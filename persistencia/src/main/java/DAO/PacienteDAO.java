@@ -1,6 +1,7 @@
 package DAO;
 
 import Exception.PersistenciaException;
+import entidades.Paciente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,6 +41,32 @@ public class PacienteDAO {
         } catch (SQLException ex) {
             Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, "Error al agregar paciente", ex);
             throw new PersistenciaException("Error al agregar paciente: " + ex.getMessage());
+        }
+    }
+    
+    public Paciente consultarPacientePorID(int idUsuario) throws PersistenciaException {
+        String sentenciaSQL2 = "SELECT * FROM PACIENTE WHERE idUsuario = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL2)) {
+            ps.setInt(1, idUsuario);
+            
+            try(ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    Paciente paciente = new Paciente();
+                    paciente.setIdUsuario(rs.getInt("idUsuario"));
+                    paciente.setCorreoElectronicoPaciente(rs.getString("correoElectronicoPaciente"));
+                    paciente.setNombrePaciente(rs.getString("nombrePaciente"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPaterno"));
+                    paciente.setApellidoMateno(rs.getString("apellidoMaterno"));
+                    paciente.setTelefono(rs.getString("telefono"));
+                    
+                    return paciente;
+                }else{
+                    throw new PersistenciaException("El paciente con el ID: " + idUsuario + "no ha sido encontrado.");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 }
