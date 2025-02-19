@@ -22,6 +22,7 @@ public class Persistencia {
 
     public static void main(String[] args) throws PersistenciaException {
         try {
+            //AÑADIR USUARIO Y PACIENTE FUNCIONAL AL 100%
             IConexionBD conexionBD = new ConexionBD();
             Connection conexion = conexionBD.crearConexion();
 
