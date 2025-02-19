@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package conexion;
 
 import Exception.PersistenciaException;
@@ -18,11 +14,12 @@ import java.util.logging.Logger;
 public class ConexionBD implements IConexionBD{
     
     final String USUARIO = "root";
-    final String PASS = "itson";
+    final String PASS = "77290Lop";
     final String CADENA_CONEXION = "jdbc:mysql://localhost:3306/ClinicaPrivada_v1"; 
     
     @Override
     public Connection crearConexion() throws PersistenciaException {
+        
         try {
             Connection conexion = DriverManager.getConnection(CADENA_CONEXION, USUARIO, PASS);
             return conexion;

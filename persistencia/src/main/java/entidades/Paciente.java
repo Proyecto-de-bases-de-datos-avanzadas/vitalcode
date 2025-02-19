@@ -97,7 +97,4 @@ public class Paciente {
     public void setFechaNacPaciente(Date fechaNacPaciente) {
         this.fechaNacPaciente = fechaNacPaciente;
     }
-    
-    
-    
 }

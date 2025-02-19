@@ -2,6 +2,7 @@ package DAO;
 
 import Exception.PersistenciaException;
 import entidades.Cita;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -23,19 +24,19 @@ public class CitaDAO {
     }
     
     public Cita agendarCita(int idPaciente, int idMedico, Date fechaHora, String estadoCita, int folio, String tipoCita) throws PersistenciaException {
-        String sentenciaSQL = "INSERT INTO CITA (idPaciente, idMedico, fechaHora, estado, folio, tipoCita) VALUES (?, ?, ?, ?, ?, ?)";
+        String sentenciaSQL = "{CALL agregar_cita(?, ?, ?, ?, ?, ?)}";
         
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, idPaciente);
-            ps.setInt(2, idMedico);
-            ps.setDate(3, fechaHora);
-            ps.setString(4, estadoCita);
-            ps.setInt(5, folio);
-            ps.setString(6, tipoCita);
+        try (CallableStatement cs = conexion.prepareCall(sentenciaSQL)) {
+            cs.setInt(1, idPaciente);
+            cs.setInt(2, idMedico);
+            cs.setDate(3, fechaHora);
+            cs.setString(4, estadoCita);
+            cs.setInt(5, folio);
+            cs.setString(6, tipoCita);
             
-            int filasAf = ps.executeUpdate();
+            int filasAf = cs.executeUpdate();
             if (filasAf > 0) {
-                try (ResultSet rs = ps.getGeneratedKeys()) {
+                try (ResultSet rs = cs.getGeneratedKeys()) {
                     if (rs.next()) {
                         int idCita = rs.getInt(1);
                         Cita cita = new Cita(idCita, idPaciente, idMedico, fechaHora, estadoCita, folio, tipoCita);
@@ -74,9 +75,9 @@ public class CitaDAO {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         int idCita = rs.getInt(1);
-                        Cita cita = new Cita(idCita, idPaciente, idMedico, TERMINAR_FECHA_MAS_CERCANA, "Pendiente", folioGenerado, "Emergencia");
+                        //Cita cita = new Cita(idCita, idPaciente, idMedico, TERMINAR_FECHA_MAS_CERCANA, "Pendiente", folioGenerado, "Emergencia");
                         AuditoriaCita(idCita, "Agendada", "Emergencia", idPaciente, idMedico);
-                        return cita;
+                        //return cita;
                     }
                 }
             }

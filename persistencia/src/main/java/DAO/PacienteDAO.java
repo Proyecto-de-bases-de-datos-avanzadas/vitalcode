@@ -2,10 +2,12 @@ package DAO;
 
 import Exception.PersistenciaException;
 import entidades.Paciente;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,53 +22,51 @@ public class PacienteDAO {
         this.conexion = conexion;
     }
 
-    //Método para agregar un paciente nuevo
-    public boolean agregarPaciente(int idUsuario, String correoElectronicoPaciente, String nombrePaciente, String apellidoPaterno, String apellidoMaterno, String telefono) throws PersistenciaException{
-        String sentenciaSQL = "INSERT INTO PACIENTE (idUsuario, correoElectronicoPaciente, nombrePaciente, apellidoPaterno, apellidoMaterno, telefono) VALUES (?, ?, ?, ?, ?, ?)" ;
-        try(PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)){
-            ps.setInt(1, idUsuario);
-            ps.setString(2, correoElectronicoPaciente);
-            ps.setString(3, nombrePaciente);
-            ps.setString(4, apellidoPaterno);
-            ps.setString(5, apellidoMaterno);
-            ps.setString(6, telefono);
-            
-            int filasAf = ps.executeUpdate();
-            if (filasAf == 0) {
-                throw new PersistenciaException("No se pudo añadir el paciente. Inténtelo de nuevo...");
-            }else{
-                System.out.println("Paciente añadido con éxito :)");
-            }
-            return true;
+    //Método para agregar un paciente nuevo usando un procedimiento almacenado
+    public boolean agregarPaciente(Paciente paciente) throws PersistenciaException {
+        String sentenciaSQL = "{CALL agregar_paciente(?, ?, ?, ?, ?, ?, ?)}";
+
+        try (CallableStatement cs = conexion.prepareCall(sentenciaSQL)) {
+            cs.setInt(1, paciente.getIdUsuario());
+            cs.setString(2, paciente.getCorreoElectronicoPaciente());
+            cs.setString(3, paciente.getNombrePaciente());
+            cs.setString(4, paciente.getApellidoPaterno());
+            cs.setString(5, paciente.getApellidoMateno());
+            cs.setString(6, paciente.getTelefono());
+            cs.setDate(7, paciente.getFechaNacPaciente());
+
+            int filasInsertadas = cs.executeUpdate();
+            return filasInsertadas > 0;
         } catch (SQLException ex) {
-            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, "Error al agregar paciente", ex);
-            throw new PersistenciaException("Error al agregar paciente: " + ex.getMessage());
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenciaException("Error al agregar el paciente en la base de datos.");
         }
     }
-    
+
+    // Método para consultar un paciente por su ID
     public Paciente consultarPacientePorID(int idUsuario) throws PersistenciaException {
-        String sentenciaSQL2 = "SELECT * FROM PACIENTE WHERE idUsuario = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL2)) {
+        String sentenciaSQL = "SELECT * FROM PACIENTE WHERE id_usuario = ?"; // Ajusté el nombre de la columna
+        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
             ps.setInt(1, idUsuario);
             
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
                     Paciente paciente = new Paciente();
-                    paciente.setIdUsuario(rs.getInt("idUsuario"));
-                    paciente.setCorreoElectronicoPaciente(rs.getString("correoElectronicoPaciente"));
-                    paciente.setNombrePaciente(rs.getString("nombrePaciente"));
-                    paciente.setApellidoPaterno(rs.getString("apellidoPaterno"));
-                    paciente.setApellidoMateno(rs.getString("apellidoMaterno"));
+                    paciente.setIdUsuario(rs.getInt("id_usuario")); // Ajusté el nombre de la columna
+                    paciente.setCorreoElectronicoPaciente(rs.getString("correoElectronico"));
+                    paciente.setNombrePaciente(rs.getString("nombre"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPat"));
+                    paciente.setApellidoMateno(rs.getString("apellidoMat"));
                     paciente.setTelefono(rs.getString("telefono"));
                     
                     return paciente;
-                }else{
-                    throw new PersistenciaException("El paciente con el ID: " + idUsuario + "no ha sido encontrado.");
+                } else {
+                    throw new PersistenciaException("El paciente con el ID: " + idUsuario + " no ha sido encontrado.");
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw new PersistenciaException("Error al consultar el paciente en la base de datos.");
         }
     }
 }
