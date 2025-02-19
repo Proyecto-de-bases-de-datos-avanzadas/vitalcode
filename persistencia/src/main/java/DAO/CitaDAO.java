@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,50 +21,121 @@ public class CitaDAO {
     public CitaDAO(Connection conexion) {
         this.conexion = conexion;
     }
-    public Cita agendarCita(int idPaciente, Date fechaHora, String consulta) throws PersistenciaException{
-    String sentenciaSQL = "INSERT INTO CITA (idPaciente, fechaHora, consulta) VALUES (?, ?, ?)";
+    
+    public Cita agendarCita(int idPaciente, int idMedico, Date fechaHora, String estadoCita, int folio, String tipoCita) throws PersistenciaException {
+        String sentenciaSQL = "INSERT INTO CITA (idPaciente, idMedico, fechaHora, estado, folio, tipoCita) VALUES (?, ?, ?, ?, ?, ?)";
+        
         try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, idPaciente);
-            ps.setDate(2, fechaHora);
-            ps.setString(4, consulta);
-            //id, id_paciente, id_medico, fechaHora, estado, folio, tipoDeCita | ATRIBUTOS CITA
+            ps.setInt(2, idMedico);
+            ps.setDate(3, fechaHora);
+            ps.setString(4, estadoCita);
+            ps.setInt(5, folio);
+            ps.setString(6, tipoCita);
+            
             int filasAf = ps.executeUpdate();
             if (filasAf > 0) {
-                ResultSet generatedKeys = ps.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int idCita = generatedKeys.getInt(1);
-                    Cita cita = new Cita(idCita, idPaciente, idMedico, fecha, estadoCita, folio, tipoCita); //Solucionar error con el constructor
-                    AuditoriaCita(idCita, "Agendada");
-                    return cita;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int idCita = rs.getInt(1);
+                        Cita cita = new Cita(idCita, idPaciente, idMedico, fechaHora, estadoCita, folio, tipoCita);
+                        AuditoriaCita(idCita, "Agendada", tipoCita, idPaciente, idMedico);
+                        return cita;
+                    }
                 }
             }
             throw new PersistenciaException("Error al agendar la cita.");
         } catch (SQLException ex) {
-            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, "Error al agendar cita", ex);
             throw new PersistenciaException("Error al agendar la cita: " + ex.getMessage());
         }
     }
     
-//    public Cita agendarCitaEmergencia() throws PersistenciaException{
-//        
-//    }
-//    
-//    public Cita desagendarCita() throws PersistenciaException{
-//        
-//    }
-//    
-    public Cita AuditoriaCita(int idCita, String accion) throws PersistenciaException {//Verificar funcionamiento
-        String sentenciaSQL = "INSERT INTO AUDITORIA_CITA (id, fechaHora, estado, tipoMovimiento, tipo, id_paciente, id_medico) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
-            //añadir los ps.setInt o string
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new PersistenciaException("Error al registrar auditoría de cita: " + ex.getMessage());
-        }
+    private Date obtenerProximaCita(int idMedico) throws PersistenciaException {//Terminar :(
+        String consultaFechaDisponible = "";
         return null;
     }
     
+    public Cita agendarCitaEmergencia(int idPaciente, int idMedico) throws PersistenciaException {
+        int folioGenerado = (int) generarFolio();
+
+        String sentenciaSQL = "INSERT INTO CITA (idPaciente, idMedico, fechaHora, estado, folio, tipoCita) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, idPaciente);
+            ps.setInt(2, idMedico);
+            //ps.setDate(3, ); | Encontrar una forma para encontrar la cita/fecha mas cercana
+            ps.setString(4, "Pendiente");
+            ps.setInt(5, folioGenerado);
+            ps.setString(6, "Emergencia");
+
+            int filasAf = ps.executeUpdate();
+            if (filasAf > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int idCita = rs.getInt(1);
+                        Cita cita = new Cita(idCita, idPaciente, idMedico, TERMINAR_FECHA_MAS_CERCANA, "Pendiente", folioGenerado, "Emergencia");
+                        AuditoriaCita(idCita, "Agendada", "Emergencia", idPaciente, idMedico);
+                        return cita;
+                    }
+                }
+            }
+            throw new PersistenciaException("Error al agendar la cita de emergencia.");
+        } catch (SQLException ex) {
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, "Error al agendar cita de emergencia", ex);
+            throw new PersistenciaException("Error al agendar la cita de emergencia: " + ex.getMessage());
+        }
+    }
+    
+    public void desagendarCita(int idCita) throws PersistenciaException {
+        String sentenciaSQL = "DELETE FROM CITA WHERE idCita = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
+            ps.setInt(1, idCita);
+
+            int filasAf = ps.executeUpdate();
+            if (filasAf == 0) {
+                throw new PersistenciaException("No se encontró la cita con ID: " + idCita);
+            }
+
+            AuditoriaCita(idCita, "Cancelada", "", 0, 0);
+            } catch (SQLException ex) {
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, "Error al desagendar cita", ex);
+            throw new PersistenciaException("Error al desagendar cita: " + ex.getMessage());
+        }
+    }
+    
+    public Cita AuditoriaCita(int idCita, String estado, String tipoCita, int idPaciente, int idMedico) throws PersistenciaException {
+        String sentenciaSQL = "INSERT INTO AUDITORIA_CITA (idCita, fechaHora, estado, tipo, id_paciente, id_medico, folio) VALUES (?, NOW(), ?, ?, ?, ?, ?)";
+
+        int folioGenerado = (int) generarFolio();
+
+        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
+            ps.setInt(1, idCita);
+            ps.setString(2, estado);
+            ps.setString(3, tipoCita);
+            ps.setInt(4, idPaciente);
+            ps.setInt(5, idMedico);
+            ps.setInt(6, folioGenerado);
+
+            ps.executeUpdate();
+
+            Cita cita = new Cita();
+            cita.setIdCita(idCita);
+            cita.setIdPaciente(idPaciente);
+            cita.setIdMedico(idMedico);
+            cita.setFecha(new Date(System.currentTimeMillis()));
+            cita.setEstadoCita(estado);
+            cita.setFolioCita(folioGenerado);
+            cita.setTipoCita(tipoCita);
+
+            return cita;
+        } catch (SQLException ex) {
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, "Error al registrar auditoría de cita", ex);
+            throw new PersistenciaException("Error al registrar auditoría de cita: " + ex.getMessage());
+        }
+    }
+
     public Cita obtenerCitaPorId(int idCita) throws PersistenciaException {
         String sentenciaSQL = "SELECT * FROM CITAS WHERE idCita = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
@@ -92,5 +161,9 @@ public class CitaDAO {
             Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    private long generarFolio() {
+        return (long) (Math.random() * 100000000);
     }
 }
