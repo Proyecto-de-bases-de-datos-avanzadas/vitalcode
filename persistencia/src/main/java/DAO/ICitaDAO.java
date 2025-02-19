@@ -9,7 +9,7 @@ import entidades.Cita;
  */
 public interface ICitaDAO {
     /**
-     * Agenda una cita normal (no de emergencia).
+     * Agenda una cita normal (no de emergencia)    .
      */
     public Cita agendarCita() throws PersistenciaException;
 
