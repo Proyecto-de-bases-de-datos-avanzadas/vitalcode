@@ -13,7 +13,6 @@ import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.SQLException;
 
 /**
  *

@@ -61,7 +61,5 @@ public class Usuario {
     public void setTipo_usuario(String tipo_usuario) {
         this.tipo_usuario = tipo_usuario;
     }
-    
-    
 }
 
