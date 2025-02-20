@@ -4,7 +4,6 @@ import DAO.CitaDAO;
 import DAO.DireccionDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
-import DAO.UsuarioDAO;
 import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
@@ -20,7 +19,7 @@ import java.sql.Date;
  */
 public class Persistencia {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws PersistenciaException {
         
         IConexionBD conexionBD = new ConexionBD();
         PacienteDAO pacienteDAO = new PacienteDAO(conexionBD);
@@ -79,29 +78,29 @@ public class Persistencia {
         // agregar cita porfavor q funcione (carita llorando)
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
-        try {
-            // 1. Agendar una cita
-            Cita cita1 = new Cita(4, 3, Date.valueOf("2025-02-20"), "Pendiente");
-            Cita citaAgendada = citaDAO.agendarCita(cita1);
-            System.out.println("Cita agendada: " + (citaAgendada != null));
-            
-           Cita citaConsultada = citaDAO.consultarCitaPorID(10);
-            if (citaConsultada != null) {
-                System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
-                System.out.println("ID Medico: " + citaConsultada.getIdMedico());
-                System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
-                System.out.println("Estado: " + citaConsultada.getEstadoCita());
-                System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
-            } else {
-                System.out.println("Cita no encontrada.");
-            }
-            
-            // 3. Cancelar una cita
-            boolean citaCancelada = citaDAO.cancelarCita(9);
-            System.out.println("Cita cancelada: " + citaCancelada);
-            
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
+        // 1. Agendar una cita
+        Cita citaAgendada = citaDAO.agendarCita(4, 3, Date.valueOf("2025-03-20"), "Pendiente", 12345, "Regular");
+
+        if (citaAgendada != null) {
+            System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
+        } else {
+            System.out.println("Error al agendar la cita.");    
         }
+
+        // 2. Consultar una cita por ID
+        Cita citaConsultada = citaDAO.obtenerCitaPorId(10);
+        if (citaConsultada != null) {
+            System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
+            System.out.println("ID Medico: " + citaConsultada.getIdMedico());
+            System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
+            System.out.println("Estado: " + citaConsultada.getEstadoCita());
+            System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
+        } else {
+            System.out.println("Cita no encontrada.");
+        }
+
+        // 3. Cancelar una cita
+        boolean citaCancelada = citaDAO.desagendarCita(9);
+        System.out.println("Cita cancelada: " + citaCancelada);
     } 
 }

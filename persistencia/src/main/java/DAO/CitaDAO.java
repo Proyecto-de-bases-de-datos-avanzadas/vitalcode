@@ -91,23 +91,23 @@ public class CitaDAO {
         }
     }
     
-    public void desagendarCita(int idCita) throws PersistenciaException {
+    public boolean desagendarCita(int idCita) throws PersistenciaException {
         String sentenciaSQL = "DELETE FROM CITA WHERE idCita = ?";
 
         try (Connection conn = conexion.crearConexion();
-                PreparedStatement ps = conn.prepareStatement(sentenciaSQL)) {
+            PreparedStatement ps = conn.prepareStatement(sentenciaSQL)) {
             ps.setInt(1, idCita);
 
             int filasAf = ps.executeUpdate();
-            if (filasAf == 0) {
-                throw new PersistenciaException("No se encontró la cita con ID: " + idCita);
+            if (filasAf > 0) {
+                AuditoriaCita(idCita, "Cancelada", "", 0, 0);
+                return true;
             }
-
-            AuditoriaCita(idCita, "Cancelada", "", 0, 0);
-            } catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, "Error al desagendar cita", ex);
             throw new PersistenciaException("Error al desagendar cita: " + ex.getMessage());
         }
+        return false;
     }
     
     public Cita AuditoriaCita(int idCita, String estado, String tipoCita, int idPaciente, int idMedico) throws PersistenciaException {
