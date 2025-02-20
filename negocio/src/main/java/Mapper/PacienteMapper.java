@@ -9,13 +9,37 @@ import entidades.Paciente;
  * @author ErnestoLpz_252663
  */
 public class PacienteMapper {
-    public Paciente toEntity (PacienteNDTO pacienteNuevo){
-        Paciente paciente = new Paciente(pacienteNuevo.getCorreoElectronico(), pacienteNuevo.getNombre(), pacienteNuevo.getApellidoPaterno(), pacienteNuevo.getApellidoMaterno(), pacienteNuevo.getTelefono(), pacienteNuevo.getFechaNacimiento());
+   public Paciente toEntity(PacienteNDTO pacienteDTO) {
+        if (pacienteDTO == null) {
+            return null;
+        }
+        
+        Paciente paciente = new Paciente();
+        paciente.setIdUsuario(pacienteDTO.getIdUsuario());
+        paciente.setCorreoElectronicoPaciente(pacienteDTO.getCorreoElectronico());
+        paciente.setNombrePaciente(pacienteDTO.getNombre());
+        paciente.setApellidoPaterno(pacienteDTO.getApellidoPaterno());
+        paciente.setApellidoMateno(pacienteDTO.getApellidoMaterno());
+        paciente.setTelefono(pacienteDTO.getTelefono());
+        paciente.setFechaNacPaciente(pacienteDTO.getFechaNacimiento());
+        
         return paciente;
     }
-    
-    public PacienteNDTO toDTO(Paciente paciente){
-        PacienteNDTO pacienteDTO = new PacienteNDTO(paciente.getCorreoElectronicoPaciente(), paciente.getNombrePaciente(), paciente.getApellidoPaterno(), paciente.getApellidoMateno(), paciente.getTelefono(), paciente.getFechaNacPaciente());
+
+    public PacienteNDTO toDTO(Paciente paciente) {
+        if (paciente == null) {
+            return null;
+        }
+        
+        PacienteNDTO pacienteDTO = new PacienteNDTO();
+        pacienteDTO.setIdUsuario(paciente.getIdUsuario());
+        pacienteDTO.setCorreoElectronico(paciente.getCorreoElectronicoPaciente());
+        pacienteDTO.setNombre(paciente.getNombrePaciente());
+        pacienteDTO.setApellidoPaterno(paciente.getApellidoPaterno());
+        pacienteDTO.setApellidoMaterno(paciente.getApellidoMateno());
+        pacienteDTO.setTelefono(paciente.getTelefono());
+        pacienteDTO.setFechaNacimiento(paciente.getFechaNacPaciente());
+        
         return pacienteDTO;
     }
     
