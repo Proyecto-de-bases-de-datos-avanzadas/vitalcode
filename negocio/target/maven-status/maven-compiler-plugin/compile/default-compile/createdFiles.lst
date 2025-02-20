@@ -1,0 +1,10 @@
+Mapper/UsuarioMapper.class
+BO/PacienteBO.class
+Exception/NegocioException.class
+com/mycompany/negocio/Negocio.class
+DTO/PacienteVDTO.class
+Mapper/PacienteMapper.class
+BO/UsuarioBO.class
+DTO/UsuarioNDTO.class
+DTO/PacienteNDTO.class
+configuracion/DependencyInjector.class
