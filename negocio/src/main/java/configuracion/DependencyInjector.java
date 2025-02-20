@@ -12,8 +12,8 @@ public class DependencyInjector {
     public static PacienteBO crearPacienteBO(){
         IConexionBD conexion = new ConexionBD();
         
-        PacienteBO activistaBO = new PacienteBO(conexion);
+        PacienteBO pacienteBO = new PacienteBO(conexion);
         
-        return activistaBO;
+        return pacienteBO;
     }
 }
