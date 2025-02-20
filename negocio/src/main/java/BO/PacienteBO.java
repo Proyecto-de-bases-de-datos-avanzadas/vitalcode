@@ -1,6 +1,8 @@
 package BO;
 
+import DAO.DireccionDAO;
 import DAO.PacienteDAO;
+import DTO.DireccionNDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
 import Exception.NegocioException;
@@ -8,6 +10,7 @@ import Exception.PersistenciaException;
 import Mapper.PacienteMapper;
 import Mapper.UsuarioMapper;
 import conexion.IConexionBD;
+import entidades.Direccion;
 import entidades.Paciente;
 import entidades.Usuario;
 
@@ -18,32 +21,50 @@ import entidades.Usuario;
 public class PacienteBO {
 
     private final PacienteDAO pacienteDAO;
+    private final DireccionDAO direccionDAO;
 
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
+        this.direccionDAO = new DireccionDAO(conexion);
     }
-   public boolean registrarPaciente(UsuarioNDTO usuario, PacienteNDTO paciente) throws PersistenciaException, NegocioException{
-        //revisar que usuario y paciente no sean nulos
-        if(usuario== null || paciente ==null){
-            throw new NegocioException("usuario y paciente no pueden ser nulos");
+
+    public boolean registrarPaciente(UsuarioNDTO usuario, PacienteNDTO paciente, DireccionNDTO direccion) throws PersistenciaException, NegocioException {
+        // Revisar que usuario, paciente y dirección no sean nulos
+        if (usuario == null || paciente == null || direccion == null) {
+            throw new NegocioException("Usuario, paciente y dirección no pueden ser nulos");
         }
-        // campos obligatorios 
-        if(usuario.getNombre_usuario().isEmpty() || usuario.getContraseniaUsuario().isEmpty()){
-            throw new NegocioException("usuario y password son obligatorios");
+        // Campos obligatorios
+        if (usuario.getNombre_usuario().isEmpty() || usuario.getContraseniaUsuario().isEmpty()) {
+            throw new NegocioException("Usuario y password son obligatorios");
         }
-        if(paciente.getCorreoElectronico().isEmpty()|| paciente.getNombre().isEmpty() 
-                || paciente.getApellidoPaterno().isEmpty() || paciente.getApellidoMaterno().isEmpty()){
+        if (paciente.getCorreoElectronico().isEmpty() || paciente.getNombre().isEmpty()
+                || paciente.getApellidoPaterno().isEmpty() || paciente.getApellidoMaterno().isEmpty()) {
             throw new NegocioException("Todos los datos son obligatorios");
         }
-        
+        if(!paciente.getCorreoElectronico().contains("@")){
+            throw new NegocioException("Formato de correo no valido.");
+        }
         PacienteMapper convertidorPaciente = new PacienteMapper();
         Paciente pacienteEntity = convertidorPaciente.toEntity(paciente);
-        
+
         UsuarioMapper convertidorUsuario = new UsuarioMapper();
         Usuario usuarioEntity = convertidorUsuario.toEntity(usuario);
-        
-        return pacienteDAO.agregarUsuarioYPaciente(usuarioEntity, pacienteEntity);
-   }
-   
-   
+
+        // Agregar usuario y paciente
+        boolean usuarioYPacienteAgregado = pacienteDAO.agregarUsuarioYPaciente(usuarioEntity, pacienteEntity);
+        if (!usuarioYPacienteAgregado) {
+            throw new PersistenciaException("Error al registrar usuario y paciente.");
+        }
+
+        // Agregar dirección
+        Direccion direccionEntity = new Direccion();
+        direccionEntity.setId_Paciente(pacienteEntity.getIdUsuario());
+        direccionEntity.setCalle(direccion.getCalle());
+        direccionEntity.setNumero(direccion.getNumero());
+        direccionEntity.setColonia(direccion.getColonia());
+
+        direccionDAO.agregarDireccion(direccionEntity);
+
+        return true;
+    }
 }
