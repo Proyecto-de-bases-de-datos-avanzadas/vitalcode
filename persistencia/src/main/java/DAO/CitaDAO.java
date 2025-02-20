@@ -1,6 +1,7 @@
 package DAO;
 
 import Exception.PersistenciaException;
+import conexion.IConexionBD;
 import entidades.Cita;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -17,16 +18,17 @@ import java.util.logging.Logger;
  * @author ErnestoLpz_252663
  */
 public class CitaDAO {
-    private Connection conexion;
+    private IConexionBD conexion;
     
-    public CitaDAO(Connection conexion) {
+    public CitaDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
     
     public Cita agendarCita(int idPaciente, int idMedico, Date fechaHora, String estadoCita, int folio, String tipoCita) throws PersistenciaException {
         String sentenciaSQL = "{CALL agregar_cita(?, ?, ?, ?, ?, ?)}";
         
-        try (CallableStatement cs = conexion.prepareCall(sentenciaSQL)) {
+        try (Connection conn = conexion.crearConexion();
+                CallableStatement cs = conn.prepareCall(sentenciaSQL)) {
             cs.setInt(1, idPaciente);
             cs.setInt(2, idMedico);
             cs.setDate(3, fechaHora);
@@ -62,7 +64,8 @@ public class CitaDAO {
 
         String sentenciaSQL = "INSERT INTO CITA (idPaciente, idMedico, fechaHora, estado, folio, tipoCita) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, idPaciente);
             ps.setInt(2, idMedico);
             //ps.setDate(3, ); | Encontrar una forma para encontrar la cita/fecha mas cercana
@@ -91,7 +94,8 @@ public class CitaDAO {
     public void desagendarCita(int idCita) throws PersistenciaException {
         String sentenciaSQL = "DELETE FROM CITA WHERE idCita = ?";
 
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sentenciaSQL)) {
             ps.setInt(1, idCita);
 
             int filasAf = ps.executeUpdate();
@@ -111,7 +115,8 @@ public class CitaDAO {
 
         int folioGenerado = (int) generarFolio();
 
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sentenciaSQL)) {
             ps.setInt(1, idCita);
             ps.setString(2, estado);
             ps.setString(3, tipoCita);
@@ -139,7 +144,8 @@ public class CitaDAO {
 
     public Cita obtenerCitaPorId(int idCita) throws PersistenciaException {
         String sentenciaSQL = "SELECT * FROM CITAS WHERE idCita = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sentenciaSQL)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sentenciaSQL)) {
             ps.setInt(1, idCita);
             
             try(ResultSet rs = ps.executeQuery()){
