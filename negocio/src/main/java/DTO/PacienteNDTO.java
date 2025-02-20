@@ -14,6 +14,28 @@ public class PacienteNDTO {
     private String telefono;
     private Date fechaNacimiento;
 
+    public PacienteNDTO() {
+    }
+
+    public PacienteNDTO(String correoElectronico, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Date fechaNacimiento) {
+        this.correoElectronico = correoElectronico;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public PacienteNDTO(int idUsuario, String correoElectronico, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Date fechaNacimiento) {
+        this.idUsuario = idUsuario;
+        this.correoElectronico = correoElectronico;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
     public int getIdUsuario() {
         return idUsuario;
     }
