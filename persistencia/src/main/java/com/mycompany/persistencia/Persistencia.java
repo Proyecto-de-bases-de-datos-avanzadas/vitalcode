@@ -30,17 +30,17 @@ public class Persistencia {
         // AÑADIR USUARIO Y PACIENTE
         try {
             Usuario nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombre_usuario("ErnestoLpz_05");
-            nuevoUsuario.setContraseniaUsuario("olalo");
+            nuevoUsuario.setNombre_usuario("Luci");
+            nuevoUsuario.setContraseniaUsuario("miisis");
             nuevoUsuario.setTipo_usuario("Paciente");
 
             Paciente nuevoPaciente = new Paciente();
-            nuevoPaciente.setCorreoElectronicoPaciente("jesusE05@gmail.com");
-            nuevoPaciente.setNombrePaciente("Ernesto");
-            nuevoPaciente.setApellidoPaterno("Lopez");
-            nuevoPaciente.setApellidoMateno("Ibarra");
-            nuevoPaciente.setTelefono("6442291847");
-            nuevoPaciente.setFechaNacPaciente(Date.valueOf("2005-08-12"));
+            nuevoPaciente.setCorreoElectronicoPaciente("lucia1111@gmail.com");
+            nuevoPaciente.setNombrePaciente("Lucia");
+            nuevoPaciente.setApellidoPaterno("Vasquez");
+            nuevoPaciente.setApellidoMateno("Gastelum");
+            nuevoPaciente.setTelefono("64424235");
+            nuevoPaciente.setFechaNacPaciente(Date.valueOf("2005-07-05"));
 
             // Agregar Usuario y Paciente
             boolean exito = pacienteDAO.agregarUsuarioYPaciente(nuevoUsuario, nuevoPaciente);

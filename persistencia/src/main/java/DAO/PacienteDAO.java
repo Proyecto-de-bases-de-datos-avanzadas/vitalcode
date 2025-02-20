@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -30,11 +31,13 @@ public class PacienteDAO {
 
         try (Connection conn = conexion.crearConexion()) {
             conn.setAutoCommit(false);
-
+            // Encriptar la contraseña :)
+            String hashedPassword = BCrypt.hashpw(usuario.getContraseniaUsuario(), BCrypt.gensalt());
+            
             // 1. Agregar el usuario y obtener el ID generado
             try (CallableStatement csUsuario = conn.prepareCall(sqlUsuario)) {
                 csUsuario.setString(1, usuario.getNombre_usuario());
-                csUsuario.setString(2, usuario.getContraseniaUsuario());
+                csUsuario.setString(2, hashedPassword); // mandamos la contraseña ya encriptada wow 
                 csUsuario.setString(3, usuario.getTipo_usuario());
                 csUsuario.registerOutParameter(4, Types.INTEGER);
 
