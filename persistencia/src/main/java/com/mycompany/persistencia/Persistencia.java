@@ -1,5 +1,6 @@
 package com.mycompany.persistencia;
 
+import DAO.CitaDAO;
 import DAO.DireccionDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
@@ -7,8 +8,8 @@ import DAO.UsuarioDAO;
 import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
+import entidades.Cita;
 import entidades.Direccion;
-import entidades.Medico;
 import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
@@ -75,35 +76,32 @@ public class Persistencia {
             ex.printStackTrace();
         }
         
-        // AÑADIR MÉDICO
+        // agregar cita porfavor q funcione (carita llorando)
+        CitaDAO citaDAO = new CitaDAO(conexionBD);
+        
         try {
-            Usuario usuarioMedico = new Usuario();
-            usuarioMedico.setIdUsuario(3);
-            usuarioMedico.setNombre_usuario("DrPerez123");
-            usuarioMedico.setContraseniaUsuario("medicoSeguro");
-            usuarioMedico.setTipo_usuario("Medico");
-
-            Medico nuevoMedico = new Medico();
-            nuevoMedico.setIdUsuario(usuarioMedico.getIdUsuario());
-            nuevoMedico.setNombre("Dr. Carlos Pérez");
-            nuevoMedico.setEspecialidadMedico("Cardiología");
-            nuevoMedico.setCedulaMedico("MED12345678");
-            nuevoMedico.setEstadoMedico("Activo");
-
-            boolean agregado = medicoDAO.agregarMedico(nuevoMedico);
-
-            if (agregado) {
-                System.out.println("Médico agregado correctamente.");
+            // 1. Agendar una cita
+            Cita cita1 = new Cita(4, 3, Date.valueOf("2025-02-20"), "Pendiente");
+            Cita citaAgendada = citaDAO.agendarCita(cita1);
+            System.out.println("Cita agendada: " + (citaAgendada != null));
+            
+           Cita citaConsultada = citaDAO.consultarCitaPorID(10);
+            if (citaConsultada != null) {
+                System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
+                System.out.println("ID Medico: " + citaConsultada.getIdMedico());
+                System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
+                System.out.println("Estado: " + citaConsultada.getEstadoCita());
+                System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
             } else {
-                System.out.println("Error al agregar el médico.");
+                System.out.println("Cita no encontrada.");
             }
-
-        } catch (PersistenciaException ex) {
-            System.err.println("Error en la persistencia: " + ex.getMessage());
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
-            ex.printStackTrace();
+            
+            // 3. Cancelar una cita
+            boolean citaCancelada = citaDAO.cancelarCita(9);
+            System.out.println("Cita cancelada: " + citaCancelada);
+            
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
         }
-    }
+    } 
 }
