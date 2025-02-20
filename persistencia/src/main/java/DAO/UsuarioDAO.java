@@ -5,6 +5,7 @@ package DAO;
  * @author ErnestoLpz_252663
  */
 import Exception.PersistenciaException;
+import conexion.IConexionBD;
 import entidades.Usuario;
 import java.sql.*;
 import java.util.logging.Level;
@@ -12,16 +13,17 @@ import java.util.logging.Logger;
 
 public class UsuarioDAO implements IUsuarioDAO {
 
-    private final Connection conexion;
+    private IConexionBD conexion;
 
-    public UsuarioDAO(Connection conexion) {
+    public UsuarioDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
     
     public Usuario agregarUsuario(Usuario usuario) throws PersistenciaException {
         String sentenciaSQL = "{CALL AgregarUsuario(?, ?, ?, ?)}";
 
-        try (CallableStatement cs = conexion.prepareCall(sentenciaSQL)) {
+        try (Connection conn = conexion.crearConexion();
+                CallableStatement cs = conn.prepareCall(sentenciaSQL)) {
             cs.setString(1, usuario.getNombre_usuario());
             cs.setString(2, usuario.getContraseniaUsuario());
             cs.setString(3, usuario.getTipo_usuario());
@@ -44,7 +46,8 @@ public class UsuarioDAO implements IUsuarioDAO {
     @Override
     public Usuario consultarUsuarioPorID(int idUsuario) throws PersistenciaException {
         String sql = "SELECT * FROM Usuario WHERE id = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idUsuario);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -66,7 +69,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     public void actualizarUsuario(Usuario usuario) throws PersistenciaException {
         String sql = "UPDATE USUARIO SET nombreUsuario = ?, contraseña = ?, tipoUsuario = ? WHERE id = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, usuario.getNombre_usuario());
             ps.setString(2, usuario.getContraseniaUsuario());
             ps.setString(3, usuario.getTipo_usuario());
@@ -81,7 +85,8 @@ public class UsuarioDAO implements IUsuarioDAO {
     
     public void eliminarUsuario(int idUsuario) throws PersistenciaException {
         String sql = "DELETE FROM Usuario WHERE id = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idUsuario);
             ps.executeUpdate();
         } catch (SQLException ex) {
