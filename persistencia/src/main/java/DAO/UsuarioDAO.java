@@ -66,33 +66,4 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("Error al consultar usuario", ex);
         }
     }
-
-    public void actualizarUsuario(Usuario usuario) throws PersistenciaException {
-        String sql = "UPDATE USUARIO SET nombreUsuario = ?, contraseña = ?, tipoUsuario = ? WHERE id = ?";
-        try (Connection conn = conexion.crearConexion();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, usuario.getNombre_usuario());
-            ps.setString(2, usuario.getContraseniaUsuario());
-            ps.setString(3, usuario.getTipo_usuario());
-            ps.setInt(4, usuario.getIdUsuario());
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new PersistenciaException("Error al actualizar usuario", ex);
-        }
-    }
-
-    
-    public void eliminarUsuario(int idUsuario) throws PersistenciaException {
-        String sql = "DELETE FROM Usuario WHERE id = ?";
-        try (Connection conn = conexion.crearConexion();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idUsuario);
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new PersistenciaException("Error al eliminar usuario", ex);
-        }
-    }
 }
-

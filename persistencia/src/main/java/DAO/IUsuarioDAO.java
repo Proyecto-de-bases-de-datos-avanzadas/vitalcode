@@ -12,10 +12,6 @@ public interface IUsuarioDAO {
     Usuario agregarUsuario(Usuario usuario) throws PersistenciaException;
     
     Usuario consultarUsuarioPorID(int idUsuario) throws PersistenciaException;
-    
-    void actualizarUsuario(Usuario usuario) throws PersistenciaException;
-    
-    void eliminarUsuario(int idUsuario) throws PersistenciaException;
 }
 
 
