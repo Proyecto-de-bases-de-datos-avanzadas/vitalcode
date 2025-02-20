@@ -1,6 +1,7 @@
 package DAO;
 
 import Exception.PersistenciaException;
+import conexion.IConexionBD;
 import entidades.Medico;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -14,9 +15,9 @@ import java.util.logging.Logger;
  * @author ErnestoLpz_252663
  */
 public class MedicoDAO {
-    private Connection conexion;
+    private IConexionBD conexion;
     
-    public MedicoDAO(Connection conexion) {
+    public MedicoDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
@@ -24,7 +25,8 @@ public class MedicoDAO {
     public boolean agregarMedico(Medico medico) throws PersistenciaException {
         String sql = "{CALL agregar_medico(?, ?, ?, ?, ?)}";
 
-        try (CallableStatement cs = conexion.prepareCall(sql)) {
+        try (Connection conn = conexion.crearConexion();
+                CallableStatement cs = conn.prepareCall(sql)) {
             cs.setInt(1, medico.getIdUsuario());
             cs.setString(2, medico.getNombre());
             cs.setString(3, medico.getEspecialidadMedico());
@@ -42,7 +44,8 @@ public class MedicoDAO {
     public boolean darDeBajaMedico(int idUsuario) throws PersistenciaException {
         String sql = "UPDATE Medico SET estado = 'Inactivo' WHERE id_usuario = ?";
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idUsuario);
 
             int filasActualizadas = ps.executeUpdate();
