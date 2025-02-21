@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,19 +26,40 @@ public class CitaDAO {
     public CitaDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
+    
     //agrgar cita
     public Cita agendarCita(Cita cita) throws PersistenciaException {
-        String sqlCita = "{CALL agregar_cita(?, ?, ?, ?)}";
+        String sqlValidacion = "SELECT COUNT(*) FROM Cita WHERE id_medico = ? AND DATE(fechaHora) = ? AND TIME(fechaHora) BETWEEN ? AND ?";
+        String sqlCita = "{CALL agregar_cita(?, ?, ?, ?, ?, ?)}";
 
         try (Connection conn = conexion.crearConexion()) {
             conn.setAutoCommit(false);
+            
+            try (PreparedStatement pst = conn.prepareStatement(sqlValidacion)) {
+                pst.setInt(1, cita.getIdMedico());
+                pst.setDate(2, Date.valueOf(cita.getFecha().toLocalDate()));
+                pst.setTime(3, Time.valueOf("07:00:00"));
+                pst.setTime(4, Time.valueOf("22:00:00"));
 
-            // 1. Agregar la cita
+                ResultSet rs = pst.executeQuery();
+
+                if (rs.next() && rs.getInt(1) > 0) {
+                    // Si ya existen citas en ese horario se lanza la exception
+                    throw new PersistenciaException("El médico no está disponible en este horario.");
+                }
+            }
+
+            // 2. Si está disponible, se añade la cita
+            
+            Timestamp timestamp = new Timestamp(cita.getFecha().getTime());
+
             try (CallableStatement csCita = conn.prepareCall(sqlCita)) {
                 csCita.setInt(1, cita.getIdPaciente());
                 csCita.setInt(2, cita.getIdMedico());
-                csCita.setDate(3, cita.getFecha());
+                csCita.setTimestamp(3, timestamp);
                 csCita.setString(4, cita.getEstadoCita());
+                csCita.setInt(5, cita.getFolioCita());
+                csCita.setString(6, cita.getTipoCita());
 
                 int filasInsertadas = csCita.executeUpdate();
 
@@ -46,14 +68,12 @@ public class CitaDAO {
                     throw new PersistenciaException("No se pudo registrar la cita.");
                 }
             }
-
-            conn.commit(); // Confirmar la transacción
+            conn.commit();
             return cita;
         } catch (SQLException e) {
             throw new PersistenciaException("Error al registrar la cita: " + e.getMessage(), e);
         }
-        
-    } 
+    }
         // Consultar cita por ID
     public Cita consultarCitaPorID(int idCita) throws PersistenciaException {
     String sql = "SELECT * FROM Cita WHERE id = ?";
@@ -93,40 +113,23 @@ public class CitaDAO {
     
     //???
     public boolean agendarCitaEmergencia(int idPaciente) throws PersistenciaException {
-        String sql = "SELECT idCita, idMedico, fechaHora " +
-                     "FROM Cita " +
-                     "WHERE estado = 'Disponible' " +
-                     "ORDER BY fechaHora ASC " +
-                     "LIMIT 1";
+        String sql = "{CALL asignar_cita_emergencia(?)}";
 
         try (Connection conn = conexion.crearConexion();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             CallableStatement cs = conn.prepareCall(sql)) {
 
+            cs.setInt(1, idPaciente);
+            boolean resultado = cs.execute();
+
+            // Obtener el mensaje del procedimiento almacenado
+            ResultSet rs = cs.getResultSet();
             if (rs.next()) {
-                int idCita = rs.getInt("idCita");
-                int idMedico = rs.getInt("idMedico");
-                Timestamp fechaHora = rs.getTimestamp("fechaHora");
-
-                // Actualizar la cita asignándola al paciente
-                String updateSql = "UPDATE Cita SET idPaciente = ?, estado = 'Asignada' WHERE idCita = ?";
-                try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
-                    updatePs.setInt(1, idPaciente);
-                    updatePs.setInt(2, idCita);
-                    int filasActualizadas = updatePs.executeUpdate();
-
-                    if (filasActualizadas > 0) {
-                        System.out.println("Cita de emergencia asignada al paciente con éxito.");
-                        System.out.println("Detalles: Médico ID " + idMedico + ", Fecha: " + fechaHora);
-                        return true;
-                    }
-                }
-            } else {
-                System.out.println("No hay citas disponibles en este momento.");
+                System.out.println(rs.getString("mensaje"));
             }
+
+            return resultado;
         } catch (SQLException ex) {
             throw new PersistenciaException("Error al asignar cita de emergencia.", ex);
         }
-        return false;
     }
 }

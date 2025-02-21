@@ -14,6 +14,7 @@ public class Cita {
     private int idCita;
     private int idPaciente;
     private int idMedico;
+    private int idUsuario;
     private Date fecha;
     private String estadoCita;
     private int folioCita;
@@ -55,17 +56,18 @@ public class Cita {
         this.folioCita = folioCita;
         this.tipoCita = tipoCita;
     }
-
-    public Cita(int idPaciente, int idMedico, Date fecha, String estadoCita, int folioCita, String tipoCita) {
+    
+    public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, int folioCita, String tipoCita) {
+        this.idCita = idCita;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
+        this.idUsuario = idUsuario;
         this.fecha = fecha;
         this.estadoCita = estadoCita;
         this.folioCita = folioCita;
         this.tipoCita = tipoCita;
     }
 
-    
     public int getIdCita() {
         return idCita;
     }
@@ -88,6 +90,14 @@ public class Cita {
 
     public void setIdMedico(int idMedico) {
         this.idMedico = idMedico;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Date getFecha() {
@@ -121,7 +131,9 @@ public class Cita {
     public void setTipoCita(String tipoCita) {
         this.tipoCita = tipoCita;
     }
-    
+
+    public enum TipoCita{
+    Emergencia, Regular;
+    }
     
 }
-
