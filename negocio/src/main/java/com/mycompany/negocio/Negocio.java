@@ -38,6 +38,7 @@ public class Negocio {
             UsuarioNDTO usuario = usuarioBO.recuperarUsuarioPorNombre(nombreUsuario);
             if (usuario != null) {
                 System.out.println("Usuario encontrado:");
+                System.out.println("id :"+usuario.getId());
                 System.out.println("Nombre de Usuario: " + usuario.getNombre_usuario());
                 System.out.println("Contraseña: " + usuario.getContraseniaUsuario());
                 System.out.println("Tipo de Usuario: " + usuario.getTipo_usuario());

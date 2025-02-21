@@ -6,7 +6,7 @@ import java.sql.Date;
  */
 public class PacienteNDTO {
 
-     private int idUsuario;
+    private int idUsuario;
     private String correoElectronico;
     private String nombre;
     private String apellidoPaterno;
