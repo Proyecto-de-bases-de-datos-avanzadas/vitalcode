@@ -4,6 +4,7 @@
 
 package com.mycompany.negocio;
 
+import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.DireccionNDTO;
 import DTO.PacienteNDTO;
@@ -21,8 +22,17 @@ import conexion.IConexionBD;
 public class Negocio {
 
     public static void main(String[] args) throws PersistenciaException, NegocioException {
-        String nombreUsuario = "lucia123";
         IConexionBD conexionBD = new ConexionBD();
+        int idPaciente = 17;
+        PacienteBO pacienteBO = new PacienteBO(conexionBD);
+        PacienteNDTO paciente = pacienteBO.recuperarPacienteID(idPaciente);
+        System.out.println("Paciente encontrado");
+        System.out.println("Nombre Pacienre"+ paciente.getNombre());
+        
+        
+        
+        String nombreUsuario = "lucia123";
+        
         UsuarioBO usuarioBO = new UsuarioBO(conexionBD);
         try {
             UsuarioNDTO usuario = usuarioBO.recuperarUsuarioPorNombre(nombreUsuario);

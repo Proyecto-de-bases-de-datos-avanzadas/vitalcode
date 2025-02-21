@@ -13,6 +13,8 @@ import conexion.IConexionBD;
 import entidades.Direccion;
 import entidades.Paciente;
 import entidades.Usuario;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,6 +24,7 @@ public class PacienteBO {
 
     private final PacienteDAO pacienteDAO;
     private final DireccionDAO direccionDAO;
+    
 
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
@@ -68,4 +71,13 @@ public class PacienteBO {
 
         return idPacienteGenerado;
     }
+    public PacienteNDTO recuperarPacienteID(int idPaciente) throws PersistenciaException {        
+        Paciente pacienteRecuperado = pacienteDAO.consultarPacientePorID(idPaciente);
+        PacienteMapper convertidorPaciente = new PacienteMapper();
+        PacienteNDTO paciente = convertidorPaciente.toDTO(pacienteRecuperado);
+
+
+        return paciente;
+    }
+
 }
