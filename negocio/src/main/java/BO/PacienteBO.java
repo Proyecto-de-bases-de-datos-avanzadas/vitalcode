@@ -28,7 +28,7 @@ public class PacienteBO {
         this.direccionDAO = new DireccionDAO(conexion);
     }
 
-    public boolean registrarPaciente(UsuarioNDTO usuario, PacienteNDTO paciente, DireccionNDTO direccion) throws PersistenciaException, NegocioException {
+    public int registrarPaciente(UsuarioNDTO usuario, PacienteNDTO paciente, DireccionNDTO direccion) throws PersistenciaException, NegocioException {
         // Revisar que usuario, paciente y dirección no sean nulos
         if (usuario == null || paciente == null || direccion == null) {
             throw new NegocioException("Usuario, paciente y dirección no pueden ser nulos");
@@ -55,7 +55,8 @@ public class PacienteBO {
         if (!usuarioYPacienteAgregado) {
             throw new PersistenciaException("Error al registrar usuario y paciente.");
         }
-
+        // Obtener el ID generado del paciente
+        int idPacienteGenerado = pacienteEntity.getIdUsuario();
         // Agregar dirección
         Direccion direccionEntity = new Direccion();
         direccionEntity.setId_Paciente(pacienteEntity.getIdUsuario());
@@ -65,6 +66,6 @@ public class PacienteBO {
 
         direccionDAO.agregarDireccion(direccionEntity);
 
-        return true;
+        return idPacienteGenerado;
     }
 }

@@ -22,6 +22,13 @@ public class Cita {
     public Cita() {
     }
 
+    public Cita(int idPaciente, int idMedico, Date fecha, String estadoCita) {
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+    }
+
     public Cita(int idPaciente, int idMedico, Date fecha, String estadoCita, String tipoCita) {
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
