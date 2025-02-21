@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -182,12 +183,13 @@ public class frmIniciarSesion extends javax.swing.JFrame {
                     frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
                     pantallaPaciente.setVisible(true);
                     this.setVisible(false);
-                } else {
+                } if ("Medico".equals(usuarioRecuperado.getTipo_usuario())) {
                     frmPantallaPrincipalMedico pantallaMedico = new frmPantallaPrincipalMedico();
                     pantallaMedico.setVisible(true);
                     this.setVisible(false);
+                } 
+            }else{JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrectos","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
                 }
-            }
         } catch (NegocioException | PersistenciaException ex) {
             Logger.getLogger(frmIniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
