@@ -26,10 +26,9 @@ public class Negocio {
         int idPaciente = 17;
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
         PacienteNDTO paciente = pacienteBO.recuperarPacienteID(idPaciente);
-        if(paciente!=null){
-            System.out.println("Paciente encontrado");
-            System.out.println("Nombre Pacienre"+ paciente.getNombre());
-        }
+        System.out.println("Paciente encontrado");
+        System.out.println("Nombre Pacienre"+ paciente.getNombre());
+        
         
         
         String nombreUsuario = "lucia123";
