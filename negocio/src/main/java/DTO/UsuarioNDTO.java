@@ -12,18 +12,27 @@ public class UsuarioNDTO {
     private String nombre_usuario; 
     private String contraseniaUsuario; 
     private String tipo_usuario;
-    private String id;
+    private int id;
 
     public UsuarioNDTO() {
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
+
+    public UsuarioNDTO(int id,String nombre_usuario, String contraseniaUsuario, String tipo_usuario ) {
+        this.nombre_usuario = nombre_usuario;
+        this.contraseniaUsuario = contraseniaUsuario;
+        this.tipo_usuario = tipo_usuario;
+        this.id = id;
+    }
+
+   
 
     public UsuarioNDTO(String nombre_usuario, String contraseniaUsuario, String tipo_usuario) {
         this.nombre_usuario = nombre_usuario;
