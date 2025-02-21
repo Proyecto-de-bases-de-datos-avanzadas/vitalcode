@@ -27,7 +27,16 @@ public class Persistencia {
         MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
-        
+        // prueba recuperar paciente por id
+        try{
+            Paciente paciente = pacienteDAO.consultarPacientePorID(17);
+            if(paciente!=null){
+                System.out.println("Paciente encontrado");
+                System.out.println("Nombre: "+paciente.getNombrePaciente());
+            }
+        }catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
         // prueba recuperar usuario por nombre
         try {
             Usuario usuario = usuarioDAO.buscarUsuarioPorUsuario("lucia123");

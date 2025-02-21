@@ -13,6 +13,8 @@ import conexion.IConexionBD;
 import entidades.Direccion;
 import entidades.Paciente;
 import entidades.Usuario;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -68,4 +70,22 @@ public class PacienteBO {
 
         return idPacienteGenerado;
     }
+    public PacienteNDTO recuperarPacienteID(int idPaciente) {
+    try {
+        Paciente pacienteRecuperado = pacienteDAO.consultarPacientePorID(idPaciente);
+        if (pacienteRecuperado == null) {
+            Logger.getLogger(PacienteBO.class.getName()).log(Level.WARNING, "No se encontró ningún paciente con el ID: " + idPaciente);
+            return null;
+        }
+
+        PacienteMapper convertidorPaciente = new PacienteMapper();
+        PacienteNDTO paciente = convertidorPaciente.toDTO(pacienteRecuperado);
+        return paciente;
+
+    } catch (PersistenciaException ex) {
+        Logger.getLogger(PacienteBO.class.getName()).log(Level.SEVERE, "Error al consultar paciente por ID: " + idPaciente, ex);
+        return null;
+    }
+}
+
 }

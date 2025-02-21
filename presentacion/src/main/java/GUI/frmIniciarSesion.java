@@ -181,6 +181,7 @@ public class frmIniciarSesion extends javax.swing.JFrame {
             if (BCrypt.checkpw(password, contrasenaEnc)) {
                 if ("Paciente".equals(usuarioRecuperado.getTipo_usuario())) {
                     frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
+                    pantallaPaciente.setNombrePaciente(usuario);
                     pantallaPaciente.setVisible(true);
                     this.setVisible(false);
                 } if ("Medico".equals(usuarioRecuperado.getTipo_usuario())) {
@@ -190,12 +191,15 @@ public class frmIniciarSesion extends javax.swing.JFrame {
                 } 
             }else{JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrectos","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
                 }
+           
         } catch (NegocioException | PersistenciaException ex) {
             Logger.getLogger(frmIniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_btnIniciarSesionMouseClicked
-
+    public String getNombreUsuario(){
+        return txtUsuario.getText();
+    }
     /**
      * @param args the command line arguments
      */

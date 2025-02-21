@@ -12,8 +12,17 @@ public class UsuarioNDTO {
     private String nombre_usuario; 
     private String contraseniaUsuario; 
     private String tipo_usuario;
+    private String id;
 
     public UsuarioNDTO() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public UsuarioNDTO(String nombre_usuario, String contraseniaUsuario, String tipo_usuario) {
