@@ -66,4 +66,31 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("Error al consultar usuario", ex);
         }
     }
+    
+    public Usuario buscarUsuarioPorUsuario(String usuario) throws PersistenciaException {
+        String sql = "SELECT * FROM Usuario WHERE nombreUsuario = ?";
+        Usuario usuarioRec = null;
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, usuario);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    usuarioRec = new Usuario();
+                    usuarioRec.setIdUsuario(rs.getInt("id"));
+                    usuarioRec.setNombre_usuario(rs.getString("nombreUsuario"));
+                    usuarioRec.setContraseniaUsuario(rs.getString("contrasenia"));
+                    usuarioRec.setTipo_usuario(rs.getString("tipoUsuario"));
+                    return usuarioRec;
+                } else {
+                    throw new PersistenciaException("Usuario no encontrado");
+                } 
+            } catch (SQLException ex) {
+                Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+                throw new PersistenciaException("Error al consultar usuario", ex);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenciaException("Error al crear conexión", ex);
+        }}
 }

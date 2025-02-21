@@ -22,7 +22,7 @@ public class Negocio {
 
     public static void main(String[] args) throws PersistenciaException, NegocioException {
         String nombreUsuario = "lucia123";
-         IConexionBD conexionBD = new ConexionBD();
+        IConexionBD conexionBD = new ConexionBD();
         UsuarioBO usuarioBO = new UsuarioBO(conexionBD);
         try {
             UsuarioNDTO usuario = usuarioBO.recuperarUsuarioPorNombre(nombreUsuario);
