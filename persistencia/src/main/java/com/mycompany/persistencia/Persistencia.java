@@ -4,6 +4,7 @@ import DAO.CitaDAO;
 import DAO.DireccionDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
+import DAO.UsuarioDAO;
 import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
