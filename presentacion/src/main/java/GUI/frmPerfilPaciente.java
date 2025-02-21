@@ -4,6 +4,14 @@
  */
 package GUI;
 
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -13,6 +21,20 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
     /**
      * Creates new form frmPerfilPaciente
      */
+    private String nombrePaciente;
+    public void getNombrePaciente (String nombrePaciente){
+        this.nombrePaciente = nombrePaciente;
+    }
+    public void mostrarPerfil(){
+        try {
+            UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+            int idUsuario = usuarioRecuperado.getId();
+            PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+            txtNombre.setText(paciente.getNombre()+" "+paciente.getApellidoPaterno()+" "+paciente.getApellidoMaterno());
+        } catch (NegocioException | PersistenciaException ex) {
+            Logger.getLogger(frmPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public frmPerfilPaciente() {
         initComponents();
         

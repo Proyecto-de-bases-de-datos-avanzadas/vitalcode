@@ -4,6 +4,14 @@
  */
 package GUI;
 
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -16,8 +24,10 @@ public class inicio {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        frmIniciarSesion inicioSesion = new frmIniciarSesion();
+       frmIniciarSesion inicioSesion = new frmIniciarSesion();
         inicioSesion.setVisible(true);
+       
+           
     }
     
 }
