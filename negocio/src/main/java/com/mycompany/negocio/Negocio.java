@@ -4,6 +4,7 @@
 
 package com.mycompany.negocio;
 
+import BO.UsuarioBO;
 import DTO.DireccionNDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
@@ -11,13 +12,33 @@ import configuracion.DependencyInjector;
 import java.sql.Date;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
+import conexion.ConexionBD;
+import conexion.IConexionBD;
 /**
  *
  * @author alexnieblas
  */
 public class Negocio {
 
-    public static void main(String[] args) throws PersistenciaException {
+    public static void main(String[] args) throws PersistenciaException, NegocioException {
+        String nombreUsuario = "lucia123";
+         IConexionBD conexionBD = new ConexionBD();
+        UsuarioBO usuarioBO = new UsuarioBO(conexionBD);
+        try {
+            UsuarioNDTO usuario = usuarioBO.recuperarUsuarioPorNombre(nombreUsuario);
+            if (usuario != null) {
+                System.out.println("Usuario encontrado:");
+                System.out.println("Nombre de Usuario: " + usuario.getNombre_usuario());
+                System.out.println("Contraseña: " + usuario.getContraseniaUsuario());
+                System.out.println("Tipo de Usuario: " + usuario.getTipo_usuario());
+            } else {
+                System.out.println("Usuario no encontrado.");
+            }
+        } catch (NegocioException | PersistenciaException e) {
+            e.printStackTrace();
+        }
+    
+        
         PacienteNDTO pacienteAregistrar = new PacienteNDTO("odiolosDAO@gmail.com", "Lucia", "Vasquez", "Gastelum", "6442546583", Date.valueOf("2005-07-05"));
         UsuarioNDTO usuarioARegistrar = new UsuarioNDTO("lucia123", "miisis", "Paciente");
 
