@@ -25,7 +25,24 @@ public class Persistencia {
         PacienteDAO pacienteDAO = new PacienteDAO(conexionBD);
         MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
-
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
+        
+        // prueba recuperar usuario por nombre
+        try {
+            Usuario usuario = usuarioDAO.buscarUsuarioPorUsuario("lucia123");
+            if (usuario != null) {
+                System.out.println("Usuario encontrado:");
+                System.out.println("ID: " + usuario.getIdUsuario());
+                System.out.println("Nombre de Usuario: " + usuario.getNombre_usuario());
+                System.out.println("Contraseña: " + usuario.getContraseniaUsuario());
+                System.out.println("Tipo de Usuario: " + usuario.getTipo_usuario());
+            } else {
+                System.out.println("Usuario no encontrado.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
         // AÑADIR USUARIO Y PACIENTE
         try {
             Usuario nuevoUsuario = new Usuario();
