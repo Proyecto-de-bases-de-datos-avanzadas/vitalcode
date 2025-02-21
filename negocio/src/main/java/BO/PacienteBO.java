@@ -24,6 +24,7 @@ public class PacienteBO {
 
     private final PacienteDAO pacienteDAO;
     private final DireccionDAO direccionDAO;
+    
 
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
@@ -70,22 +71,13 @@ public class PacienteBO {
 
         return idPacienteGenerado;
     }
-    public PacienteNDTO recuperarPacienteID(int idPaciente) {
-    try {
+    public PacienteNDTO recuperarPacienteID(int idPaciente) throws PersistenciaException {        
         Paciente pacienteRecuperado = pacienteDAO.consultarPacientePorID(idPaciente);
-        if (pacienteRecuperado == null) {
-            Logger.getLogger(PacienteBO.class.getName()).log(Level.WARNING, "No se encontró ningún paciente con el ID: " + idPaciente);
-            return null;
-        }
-
         PacienteMapper convertidorPaciente = new PacienteMapper();
         PacienteNDTO paciente = convertidorPaciente.toDTO(pacienteRecuperado);
-        return paciente;
 
-    } catch (PersistenciaException ex) {
-        Logger.getLogger(PacienteBO.class.getName()).log(Level.SEVERE, "Error al consultar paciente por ID: " + idPaciente, ex);
-        return null;
+
+        return paciente;
     }
-}
 
 }
