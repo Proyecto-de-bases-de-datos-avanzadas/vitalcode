@@ -14,6 +14,11 @@ public class Usuario {
     private String contraseniaUsuario; 
     private String tipo_usuario;
 
+    public Usuario(String nombre_usuario, String contraseniaUsuario) {
+        this.nombre_usuario = nombre_usuario;
+        this.contraseniaUsuario = contraseniaUsuario;
+    }
+
     public Usuario() {
     }
 

@@ -4,8 +4,16 @@
  */
 package GUI;
 
+import BO.UsuarioBO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -41,7 +49,6 @@ public class frmIniciarSesion extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
         setBackground(new java.awt.Color(183, 213, 229));
-        setPreferredSize(new java.awt.Dimension(943, 523));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -80,8 +87,6 @@ public class frmIniciarSesion extends javax.swing.JFrame {
                 btnRegistroActionPerformed(evt);
             }
         });
-
-        pswContrasenia.setText("jPasswordField1");
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Logo Clínica de Salud Corporativo Azul y Crudo.png"))); // NOI18N
 
@@ -165,10 +170,28 @@ public class frmIniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistroMouseClicked
 
     private void btnIniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIniciarSesionMouseClicked
+
+        String usuario = txtUsuario.getText();
+        String password = new String(pswContrasenia.getPassword());
+        try {
+            UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(usuario);
+            String contrasenaEnc = usuarioRecuperado.getContraseniaUsuario();
+
+            if (BCrypt.checkpw(password, contrasenaEnc)) {
+                if ("Paciente".equals(usuarioRecuperado.getTipo_usuario())) {
+                    frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
+                    pantallaPaciente.setVisible(true);
+                    this.setVisible(false);
+                } else {
+                    frmPantallaPrincipalMedico pantallaMedico = new frmPantallaPrincipalMedico();
+                    pantallaMedico.setVisible(true);
+                    this.setVisible(false);
+                }
+            }
+        } catch (NegocioException | PersistenciaException ex) {
+            Logger.getLogger(frmIniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        frmPantallaPrincipalMedico pantallaMedico = new frmPantallaPrincipalMedico();
-        pantallaMedico.setVisible(true);
-        this.setVisible(false);
     }//GEN-LAST:event_btnIniciarSesionMouseClicked
 
     /**
