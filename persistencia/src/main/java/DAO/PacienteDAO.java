@@ -80,7 +80,7 @@ public class PacienteDAO {
 
     // Método para consultar un paciente por su ID
     public Paciente consultarPacientePorID(int idUsuario) throws PersistenciaException {
-        String sentenciaSQL = "SELECT id_usuario, correo_electronico, nombre, apellido_paterno, apellido_materno, telefono FROM PACIENTE WHERE id_usuario = ?";
+        String sentenciaSQL = "SELECT id_usuario, correoElectronico, nombre, apellidoPat, apellidoMat, telefono, fechaNacimiento FROM PACIENTE WHERE id_usuario = ?";
 
         try (Connection conn = conexion.crearConexion();
              PreparedStatement ps = conn.prepareStatement(sentenciaSQL)) {
@@ -91,11 +91,12 @@ public class PacienteDAO {
                 if (rs.next()) {
                     Paciente paciente = new Paciente();
                     paciente.setIdUsuario(rs.getInt("id_usuario"));
-                    paciente.setCorreoElectronicoPaciente(rs.getString("correo_electronico"));
+                    paciente.setCorreoElectronicoPaciente(rs.getString("correoElectronico"));
                     paciente.setNombrePaciente(rs.getString("nombre"));
-                    paciente.setApellidoPaterno(rs.getString("apellido_paterno"));
-                    paciente.setApellidoMateno(rs.getString("apellido_materno"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPat"));
+                    paciente.setApellidoMateno(rs.getString("apellidoMat"));
                     paciente.setTelefono(rs.getString("telefono"));
+                    paciente.setFechaNacPaciente(rs.getDate("fechaNacimiento"));
                     
                     return paciente;
                 } else {
