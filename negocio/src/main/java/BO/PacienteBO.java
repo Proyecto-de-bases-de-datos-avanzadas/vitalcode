@@ -79,5 +79,15 @@ public class PacienteBO {
 
         return paciente;
     }
+    
+    public boolean ActualizarPaciente(PacienteNDTO pacienteDTO ) throws NegocioException, PersistenciaException {
+        if(pacienteDTO ==null){
+            throw new NegocioException("Paciente no puede ser nulo");
+        }
+        
+        PacienteMapper convertidorPaciente = new PacienteMapper();
+        Paciente paciente = convertidorPaciente.toEntity(pacienteDTO);
+        return pacienteDAO.ActualizarPaciente(paciente);
+    }
 
 }
