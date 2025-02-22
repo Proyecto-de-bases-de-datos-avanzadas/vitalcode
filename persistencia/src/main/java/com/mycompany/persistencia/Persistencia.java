@@ -29,6 +29,26 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
+        //prueba modificar paciente
+        Paciente paciente = new Paciente();
+        paciente.setIdUsuario(17); // ID del paciente a actualizar
+        paciente.setCorreoElectronicoPaciente("nuevo_correo@ejemplo.com");
+        paciente.setNombrePaciente("Nuevo Nombre");
+        paciente.setApellidoPaterno("Nuevo Apellido Paterno");
+        paciente.setApellidoMateno("Nuevo Apellido Materno");
+        paciente.setTelefono("1234567890");
+        paciente.setFechaNacPaciente(Date.valueOf("2005-07-05")); 
+        try {
+            // Llamar al método actualizarPaciente
+            boolean exito = pacienteDAO.ActualizarPaciente(paciente);
+            if (exito) {
+                System.out.println("Paciente actualizado exitosamente.");
+            } else {
+                System.out.println("Error al actualizar el paciente.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
         // prueba recuperar direecion por id
         try{
             Direccion direccion = direccionDAO.obtenerDireccionPorIdPaciente(17);
@@ -42,7 +62,7 @@ public class Persistencia {
 
         // prueba recuperar paciente por id
         try{
-            Paciente paciente = pacienteDAO.consultarPacientePorID(17);
+            Paciente paciente1 = pacienteDAO.consultarPacientePorID(17);
             if(paciente!=null){
                 System.out.println("Paciente encontrado");
                 System.out.println("Nombre: "+paciente.getNombrePaciente());

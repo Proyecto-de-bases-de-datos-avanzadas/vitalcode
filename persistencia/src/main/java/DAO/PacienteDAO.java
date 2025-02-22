@@ -108,4 +108,24 @@ public class PacienteDAO {
             throw new PersistenciaException("Error al consultar el paciente en la base de datos.", ex);
         }
     }
+    
+    public boolean ActualizarPaciente(Paciente paciente) throws PersistenciaException{
+        String sql = "UPDATE paciente SET correoElectronico = ?, nombre =? ,apellidoPat=? ,apellidoMat=? ,telefono=? ,fechaNacimiento =?  WHERE id_usuario = ?;";
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, paciente.getCorreoElectronicoPaciente());
+            ps.setString(2, paciente.getNombrePaciente());
+            ps.setString(3, paciente.getApellidoPaterno());
+            ps.setString(4, paciente.getApellidoMateno());
+            ps.setString(5, paciente.getTelefono());
+            ps.setDate(6, new java.sql.Date(paciente.getFechaNacPaciente().getTime()));
+            ps.setInt(7, paciente.getIdUsuario());
+            
+            int filasActualizadas = ps.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, "Error al actualizar el paciente con ID: " + paciente.getIdUsuario(), ex);
+            throw new PersistenciaException("Error al actualizar el paciente en la base de datos.", ex);
+        }
+    }
 }
