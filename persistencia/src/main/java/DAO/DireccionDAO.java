@@ -58,7 +58,7 @@ public class DireccionDAO {
     }
 
     // Método para actualizar dirección
-    public void actualizarDireccion(Direccion direccion) throws PersistenciaException {
+    public boolean  actualizarDireccion(Direccion direccion) throws PersistenciaException {
         String sentenciaSQL = "UPDATE direccion SET calle = ?, numero = ?, colonia = ? WHERE id_Paciente = ?";
         try (Connection conn = conexion.crearConexion();
                 PreparedStatement ps = conn.prepareCall(sentenciaSQL)) {
@@ -67,6 +67,7 @@ public class DireccionDAO {
             ps.setString(3, direccion.getColonia());
             ps.setInt(4, direccion.getId_Paciente());
             ps.executeUpdate();
+            return true;
         } catch (SQLException e) {
             throw new PersistenciaException("Error al actualizar la direccion...");
         }

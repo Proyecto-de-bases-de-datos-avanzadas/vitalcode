@@ -11,8 +11,10 @@ import Exception.NegocioException;
 import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -132,6 +134,11 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
         });
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnGuardarMouseClicked(evt);
+            }
+        });
 
         lblCalle.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblCalle.setText("Calle:");
@@ -276,6 +283,10 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
     private void txtColoniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtColoniaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtColoniaActionPerformed
+
+    private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
+        modificarDatos();
+    }//GEN-LAST:event_btnGuardarMouseClicked
     
     public void mostrarDatosActuales(String nombre){
         try {
@@ -296,6 +307,49 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
             txtColonia.setText(direccionRecuperada.getColonia());
         } catch (NegocioException | PersistenciaException ex) {
             Logger.getLogger(frmPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void modificarDatos() {
+        try {
+            String nombre = txtNombre.getText();
+            String apellidoPaterno = txtApellidoPat.getText();
+            String apellidoMaterno = txtApellidoMat.getText();
+            String correo = txtCorreo.getText();
+            String telefono = txtTelefono.getText();
+            java.util.Date fechaNac = jDateChooser1.getDate();
+            if (fechaNac == null) {
+                JOptionPane.showMessageDialog(this, "La fecha de nacimiento es inválida.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            //validar fecha de nacimiento
+            Date fechaActual = new Date();
+            if (fechaNac.after(fechaActual)) {
+                JOptionPane.showMessageDialog(null, "La fecha de nacimiento no puede ser una fecha futura.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            java.sql.Date sqlFechaNac = new java.sql.Date(fechaNac.getTime());
+            System.out.println(sqlFechaNac);
+
+            PacienteNDTO pacienteDTO = new PacienteNDTO(correo, nombre, apellidoPaterno, apellidoMaterno, telefono, sqlFechaNac);
+            
+                // Depuración
+            System.out.println("Datos del paciente:");
+            System.out.println("Nombre: " + nombre);
+            System.out.println("Apellido Paterno: " + apellidoPaterno);
+            System.out.println("Apellido Materno: " + apellidoMaterno);
+            System.out.println("Correo: " + correo);
+            System.out.println("Teléfono: " + telefono);
+            System.out.println("Fecha de Nacimiento: " + sqlFechaNac);
+
+            boolean exito = DependencyInjector.crearPacienteBO().ActualizarPaciente(pacienteDTO);
+            if (exito==true) {
+                JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al guardar los cambios.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NegocioException | PersistenciaException ex) {
+            JOptionPane.showMessageDialog(this, "Error al guardar los cambios:C : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(frmModificarPerfil.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     /**

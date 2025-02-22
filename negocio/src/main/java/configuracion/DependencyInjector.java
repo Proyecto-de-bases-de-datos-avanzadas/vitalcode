@@ -18,6 +18,10 @@ public class DependencyInjector {
         
         return pacienteBO;
     }
+    public static PacienteBO actualizarPaciente() {
+        IConexionBD conexion = new ConexionBD();
+        return new PacienteBO(conexion);
+    }
     public static UsuarioBO consultarUsuario(){
         IConexionBD conexion = new ConexionBD();
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
