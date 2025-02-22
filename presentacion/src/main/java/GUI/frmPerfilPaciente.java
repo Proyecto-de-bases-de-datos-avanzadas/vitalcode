@@ -18,12 +18,12 @@ import java.util.logging.Logger;
  *
  * @author erika
  */
-public class frmPerfilPaciente extends javax.swing.JFrame {
+public final class frmPerfilPaciente extends javax.swing.JFrame {
 
     /**
      * Creates new form frmPerfilPaciente
      */
-    private String nombrePaciente;
+     public final String nombrePaciente;
     public frmPerfilPaciente(String nombrePaciente) {
         this.nombrePaciente = nombrePaciente;
         initComponents();
@@ -259,7 +259,8 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
    
     private void btnModificarPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnModificarPerfilMouseClicked
-        frmModificarPerfil modificarPerfil = new frmModificarPerfil();
+        frmModificarPerfil modificarPerfil = new frmModificarPerfil(nombrePaciente);
+        modificarPerfil.mostrarDatosActuales(nombrePaciente);
         modificarPerfil.setVisible(true);
         this.setVisible(false);
         
@@ -271,7 +272,6 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
-        pantallaPaciente.setNombrePaciente(nombrePaciente);
         pantallaPaciente.setVisible(true);
         this.setVisible(false);
         

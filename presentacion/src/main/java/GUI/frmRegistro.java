@@ -259,6 +259,7 @@ public class frmRegistro extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistroActionPerformed
 
     private void btnRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegistroMouseClicked
+        //recuperar datos de los campos de texto
         String nombre = txtNombre.getText();
         String apellidoPaterno = txtApellidoPat.getText();
         String apellidoMaterno = txtApellidoMat.getText();
@@ -268,18 +269,39 @@ public class frmRegistro extends javax.swing.JFrame {
         String calle = txtCalle.getText();
         String numCasa = txtNumeroCasa.getText();
         String colonia = txtColonia.getText();
+        //recuperar la fecha
         Date fechaNac = new java.sql.Date(DtFechaNac.getDate().getTime());
         
+        //validar que los campos esten completos
+        if (nombre.isEmpty() || apellidoPaterno.isEmpty() || apellidoMaterno.isEmpty() ||
+            correo.isEmpty() || password.isEmpty() || telefono.isEmpty() ||
+            calle.isEmpty() || numCasa.isEmpty() || colonia.isEmpty() || fechaNac == null) {
+            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        //validar el formato del correo
+        if (!correo.contains("@")) {
+            JOptionPane.showMessageDialog(null, "Correo electrónico inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        //validar fecha de nacimiento
+        Date fechaActual = new Date();
+        if (fechaNac.after(fechaActual)) {
+            JOptionPane.showMessageDialog(null, "La fecha de nacimiento no puede ser una fecha futura.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        //crear onjetos
         UsuarioNDTO usuario = new UsuarioNDTO(correo, password, "paciente");
-    PacienteNDTO paciente = new PacienteNDTO(correo, nombre, apellidoPaterno, apellidoMaterno, telefono, (java.sql.Date) fechaNac);
-    DireccionNDTO direccion = new DireccionNDTO(0, calle, numCasa, colonia); // Usa 0 temporalmente para idPaciente
-
+        PacienteNDTO paciente = new PacienteNDTO(correo, nombre, apellidoPaterno, apellidoMaterno, telefono, (java.sql.Date) fechaNac);
+        DireccionNDTO direccion = new DireccionNDTO(0, calle, numCasa, colonia); // Usa 0 temporalmente para idPaciente
+        
+        
     try {
         int idPacienteGenerado = DependencyInjector.crearPacienteBO().registrarPaciente(usuario, paciente, direccion);
         if (idPacienteGenerado > 0) {
             JOptionPane.showMessageDialog(null, "Registro exitoso. ID del paciente: " + idPacienteGenerado, "Registro", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "Error en el registro.", "Registro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error en el registro.", "Registro", JOptionPane.INFORMATION_MESSAGE);
         }
     } catch (NegocioException ne) {
         JOptionPane.showMessageDialog(null, "Error de negocio: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
