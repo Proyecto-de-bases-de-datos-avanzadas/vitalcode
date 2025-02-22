@@ -4,6 +4,7 @@
 
 package com.mycompany.negocio;
 
+import BO.DireccionBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.DireccionNDTO;
@@ -23,7 +24,15 @@ public class Negocio {
 
     public static void main(String[] args) throws PersistenciaException, NegocioException {
         IConexionBD conexionBD = new ConexionBD();
+        
+        //recuperarar direccion por id
+        
         int idPaciente = 17;
+        DireccionBO direccionBO = new DireccionBO(conexionBD);
+        DireccionNDTO direccion = direccionBO.recuperarDireccionPorID(idPaciente);
+        System.out.println("Direccion Recuperada");
+        System.out.println("Calle: "+direccion.getCalle());
+        
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
         PacienteNDTO paciente = pacienteBO.recuperarPacienteID(idPaciente);
         System.out.println("Paciente encontrado");
@@ -53,7 +62,7 @@ public class Negocio {
         PacienteNDTO pacienteAregistrar = new PacienteNDTO("odiolosDAO@gmail.com", "Lucia", "Vasquez", "Gastelum", "6442546583", Date.valueOf("2005-07-05"));
         UsuarioNDTO usuarioARegistrar = new UsuarioNDTO("lucia123", "miisis", "Paciente");
 
-        DireccionNDTO direccion = new DireccionNDTO(pacienteAregistrar.getIdUsuario(), "calle11", "1352", "colonia1");
+        DireccionNDTO direccionq = new DireccionNDTO(pacienteAregistrar.getIdUsuario(), "calle11", "1352", "colonia1");
         try{
             DependencyInjector.crearPacienteBO().registrarPaciente(usuarioARegistrar, pacienteAregistrar,direccion);
         
