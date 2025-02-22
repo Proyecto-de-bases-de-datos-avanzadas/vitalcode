@@ -23,7 +23,11 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
      * Creates new form frmPerfilPaciente
      */
     private String nombrePaciente;
-
+    public frmPerfilPaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+        initComponents();
+        mostrarPerfil(nombrePaciente); 
+    }
     public void mostrarPerfil(String nombrePaciente){
         try {
             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
@@ -39,11 +43,7 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
             Logger.getLogger(frmPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public frmPerfilPaciente() {
-        initComponents();
-        
-    }
-
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -265,9 +265,9 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnModificarPerfilActionPerformed
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
-        frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
-        pantallaprincipal.setNombrePaciente(nombrePaciente);
-        pantallaprincipal.setVisible(true);
+        frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
+        pantallaPaciente.setNombrePaciente(nombrePaciente);
+        pantallaPaciente.setVisible(true);
         this.setVisible(false);
         
     }//GEN-LAST:event_btnRegresar1MouseClicked
