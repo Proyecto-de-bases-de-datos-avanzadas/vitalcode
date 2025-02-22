@@ -28,6 +28,17 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
+        
+        // prueba recuperar direecion por id
+        try{
+            Direccion direccion = direccionDAO.obtenerDireccionPorIdPaciente(17);
+            if(direccion!=null){
+                System.out.println("Direccion encontrada");
+                System.out.println("Calle: "+direccion.getCalle());
+            }
+        }catch (PersistenciaException e) {
+            e.printStackTrace();
+            }
 
         // prueba recuperar paciente por id
         try{
