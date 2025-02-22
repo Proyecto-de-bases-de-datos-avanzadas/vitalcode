@@ -24,7 +24,20 @@ public class Negocio {
 
     public static void main(String[] args) throws PersistenciaException, NegocioException {
         IConexionBD conexionBD = new ConexionBD();
-        
+        PacienteBO pacienteBO = new PacienteBO(conexionBD);
+        //Actualizar paciente 
+        PacienteNDTO pacienteActualizar = new PacienteNDTO(18, "CorreoNegocio@gmail.com", "Negocio", "Capa", "Negpcio", "852085720", Date.valueOf("2005-05-20"));
+        try {
+            // Llamar al método actualizarPaciente
+            boolean exito = pacienteBO.ActualizarPaciente(pacienteActualizar);
+            if (exito) {
+                System.out.println("Paciente actualizado exitosamente.");
+            } else {
+                System.out.println("Error al actualizar el paciente.");
+            }
+        } catch (NegocioException | PersistenciaException e) {
+            e.printStackTrace();
+        }
         //recuperarar direccion por id
         
         int idPaciente = 17;
@@ -33,7 +46,7 @@ public class Negocio {
         System.out.println("Direccion Recuperada");
         System.out.println("Calle: "+direccion.getCalle());
         
-        PacienteBO pacienteBO = new PacienteBO(conexionBD);
+        
         PacienteNDTO paciente = pacienteBO.recuperarPacienteID(idPaciente);
         System.out.println("Paciente encontrado");
         System.out.println("Nombre Pacienre"+ paciente.getNombre());
