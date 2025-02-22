@@ -113,7 +113,7 @@ public class CitaDAO {
     
     //???
     public boolean agendarCitaEmergencia(int idPaciente) throws PersistenciaException {
-        String sql = "{CALL asignar_cita_emergencia(?)}";
+        String sql = "{CALL AsignarCitaEmergencia(?)}";
 
         try (Connection conn = conexion.crearConexion();
              CallableStatement cs = conn.prepareCall(sql)) {

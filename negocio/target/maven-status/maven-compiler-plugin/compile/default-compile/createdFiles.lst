@@ -1,3 +1,4 @@
+DTO/DireccionNDTO.class
 Mapper/UsuarioMapper.class
 BO/PacienteBO.class
 Exception/NegocioException.class

@@ -2,6 +2,7 @@
 /Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/BO/UsuarioBO.java
 /Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/configuracion/DependencyInjector.java
 /Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/DTO/PacienteVDTO.java
+/Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/DTO/DireccionNDTO.java
 /Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/Mapper/UsuarioMapper.java
 /Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/DTO/PacienteNDTO.java
 /Users/alexnieblas/Documents/develop/proyectos/vitalcode/negocio/src/main/java/Mapper/PacienteMapper.java
