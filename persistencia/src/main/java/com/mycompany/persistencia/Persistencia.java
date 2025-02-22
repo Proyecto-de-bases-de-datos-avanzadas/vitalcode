@@ -27,6 +27,7 @@ public class Persistencia {
         MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
+        CitaDAO citaDAO = new CitaDAO(conexionBD);
 
         // prueba recuperar paciente por id
         try{

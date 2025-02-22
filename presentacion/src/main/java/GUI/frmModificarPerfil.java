@@ -222,9 +222,9 @@ public class frmModificarPerfil extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresar1MouseClicked
 
     private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
-        frmPerfilPaciente perfil = new frmPerfilPaciente();
+       /* frmPerfilPaciente perfil = new frmPerfilPaciente();
         perfil.setVisible(true);
-        this.setVisible(false);
+        this.setVisible(false);*/
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
     private void jCalendar1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jCalendar1PropertyChange
