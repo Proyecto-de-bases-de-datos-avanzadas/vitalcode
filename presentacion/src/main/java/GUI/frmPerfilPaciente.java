@@ -9,6 +9,7 @@ import DTO.UsuarioNDTO;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,24 +23,27 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
      * Creates new form frmPerfilPaciente
      */
     private String nombrePaciente;
-    public void getNombrePaciente (String nombrePaciente){
+    public frmPerfilPaciente(String nombrePaciente) {
         this.nombrePaciente = nombrePaciente;
+        initComponents();
+        mostrarPerfil(nombrePaciente); 
     }
-    public void mostrarPerfil(){
+    public void mostrarPerfil(String nombrePaciente){
         try {
             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
             int idUsuario = usuarioRecuperado.getId();
             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
             txtNombre.setText(paciente.getNombre()+" "+paciente.getApellidoPaterno()+" "+paciente.getApellidoMaterno());
+            txtCorreo.setText(paciente.getCorreoElectronico());
+            txtTelefono.setText(paciente.getTelefono());
+            SimpleDateFormat formateadorFecha = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaTexto = formateadorFecha.format(paciente.getFechaNacimiento());
+            txtFechaNac.setText(fechaTexto);
         } catch (NegocioException | PersistenciaException ex) {
             Logger.getLogger(frmPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public frmPerfilPaciente() {
-        initComponents();
-        
-    }
-
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,7 +58,7 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
         lblNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         lblDireccion = new javax.swing.JLabel();
-        txtDireccion = new javax.swing.JTextField();
+        txtCalle = new javax.swing.JTextField();
         lblTelefono = new javax.swing.JLabel();
         txtFechaNac = new javax.swing.JTextField();
         lblFechaNac = new javax.swing.JLabel();
@@ -63,6 +67,10 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
         txtCorreo = new javax.swing.JTextField();
         btnModificarPerfil = new javax.swing.JButton();
         btnRegresar1 = new javax.swing.JButton();
+        lblDireccion1 = new javax.swing.JLabel();
+        txtNumero = new javax.swing.JTextField();
+        lblDireccion2 = new javax.swing.JLabel();
+        txtColonia = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mi Perfil");
@@ -82,9 +90,9 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
         txtNombre.setEditable(false);
 
         lblDireccion.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        lblDireccion.setText("Dirección:");
+        lblDireccion.setText("Calle:");
 
-        txtDireccion.setEditable(false);
+        txtCalle.setEditable(false);
 
         lblTelefono.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblTelefono.setText("Numero Telefonico:");
@@ -129,34 +137,20 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
             }
         });
 
+        lblDireccion1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        lblDireccion1.setText("Numero:");
+
+        txtNumero.setEditable(false);
+
+        lblDireccion2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        lblDireccion2.setText("Colonia:");
+
+        txtColonia.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(92, 92, 92)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblCorreo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtCorreo))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombre)
-                            .addComponent(txtDireccion)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblTelefono)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTelefono))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblFechaNac)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFechaNac)))
-                .addGap(76, 76, 76))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 248, Short.MAX_VALUE)
                 .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -167,6 +161,43 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTitulo)
                 .addGap(306, 306, 306))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCalle))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(txtNombre))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblFechaNac)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFechaNac))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblTelefono)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtTelefono))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblCorreo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtCorreo))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblDireccion1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtNumero))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblDireccion2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtColonia)))))
+                .addGap(75, 75, 75))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,14 +208,10 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDireccion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtFechaNac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFechaNac))
+                    .addComponent(lblFechaNac)
+                    .addComponent(txtFechaNac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTelefono)
@@ -193,11 +220,23 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCorreo)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(73, 73, 73)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDireccion)
+                    .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDireccion1)
+                    .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDireccion2)
+                    .addComponent(txtColonia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificarPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -226,8 +265,9 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnModificarPerfilActionPerformed
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
-        frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
-        pantallaprincipal.setVisible(true);
+        frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
+        pantallaPaciente.setNombrePaciente(nombrePaciente);
+        pantallaPaciente.setVisible(true);
         this.setVisible(false);
         
     }//GEN-LAST:event_btnRegresar1MouseClicked
@@ -247,14 +287,18 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCorreo;
     private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblDireccion1;
+    private javax.swing.JLabel lblDireccion2;
     private javax.swing.JLabel lblFechaNac;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextField txtCalle;
+    private javax.swing.JTextField txtColonia;
     private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtFechaNac;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtNumero;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

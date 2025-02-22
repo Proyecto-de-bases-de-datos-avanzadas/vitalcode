@@ -28,6 +28,7 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
+
         // prueba recuperar paciente por id
         try{
             Paciente paciente = pacienteDAO.consultarPacientePorID(17);
