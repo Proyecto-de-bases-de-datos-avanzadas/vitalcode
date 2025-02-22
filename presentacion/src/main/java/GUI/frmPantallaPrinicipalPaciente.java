@@ -271,7 +271,7 @@ public class frmPantallaPrinicipalPaciente extends javax.swing.JFrame {
 
     private void btnPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPerfilMouseClicked
         frmPerfilPaciente perfilPaciente = new frmPerfilPaciente();
-        perfilPaciente.getNombrePaciente(nombrePaciente);
+        perfilPaciente.mostrarPerfil(nombrePaciente);
         perfilPaciente.setVisible(true);
         
         this.setVisible(false);
