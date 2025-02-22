@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import DTO.DireccionNDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
 import Exception.NegocioException;
@@ -39,6 +40,10 @@ public class frmPerfilPaciente extends javax.swing.JFrame {
             SimpleDateFormat formateadorFecha = new SimpleDateFormat("dd/MM/yyyy");
             String fechaTexto = formateadorFecha.format(paciente.getFechaNacimiento());
             txtFechaNac.setText(fechaTexto);
+            DireccionNDTO direccionRecuperada = DependencyInjector.consultarDireccion().recuperarDireccionPorID(idUsuario);
+            txtCalle.setText(direccionRecuperada.getCalle());
+            txtNumero.setText(direccionRecuperada.getNumero());
+            txtColonia.setText(direccionRecuperada.getColonia());
         } catch (NegocioException | PersistenciaException ex) {
             Logger.getLogger(frmPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
