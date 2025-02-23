@@ -2,12 +2,15 @@ package DAO;
 
 import Exception.PersistenciaException;
 import conexion.IConexionBD;
+import entidades.Horario;
 import entidades.Medico;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,5 +82,37 @@ public class MedicoDAO {
             Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, "Error al recuperar el médico con ID: " + idMedico, ex);
             throw new PersistenciaException("Error al recuperar el médico en la base de datos.", ex);
         }
+    }
+    
+    
+
+    public List<Horario> consultarHorarioMedico(int idMedico) throws PersistenciaException {
+        String sql = "SELECT h.id, h.diaSemana, h.horaEntrada, h.horaSalida " +
+                     "FROM Horario h " +
+                     "INNER JOIN Medico_Horario mh ON h.id = mh.id_horario " +
+                     "WHERE mh.id_medico = ?";
+
+        List<Horario> horarios = new ArrayList<>();
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idMedico);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Horario horario = new Horario();
+                    horario.setId(rs.getInt("id"));
+                    horario.setDiaSemana(rs.getString("diaSemana"));
+                    horario.setHoraEntrada(rs.getTime("horaEntrada"));
+                    horario.setHoraSalida(rs.getTime("horaSalida"));
+                    horarios.add(horario);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, "Error al recuperar el horario del médico con ID: " + idMedico, ex);
+            throw new PersistenciaException("Error al recuperar el horario del médico en la base de datos.", ex);
+        }
+
+        return horarios;
     }
 }
