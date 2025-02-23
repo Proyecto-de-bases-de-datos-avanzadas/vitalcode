@@ -9,9 +9,11 @@ import entidades.Usuario;
  */
 public interface IUsuarioDAO {
     
-    Usuario agregarUsuario(Usuario usuario) throws PersistenciaException;
+    public Usuario agregarUsuario(Usuario usuario) throws PersistenciaException;
     
-    Usuario consultarUsuarioPorID(int idUsuario) throws PersistenciaException;
+    public Usuario consultarUsuarioPorID(int idUsuario) throws PersistenciaException;
+    
+    public Usuario buscarUsuarioPorUsuario(String usuario) throws PersistenciaException;
 }
 
 

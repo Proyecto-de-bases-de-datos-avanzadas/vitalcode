@@ -50,7 +50,7 @@ public class Persistencia {
         }
          try {
             // Probar el método getDoctoresDisponibles
-            List<Medico> doctores = citaDAO.getDoctoresDisponibles("Cardiología");
+            List<Medico> doctores = citaDAO.obtenerDoctoresDisponibles("Cardiología");
             System.out.println("Doctores disponibles en Cardiología:");
             for (Medico doctor : doctores) {
                 System.out.println("ID: " + doctor.getIdUsuario() + ", Nombre: " + doctor.getNombre() + ", Especialidad: " + doctor.getEspecialidadMedico()+ ", Cédula: " + doctor.getCedulaMedico()+ ", Estado: " + doctor.getEstadoMedico());
@@ -63,7 +63,7 @@ public class Persistencia {
          try {
             // Probar el método getHorarioDisponible
             int idMedico = 3; 
-            List<String> horarios = citaDAO.getHorarioDisponible(idMedico);
+            List<String> horarios = citaDAO.obtenerHorarioDisponible(idMedico);
 
             System.out.println("Horarios disponibles para el doctor con ID " + idMedico + ":");
             for (String horario : horarios) {
@@ -316,7 +316,6 @@ public class Persistencia {
         }
         
         //Pruebas citas:
-        
         Cita nuevaCita = new Cita();
         nuevaCita.setIdPaciente(1);
         nuevaCita.setIdMedico(3);
@@ -368,9 +367,5 @@ public class Persistencia {
             System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
             e.printStackTrace();
         }
-
-
     }
-    
-    
 }
