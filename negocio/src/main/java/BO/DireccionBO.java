@@ -6,6 +6,7 @@ package BO;
 
 import DAO.DireccionDAO;
 import DTO.DireccionNDTO;
+import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.DireccionMapper;
 import conexion.IConexionBD;
@@ -27,5 +28,14 @@ public class DireccionBO {
         DireccionMapper convertidorDireccion = new DireccionMapper();
         DireccionNDTO direccionRec = convertidorDireccion.toDTO(direccionRecuperada);
         return direccionRec;
+    }
+    
+    public boolean actualizarDireccion(DireccionNDTO direccionDTO) throws PersistenciaException, NegocioException {
+        if (direccionDTO == null) {
+            throw new NegocioException("La dirección no puede ser nula");
+        }
+        DireccionMapper convertidorDireccion = new DireccionMapper();
+        Direccion direccion = convertidorDireccion.ToEntity(direccionDTO);
+        return direccionDAO.actualizarDireccion(direccion);
     }
 }

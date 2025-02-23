@@ -22,7 +22,7 @@ public class inicio {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // TODO code application logic heremi
         
        frmIniciarSesion inicioSesion = new frmIniciarSesion();
         inicioSesion.setVisible(true);

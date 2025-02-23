@@ -29,6 +29,14 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
+        // modificar direccion 
+        Direccion direccion1 = new Direccion(5, "calle1133", "245", "Colonia3525");
+        boolean exito1 = direccionDAO.actualizarDireccion(direccion1);
+        if(exito1){
+            System.out.println("direccion actualizada");
+        }else{
+            System.out.println("No se pudo actualizar la direccion");
+        }
         //prueba modificar paciente
         Paciente paciente = new Paciente();
         paciente.setIdUsuario(17); // ID del paciente a actualizar
