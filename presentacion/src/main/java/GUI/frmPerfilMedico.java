@@ -4,19 +4,42 @@
  */
 package GUI;
 
+import DTO.MedicoDTO;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
  */
-public class frmPerfilMedico extends javax.swing.JFrame {
+public final class frmPerfilMedico extends javax.swing.JFrame {
 
     /**
      * Creates new form frmPerfilMedico
      */
-    public frmPerfilMedico() {
+    private final String nombre;
+    public frmPerfilMedico(String nombre) {
+        
+        this.nombre= nombre;
         initComponents();
+        mostrarPerfil(nombre);
     }
-
+    
+    public void mostrarPerfil(String nombreMed){
+        try {
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico().recuperarMedicoUsuario(nombre);
+            txtNombre.setText(medicoRecuperado.getNombre());
+            txtCedulaProf.setText(medicoRecuperado.getCedula());
+            txtEspecialida.setText(medicoRecuperado.getEspecialidad());
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(frmPerfilMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,12 +60,11 @@ public class frmPerfilMedico extends javax.swing.JFrame {
         lblHorario = new javax.swing.JLabel();
         txtHorario = new javax.swing.JTextField();
         lblEstado = new javax.swing.JLabel();
-        radInactivo = new javax.swing.JRadioButton();
-        radActivo = new javax.swing.JRadioButton();
         btnRegresar1 = new javax.swing.JButton();
+        cmbEstado = new javax.swing.JComboBox<>();
+        btnCambiarEstado = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(854, 498));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -74,13 +96,6 @@ public class frmPerfilMedico extends javax.swing.JFrame {
         lblEstado.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblEstado.setText("Estado:");
 
-        radInactivo.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        radInactivo.setText("Inactivo");
-
-        radActivo.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        radActivo.setSelected(true);
-        radActivo.setText("Activo");
-
         btnRegresar1.setBackground(new java.awt.Color(0, 0, 0));
         btnRegresar1.setForeground(new java.awt.Color(255, 255, 255));
         btnRegresar1.setText("Regresar");
@@ -94,6 +109,10 @@ public class frmPerfilMedico extends javax.swing.JFrame {
                 btnRegresar1ActionPerformed(evt);
             }
         });
+
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        btnCambiarEstado.setText("Modificar Estado");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -126,10 +145,10 @@ public class frmPerfilMedico extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(169, 169, 169)
                 .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(radActivo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(radInactivo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCambiarEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -139,7 +158,7 @@ public class frmPerfilMedico extends javax.swing.JFrame {
                         .addGap(333, 333, 333))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(335, 335, 335))))
+                        .addGap(334, 334, 334))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,11 +184,11 @@ public class frmPerfilMedico extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEstado)
-                    .addComponent(radActivo)
-                    .addComponent(radInactivo))
-                .addGap(18, 18, 18)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCambiarEstado))
+                .addGap(31, 31, 31)
                 .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -188,7 +207,9 @@ public class frmPerfilMedico extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrincipalMedico pantallaprincipal = new frmPantallaPrincipalMedico();
+        pantallaprincipal.setNombreMedico(nombre);
         pantallaprincipal.setVisible(true);
+        
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresar1MouseClicked
 
@@ -199,40 +220,12 @@ public class frmPerfilMedico extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmPerfilMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmPerfilMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmPerfilMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmPerfilMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmPerfilMedico().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCambiarEstado;
     private javax.swing.JButton btnRegresar1;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblEspecialidad;
@@ -240,8 +233,6 @@ public class frmPerfilMedico extends javax.swing.JFrame {
     private javax.swing.JLabel lblHorario;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JRadioButton radActivo;
-    private javax.swing.JRadioButton radInactivo;
     private javax.swing.JTextField txtCedulaProf;
     private javax.swing.JTextField txtEspecialida;
     private javax.swing.JTextField txtHorario;

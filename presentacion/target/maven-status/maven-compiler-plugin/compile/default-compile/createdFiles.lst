@@ -14,7 +14,6 @@ GUI\frmCitasMedico$2.class
 GUI\frmHistorialCitasMedico$2.class
 GUI\frmModificarPerfil$3.class
 GUI\frmPantallaPrincipalMedico$7.class
-GUI\frmPerfilMedico$3.class
 GUI\frmEliminarCita$1.class
 GUI\frmEliminarCita.class
 GUI\frmConsulta$1.class
@@ -30,7 +29,6 @@ GUI\frmPantallaPrinicipalPaciente$5.class
 GUI\frmAgregarCita$4.class
 GUI\frmPerfilPaciente$4.class
 GUI\frmCitasPaciente$4.class
-GUI\frmPantallaPrincipalMedico$8.class
 GUI\frmCitasPaciente.class
 GUI\frmCitaEmergencia$2.class
 GUI\frmConsulta$2.class

@@ -186,6 +186,7 @@ public class frmIniciarSesion extends javax.swing.JFrame {
                     this.setVisible(false);
                 } if ("Medico".equals(usuarioRecuperado.getTipo_usuario())) {
                     frmPantallaPrincipalMedico pantallaMedico = new frmPantallaPrincipalMedico();
+                    pantallaMedico.setNombreMedico(usuario);
                     pantallaMedico.setVisible(true);
                     this.setVisible(false);
                 } 

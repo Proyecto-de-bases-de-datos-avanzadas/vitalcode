@@ -5,7 +5,10 @@
 package GUI;
 
 import DTO.MedicoDTO;
+import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,9 +26,14 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
     
     public void setNombreMedico(String nombre){
         this.nombreMedico = nombre;
-        /*try{
-            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico()
-        }*/
+        try{
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico().recuperarMedicoUsuario(nombre);
+            int idUsuario = medicoRecuperado.getId();
+            String nombreMed = medicoRecuperado.getNombre();
+            lblTitulo.setText("Bienvenid@ "+nombreMed);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(frmPantallaPrincipalMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,13 +55,12 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
         bntCerrarSesion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(854, 524));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
         jPanel1.setPreferredSize(new java.awt.Dimension(854, 498));
 
-        lblTitulo.setFont(new java.awt.Font("Century Gothic", 0, 48)); // NOI18N
+        lblTitulo.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
         lblTitulo.setText("Bienvenid@");
 
         btnPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/ic-username_97587.png"))); // NOI18N
@@ -120,17 +127,6 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(303, 303, 303)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(181, 181, 181)
-                        .addComponent(jLabel2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(253, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,14 +147,26 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(bntCerrarSesion)
                         .addGap(26, 26, 26))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(303, 303, 303)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(181, 181, 181)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(44, 44, 44)
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnPerfil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPerfil, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
                     .addComponent(btnCitas, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,7 +197,8 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
 
     private void btnPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPerfilMouseClicked
         
-        frmPerfilMedico perfilMedico = new frmPerfilMedico();
+        frmPerfilMedico perfilMedico = new frmPerfilMedico(nombreMedico);
+        perfilMedico.mostrarPerfil(nombreMedico);
         perfilMedico.setVisible(true);
         this.setVisible(false);
 
@@ -228,37 +237,7 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmPantallaPrincipalMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmPantallaPrincipalMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmPantallaPrincipalMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmPantallaPrincipalMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmPantallaPrincipalMedico().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntCerrarSesion;
