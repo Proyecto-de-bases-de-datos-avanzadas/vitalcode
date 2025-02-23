@@ -32,7 +32,22 @@ public class Negocio {
         // Crear una instancia de MedicoBO
         MedicoBO medicoBO = new MedicoBO(conexionBD);
         
-        //recuperar medico por nombre de usuario
+        System.out.println("prueba baja medico");
+        
+        boolean baja = medicoBO.BajaMedico(77);
+        if (baja) {
+            System.out.println("medico dado de baja");
+        }else{
+            System.out.println("no se pudo");
+        }
+        System.out.println("prueba alta medico");
+        boolean alta = medicoBO.AltaMedico(77);
+        if (alta) {
+            System.out.println("medico dado de alta");
+        }else{
+            System.out.println("no se pudo x2");
+        }
+       //recuperar medico por nombre de usuario
         String usuarioMedido = "23623gf23";
         MedicoDTO medicoPorUsuario = medicoBO.recuperarMedicoUsuario(usuarioMedido);
         System.out.println("nombre medico: "+medicoPorUsuario.getNombre());

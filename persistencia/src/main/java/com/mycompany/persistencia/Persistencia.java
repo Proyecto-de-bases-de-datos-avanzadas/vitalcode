@@ -32,6 +32,22 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
+        //probar metodo dar de baja medico
+        int idMedicoBaja = 77;
+        boolean exitoBaja = medicoDAO.darDeBajaMedico(idMedicoBaja);
+        if(exitoBaja==true){
+            System.out.println("Medico Inactivo");
+        }
+        else{
+            System.out.println("no se pudo gg");
+        }
+        
+        boolean exitoAlta = medicoDAO.activarMedico(idMedicoBaja);
+        if(exitoAlta==true){
+            System.out.println("Medico Activo");
+        }else{
+            System.out.println("no se pudox2");
+        }
          try {
             // Probar el método getDoctoresDisponibles
             List<Medico> doctores = citaDAO.getDoctoresDisponibles("Cardiología");

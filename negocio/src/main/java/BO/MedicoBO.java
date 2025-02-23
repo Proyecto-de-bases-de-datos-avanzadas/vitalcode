@@ -13,6 +13,8 @@ import conexion.IConexionBD;
 import entidades.Horario;
 import entidades.Medico;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -45,5 +47,23 @@ public class MedicoBO {
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al recuperar el horario del médico con ID: " + idMedico, e);
         }
+    }
+    
+    public boolean BajaMedico (int idMedico){
+        try {
+            return medicoDAO.darDeBajaMedico(idMedico);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(MedicoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean AltaMedico (int idMedico){
+        try {
+            return medicoDAO.activarMedico(idMedico);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(MedicoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }
