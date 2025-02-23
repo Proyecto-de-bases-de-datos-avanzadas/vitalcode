@@ -99,6 +99,20 @@ public class MedicoDAO {
             throw new PersistenciaException("Error al dar de baja al médico en la base de datos.");
         }
     }
+    public boolean activarMedico (int idUsuario) throws PersistenciaException{
+        String sql = "UPDATE Medico SET estado = 'Activo' WHERE id_usuario = ?";
+
+        try (Connection conn = conexion.crearConexion();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+
+            int filasActualizadas = ps.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenciaException("Error al dar de baja al médico en la base de datos.");
+        }
+    }
     public Medico consultarMedicoID(int idMedico) throws PersistenciaException {
         String sql = "SELECT * FROM medico WHERE id_usuario = ?;";
         try (Connection conn = conexion.crearConexion();
