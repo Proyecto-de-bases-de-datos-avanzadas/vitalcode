@@ -32,6 +32,7 @@ public class Negocio {
         IConexionBD conexionBD = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
         // Crear una instancia de MedicoBO
+        //faltan inserts en la tabla jsj
         MedicoBO medicoBO = new MedicoBO(conexionBD);
         // Consultar todas las citas de un paciente
             try {
