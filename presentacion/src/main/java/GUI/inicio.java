@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edidrt this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edidrmt this template
  */
 package GUI;
 

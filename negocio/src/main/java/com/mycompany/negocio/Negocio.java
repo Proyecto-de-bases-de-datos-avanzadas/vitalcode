@@ -31,7 +31,19 @@ public class Negocio {
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
         // Crear una instancia de MedicoBO
         MedicoBO medicoBO = new MedicoBO(conexionBD);
-        
+        //Actualizar paciente 
+        PacienteNDTO pacienteActualizar = new PacienteNDTO(18, "CorreoNegocio11@gmail.com", "Negocio", "Capa", "Negpcio", "852085720", Date.valueOf("2005-05-20"));
+        try {
+            // Llamar al método actualizarPaciente
+            boolean exito = pacienteBO.ActualizarPaciente(pacienteActualizar);
+            if (exito) {
+                System.out.println("Paciente actualizado exitosamente.");
+            } else {
+                System.out.println("Error al actualizar el paciente.");
+            }
+        } catch (NegocioException | PersistenciaException e) {
+            e.printStackTrace();
+        }
         System.out.println("prueba baja medico");
         
         boolean baja = medicoBO.BajaMedico(77);
@@ -89,19 +101,7 @@ public class Negocio {
             e.printStackTrace();
         }
         
-        //Actualizar paciente 
-        PacienteNDTO pacienteActualizar = new PacienteNDTO(18, "CorreoNegocio@gmail.com", "Negocio", "Capa", "Negpcio", "852085720", Date.valueOf("2005-05-20"));
-        try {
-            // Llamar al método actualizarPaciente
-            boolean exito = pacienteBO.ActualizarPaciente(pacienteActualizar);
-            if (exito) {
-                System.out.println("Paciente actualizado exitosamente.");
-            } else {
-                System.out.println("Error al actualizar el paciente.");
-            }
-        } catch (NegocioException | PersistenciaException e) {
-            e.printStackTrace();
-        }
+        
         //recuperarar direccion por id
         
         int idPaciente = 17;

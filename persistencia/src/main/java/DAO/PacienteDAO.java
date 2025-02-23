@@ -2,6 +2,7 @@ package DAO;
 
 import Exception.PersistenciaException;
 import conexion.IConexionBD;
+import entidades.Cita;
 import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.CallableStatement;
@@ -10,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
@@ -128,4 +131,57 @@ public class PacienteDAO {
             throw new PersistenciaException("Error al actualizar el paciente en la base de datos.", ex);
         }
     }
+    
+     
+    
+     public List<Cita> obtenerTodasLasCitas(int idPaciente) throws SQLException {
+        List<Cita> citas = new ArrayList<>();
+        String query = "SELECT * FROM Cita WHERE id_paciente = ?";
+
+        try (Connection conn = conexion.crearConexion();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idPaciente);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+                    cita.setIdCita(rs.getInt("id"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setFecha(rs.getTimestamp("fechaHora"));
+                    cita.setEstadoCita(rs.getString("estado"));
+                    cita.setTipoCita(rs.getString("tipoDeCita"));
+                    citas.add(cita);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citas;
+    } 
+    public List<Cita> obtenerCitasPendientes(int idPaciente) throws SQLException {
+    List<Cita> citas = new ArrayList<>();
+    String query = "SELECT * FROM Cita WHERE id_paciente = ? AND fechaHora > NOW() AND estado = 'Pendiente'";
+
+    try (Connection conn = conexion.crearConexion();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, idPaciente);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Cita cita = new Cita();
+                cita.setIdCita(rs.getInt("id"));
+                cita.setIdPaciente(rs.getInt("id_paciente"));
+                cita.setIdMedico(rs.getInt("id_medico"));
+                cita.setFecha(rs.getTimestamp("fechaHora"));
+                cita.setEstadoCita(rs.getString("estado"));
+                cita.setTipoCita(rs.getString("tipoDeCita"));
+                citas.add(cita);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Puedes personalizar el manejo de excepciones según tus necesidades
+    }   catch (PersistenciaException ex) {
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return citas;
+}
 }

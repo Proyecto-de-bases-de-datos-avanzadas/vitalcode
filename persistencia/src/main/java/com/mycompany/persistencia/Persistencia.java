@@ -15,7 +15,11 @@ import entidades.Medico;
 import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,6 +35,33 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
+        
+        // Agregar una nueva cita
+            Cita nuevaCita = new Cita();
+            nuevaCita.setIdPaciente(37);
+            nuevaCita.setIdMedico(3);
+            nuevaCita.setFecha(Timestamp.valueOf("2025-03-01 10:00:00"));
+            nuevaCita.setEstadoCita("Pendiente");
+            nuevaCita.setFolioCita(12345);
+            nuevaCita.setTipoCita("Regular");
+
+            try {
+                citaDAO.agendarCita(nuevaCita);
+                System.out.println("Cita agregada exitosamente.");
+            } catch (PersistenciaException e) {
+                System.err.println("Error al agregar la cita: " + e.getMessage());
+            }
+
+            // Consultar todas las citas de un paciente
+            try {
+                List<Cita> citas = pacienteDAO.obtenerTodasLasCitas(1);
+                System.out.println("Citas del paciente:");
+                for (Cita cita : citas) {
+                    System.out.println(cita);
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al consultar las citas: " + e.getMessage());
+            }
         
         //probar metodo dar de baja medico
         int idMedicoBaja = 77;
@@ -314,7 +345,7 @@ public class Persistencia {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
         }
-        
+=//no jala hay q arreglar 
         //Pruebas citas:
         Cita nuevaCita = new Cita();
         nuevaCita.setIdPaciente(1);
@@ -334,7 +365,6 @@ public class Persistencia {
             } catch (PersistenciaException e) {
             e.printStackTrace();
         }
-
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
