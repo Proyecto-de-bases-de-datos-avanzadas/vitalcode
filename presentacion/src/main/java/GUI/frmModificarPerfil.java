@@ -9,6 +9,7 @@ import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
+import GUI.frmPerfilPaciente;
 import configuracion.DependencyInjector;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -285,7 +286,7 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
     }//GEN-LAST:event_txtColoniaActionPerformed
 
     private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
-        modificarDatos();
+        guardarCambios();
     }//GEN-LAST:event_btnGuardarMouseClicked
     
     public void mostrarDatosActuales(String nombre){
@@ -309,7 +310,7 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
             Logger.getLogger(frmPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void modificarDatos() {
+       private void guardarCambios() {
         try {
             String nombre = txtNombre.getText();
             String apellidoPaterno = txtApellidoPat.getText();
@@ -321,34 +322,34 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "La fecha de nacimiento es inválida.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            //validar fecha de nacimiento
+            // validar fecha de nacimineto
             Date fechaActual = new Date();
             if (fechaNac.after(fechaActual)) {
-                JOptionPane.showMessageDialog(null, "La fecha de nacimiento no puede ser una fecha futura.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La fecha de nacimiento no puede ser una fecha futura.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             java.sql.Date sqlFechaNac = new java.sql.Date(fechaNac.getTime());
-            System.out.println(sqlFechaNac);
 
+            // Crear objeto PacienteNDTO
             PacienteNDTO pacienteDTO = new PacienteNDTO(correo, nombre, apellidoPaterno, apellidoMaterno, telefono, sqlFechaNac);
-            
-                // Depuración
-            System.out.println("Datos del paciente:");
-            System.out.println("Nombre: " + nombre);
-            System.out.println("Apellido Paterno: " + apellidoPaterno);
-            System.out.println("Apellido Materno: " + apellidoMaterno);
-            System.out.println("Correo: " + correo);
-            System.out.println("Teléfono: " + telefono);
-            System.out.println("Fecha de Nacimiento: " + sqlFechaNac);
+            pacienteDTO.setIdUsuario(pacienteDTO.getIdUsuario());
 
-            boolean exito = DependencyInjector.crearPacienteBO().ActualizarPaciente(pacienteDTO);
-            if (exito==true) {
+            // Crear objeto DireccionNDTO
+            String calle = txtCalle.getText();
+            String numCasa = txtNumCasa.getText();
+            String colonia = txtColonia.getText();
+            DireccionNDTO direccionDTO = new DireccionNDTO(pacienteDTO.getIdUsuario(), calle, numCasa, colonia);
+
+            // Llamar a los métodos actualizarPaciente y actualizarDireccion
+            boolean exitoPaciente = DependencyInjector.crearPacienteBO().ActualizarPaciente(pacienteDTO);
+            boolean exitoDireccion = DependencyInjector.consultarDireccion().actualizarDireccion(direccionDTO);
+            if (exitoPaciente==true && exitoDireccion==true) {
                 JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Error al guardar los cambios.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (NegocioException | PersistenciaException ex) {
-            JOptionPane.showMessageDialog(this, "Error al guardar los cambios:C : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+       } catch (NegocioException | PersistenciaException ex) {
+            JOptionPane.showMessageDialog(this, "Error al guardar los cambios: en persistencia " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(frmModificarPerfil.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
