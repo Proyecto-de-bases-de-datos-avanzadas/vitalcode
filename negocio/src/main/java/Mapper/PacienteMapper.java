@@ -1,7 +1,11 @@
 package Mapper;
 
+import DTO.CitaDTO;
 import DTO.PacienteNDTO;
+import entidades.Cita;
 import entidades.Paciente;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 /**
@@ -9,6 +13,18 @@ import entidades.Paciente;
  * @author ErnestoLpz_252663
  */
 public class PacienteMapper {
+    
+    public static CitaDTO toDTO(Cita cita) {
+        CitaDTO dto = new CitaDTO();
+        dto.setIdCita(cita.getIdCita());
+        dto.setIdPaciente(cita.getIdPaciente());
+        dto.setIdMedico(cita.getIdMedico());
+        dto.setFecha(cita.getFecha());
+        dto.setEstadoCita(cita.getEstadoCita());
+        dto.setTipoCita(cita.getTipoCita());
+        return dto;
+    }
+    
    public Paciente toEntity(PacienteNDTO pacienteDTO) {
         if (pacienteDTO == null) {
             return null;
@@ -42,5 +58,7 @@ public class PacienteMapper {
         
         return pacienteDTO;
     }
+    
+    
     
 }

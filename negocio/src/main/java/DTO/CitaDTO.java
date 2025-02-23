@@ -1,0 +1,122 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package DTO;
+
+import java.sql.Date;
+
+/**
+ *
+ * @author erika
+ */
+public class CitaDTO {
+    private int idCita;
+    private int idPaciente;
+    private int idMedico;
+    private int idUsuario;
+    private Date fecha;
+    private String estadoCita;
+    private int folioCita;
+    private String tipoCita;
+
+    public CitaDTO() {
+    }
+
+    public CitaDTO(int idCita, int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, int folioCita, String tipoCita) {
+        this.idCita = idCita;
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.idUsuario = idUsuario;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+        this.folioCita = folioCita;
+        this.tipoCita = tipoCita;
+    }
+
+    public CitaDTO(int idCita, int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, String tipoCita) {
+        this.idCita = idCita;
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.idUsuario = idUsuario;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+        this.tipoCita = tipoCita;
+    }
+
+    public CitaDTO(int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, int folioCita, String tipoCita) {
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.idUsuario = idUsuario;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+        this.folioCita = folioCita;
+        this.tipoCita = tipoCita;
+    }
+
+    public int getIdCita() {
+        return idCita;
+    }
+
+    public void setIdCita(int idCita) {
+        this.idCita = idCita;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
+    public int getIdMedico() {
+        return idMedico;
+    }
+
+    public void setIdMedico(int idMedico) {
+        this.idMedico = idMedico;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getEstadoCita() {
+        return estadoCita;
+    }
+
+    public void setEstadoCita(String estadoCita) {
+        this.estadoCita = estadoCita;
+    }
+
+    public int getFolioCita() {
+        return folioCita;
+    }
+
+    public void setFolioCita(int folioCita) {
+        this.folioCita = folioCita;
+    }
+
+    public String getTipoCita() {
+        return tipoCita;
+    }
+
+    public void setTipoCita(String tipoCita) {
+        this.tipoCita = tipoCita;
+    }
+    
+    
+}

@@ -2,6 +2,7 @@ package BO;
 
 import DAO.DireccionDAO;
 import DAO.PacienteDAO;
+import DTO.CitaDTO;
 import DTO.DireccionNDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
@@ -10,9 +11,13 @@ import Exception.PersistenciaException;
 import Mapper.PacienteMapper;
 import Mapper.UsuarioMapper;
 import conexion.IConexionBD;
+import entidades.Cita;
 import entidades.Direccion;
 import entidades.Paciente;
 import entidades.Usuario;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,6 +93,33 @@ public class PacienteBO {
         PacienteMapper convertidorPaciente = new PacienteMapper();
         Paciente paciente = convertidorPaciente.toEntity(pacienteDTO);
         return pacienteDAO.ActualizarPaciente(paciente);
+    }
+    
+  
+     // Método para obtener las citas de un paciente cuya fecha aún no ha pasado y su estado es pendiente
+    public List<CitaDTO> obtenerCitasPendientes(int idPaciente) throws SQLException {
+        List<CitaDTO> citasDTO = new ArrayList<>();
+        List<Cita> citas = pacienteDAO.obtenerCitasPendientes(idPaciente);
+
+        for (Cita cita : citas) {
+            CitaDTO citaDTO = PacienteMapper.toDTO(cita);
+            citasDTO.add(citaDTO);
+        }
+
+        return citasDTO;
+    }
+    
+    // Método para obtener todas las citas de un paciente sin importar su estado
+    public List<CitaDTO> obtenerTodasLasCitas(int idPaciente) throws SQLException {
+        List<CitaDTO> citasDTO = new ArrayList<>();
+        List<Cita> citas = pacienteDAO.obtenerTodasLasCitas(idPaciente);
+
+        for (Cita cita : citas) {
+            CitaDTO citaDTO = PacienteMapper.toDTO(cita);
+            citasDTO.add(citaDTO);
+        }
+
+        return citasDTO;
     }
 
 }
