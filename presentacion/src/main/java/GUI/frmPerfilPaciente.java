@@ -272,6 +272,7 @@ public final class frmPerfilPaciente extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaPaciente = new frmPantallaPrinicipalPaciente();
+        pantallaPaciente.setNombrePaciente(nombrePaciente);
         pantallaPaciente.setVisible(true);
         this.setVisible(false);
         

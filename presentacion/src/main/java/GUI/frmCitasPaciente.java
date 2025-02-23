@@ -4,6 +4,18 @@
  */
 package GUI;
 
+import DTO.CitaDTO;
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import entidades.Horario;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -13,8 +25,30 @@ public class frmCitasPaciente extends javax.swing.JFrame {
     /**
      * Creates new form frmCitasPaciente
      */
-    public frmCitasPaciente() {
+     public final String nombrePaciente;
+    public frmCitasPaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
         initComponents();
+        mostrarCitas();
+    }
+    public void mostrarCitas (){
+         try {
+             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+             int idUsuario = usuarioRecuperado.getId();
+             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+              List<CitaDTO> Citas = DependencyInjector.actualizarPaciente().obtenerCitasPendientes(idUsuario);
+              if(Citas.isEmpty()){
+                  txtCitas.append("No tiene citas proximas");
+              }else{
+                  txtCitas.setText("");
+                  for (CitaDTO cita : Citas) {
+                    txtCitas.append(cita.getFecha()+" "+cita.getTipoCita()+" "+cita.getIdMedico()+"\n");
+            }
+              }
+             
+         } catch (NegocioException | PersistenciaException | SQLException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }
 
     /**
@@ -30,7 +64,7 @@ public class frmCitasPaciente extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtCitas = new javax.swing.JTextArea();
         btnAgregarCita = new javax.swing.JButton();
         btnEliminarCita = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
@@ -47,10 +81,10 @@ public class frmCitasPaciente extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel1.setText("proximas citas: ");
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtCitas.setEditable(false);
+        txtCitas.setColumns(20);
+        txtCitas.setRows(5);
+        jScrollPane1.setViewportView(txtCitas);
 
         btnAgregarCita.setBackground(new java.awt.Color(0, 0, 0));
         btnAgregarCita.setForeground(new java.awt.Color(255, 255, 255));
@@ -160,40 +194,7 @@ public class frmCitasPaciente extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarCitaMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmCitasPaciente().setVisible(true);
-            }
-        });
-    }
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCita;
@@ -202,7 +203,7 @@ public class frmCitasPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextArea txtCitas;
     // End of variables declaration//GEN-END:variables
 }
