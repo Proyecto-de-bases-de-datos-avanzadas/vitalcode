@@ -32,6 +32,19 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
+         
+            // Llamar al método consultarMedicoPorNombre
+            Medico medico = medicoDAO.consultarMedicoPorNombre("dr.juarez");
+            
+                // Imprimir los detalles del médico recuperado
+                System.out.println("ID Usuario: " + medico.getIdUsuario());
+                System.out.println("Nombre: " + medico.getNombre());
+                System.out.println("Especialidad: " + medico.getEspecialidadMedico());
+                System.out.println("Cedula: " + medico.getCedulaMedico());
+                System.out.println("Estado: " + medico.getEstadoMedico());
+           
+    
+        
         try {
             // Llamar al método consultarHorarioMedico
             List<Horario> horarios = medicoDAO.consultarHorarioMedico(3); 

@@ -30,7 +30,7 @@ public class frmPantallaPrinicipalPaciente extends javax.swing.JFrame {
     }
     private String nombrePaciente;
     
-     public void setNombrePaciente(String nombrePaciente) {
+    public void setNombrePaciente(String nombrePaciente) {
      this.nombrePaciente = nombrePaciente;
         try {
             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
