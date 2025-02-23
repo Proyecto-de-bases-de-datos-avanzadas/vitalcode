@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import DTO.MedicoDTO;
+import configuracion.DependencyInjector;
+
 /**
  *
  * @author erika
@@ -16,7 +19,14 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
     public frmPantallaPrincipalMedico() {
         initComponents();
     }
-
+    private String nombreMedico;
+    
+    public void setNombreMedico(String nombre){
+        this.nombreMedico = nombre;
+        /*try{
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico()
+        }*/
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

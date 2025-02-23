@@ -84,7 +84,35 @@ public class MedicoDAO {
         }
     }
     
-    
+    public Medico consultarMedicoPorNombre(String nombreUsuario) throws PersistenciaException{
+    String sql = "SELECT m.id_usuario, m.nombre, m.especialidad, m.cedulaProfesional, m.estado " +
+                     "FROM Medico m " +
+                     "INNER JOIN Usuario u ON m.id_usuario = u.id " +
+                     "WHERE u.nombreUsuario = ?;";
+    try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, nombreUsuario);
+        try(ResultSet rs = ps.executeQuery()){
+            if(rs.next()){
+                Medico medico = new Medico();
+                medico.setIdUsuario(rs.getInt("id_usuario"));
+                medico.setNombre(rs.getString("nombre"));
+                medico.setEspecialidadMedico(rs.getString("especialidad"));
+                medico.setCedulaMedico(rs.getString("cedulaProfesional"));
+                medico.setEstadoMedico(rs.getString("estado"));
+                return medico;
+            }    
+             else{
+                 throw new PersistenciaException("No se encontro medico");}
+            
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }   catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     public List<Horario> consultarHorarioMedico(int idMedico) throws PersistenciaException {
         String sql = "SELECT h.id, h.diaSemana, h.horaEntrada, h.horaSalida " +
