@@ -197,4 +197,20 @@ public class MedicoDAO {
 
         return horarios;
     }
+    
+    public boolean actualizarEstadoMedico(int idMedico, String nuevoEstado) throws PersistenciaException {
+        String sql = "UPDATE Medicos SET estado = ? WHERE idMedico = ?";
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nuevoEstado);
+            ps.setInt(2, idMedico);
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al actualizar el estado del médico", e);
+        }
+    }
 }

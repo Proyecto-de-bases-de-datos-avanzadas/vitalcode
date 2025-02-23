@@ -2,6 +2,8 @@ package DAO;
 
 import Exception.PersistenciaException;
 import entidades.Cita;
+import entidades.Medico;
+import java.util.List;
 
 /**
  *
@@ -32,4 +34,8 @@ public interface ICitaDAO {
      * Realiza una auditoría de una cita de emergencia
      */
     public Cita AuditoriaCitaEmergencia() throws PersistenciaException;
+    
+    public List<Medico> obtenerDoctoresDisponibles(String especialidad) throws PersistenciaException;
+    
+    public List<String> obtenerHorarioDisponible(int idMedico) throws PersistenciaException;
 }

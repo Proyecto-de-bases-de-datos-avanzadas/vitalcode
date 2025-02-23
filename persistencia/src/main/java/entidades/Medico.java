@@ -93,8 +93,4 @@ public class Medico {
     public void setHorarioMedico(List<Horario> horarioMedico) {
         this.horarioMedico = horarioMedico;
     }
-    
-    
-   
 }
-

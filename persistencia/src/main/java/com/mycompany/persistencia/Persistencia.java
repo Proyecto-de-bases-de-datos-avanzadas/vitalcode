@@ -81,7 +81,7 @@ public class Persistencia {
         }
          try {
             // Probar el método getDoctoresDisponibles
-            List<Medico> doctores = citaDAO.getDoctoresDisponibles("Cardiología");
+            List<Medico> doctores = citaDAO.obtenerDoctoresDisponibles("Cardiología");
             System.out.println("Doctores disponibles en Cardiología:");
             for (Medico doctor : doctores) {
                 System.out.println("ID: " + doctor.getIdUsuario() + ", Nombre: " + doctor.getNombre() + ", Especialidad: " + doctor.getEspecialidadMedico()+ ", Cédula: " + doctor.getCedulaMedico()+ ", Estado: " + doctor.getEstadoMedico());
@@ -94,7 +94,7 @@ public class Persistencia {
          try {
             // Probar el método getHorarioDisponible
             int idMedico = 3; 
-            List<String> horarios = citaDAO.getHorarioDisponible(idMedico);
+            List<String> horarios = citaDAO.obtenerHorarioDisponible(idMedico);
 
             System.out.println("Horarios disponibles para el doctor con ID " + idMedico + ":");
             for (String horario : horarios) {
@@ -345,8 +345,26 @@ public class Persistencia {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
         }
+=//no jala hay q arreglar 
+        //Pruebas citas:
+        Cita nuevaCita = new Cita();
+        nuevaCita.setIdPaciente(1);
+        nuevaCita.setIdMedico(3);
+        nuevaCita.setFecha(Date.valueOf("2025-03-20"));
+        nuevaCita.setEstadoCita("Pendiente");
+        nuevaCita.setTipoCita("Regular");
         
-        
+        // 1. Agendar una cita
+        try {
+            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
+            if (citaAgendada != null) {
+                System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
+                } else {
+                    System.out.println("Error al agendar la cita.");
+                }
+            } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
@@ -379,9 +397,5 @@ public class Persistencia {
             System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
             e.printStackTrace();
         }
-
-
     }
-    
-    
 }

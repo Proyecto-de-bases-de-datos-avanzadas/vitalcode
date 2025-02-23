@@ -113,55 +113,52 @@ public class CitaDAO {
         }
     }
     
-    public List<Medico> getDoctoresDisponibles(String especialidad) throws PersistenciaException {
-    List<Medico> doctores = new ArrayList<>();
-    String sql = "SELECT * FROM Medico WHERE especialidad = ? AND estado = 'Activo'";
-    
-    try (Connection conn = conexion.crearConexion();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, especialidad);
-        ResultSet rs = ps.executeQuery();
-        
-        while (rs.next()) {
-            Medico medico = new Medico(
-                rs.getInt("id_usuario"),
-                rs.getString("nombre"),
-                rs.getString("especialidad"),
-                rs.getString("cedulaProfesional"),
-                rs.getString("estado")
-            );
-            doctores.add(medico);
-        }
-    } catch (SQLException e) {
-        throw new PersistenciaException("Error al obtener doctores disponibles", e);
-    }
-    
-    return doctores;
-    }
-    
-    public List<String> getHorarioDisponible(int idMedico) throws PersistenciaException {
-        List<String> horarios = new ArrayList<>();
-        String sql = "SELECT h.diaSemana, h.horaEntrada, h.horaSalida " +
-                     "FROM Horarios h " +
-                     "INNER JOIN Medico_Horario mh ON h.id = mh.id_horario " +
-                     "WHERE mh.id_medico = ?";
+    public List<Medico> obtenerDoctoresDisponibles(String especialidad) throws PersistenciaException {
+        List<Medico> doctores = new ArrayList<>();
+        String sql = "SELECT idUsuario, nombre, especialidad, cedula, estado FROM Medicos WHERE especialidad = ? AND estado = 'Disponible'";
 
         try (Connection conn = conexion.crearConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idMedico);
+
+            ps.setString(1, especialidad);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    String horario = rs.getString("diaSemana") + " " + rs.getTime("horaEntrada") + "-" + rs.getTime("horaSalida");
-                    horarios.add(horario);
+                    Medico medico = new Medico(
+                        rs.getInt("idUsuario"),
+                        rs.getString("nombre"),
+                        rs.getString("especialidad"),
+                        rs.getString("cedula"),
+                        rs.getString("estado")
+                    );
+                    doctores.add(medico);
                 }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener doctores disponibles", e);
+        }
+
+        return doctores;
+    }
+    
+    public List<String> obtenerHorarioDisponible(int idMedico) throws PersistenciaException {
+        List<String> horarios = new ArrayList<>();
+        String sql = "SELECT horario FROM Horarios WHERE idMedico = ? AND disponible = 1";
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            ps.setInt(1, idMedico);
+
+            while (rs.next()) {
+                horarios.add(rs.getString("horario"));
             }
         } catch (SQLException e) {
             throw new PersistenciaException("Error al obtener horarios disponibles", e);
         }
-
         return horarios;
     }
-     // Consultar cita por ID
+ // Consultar cita por ID
     public Cita consultarCitaPorID(int idCita) throws PersistenciaException {
     String sql = "SELECT * FROM Cita WHERE id = ?";
     try (Connection conn = conexion.crearConexion();
