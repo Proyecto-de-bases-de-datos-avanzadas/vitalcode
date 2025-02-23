@@ -4,7 +4,8 @@
  */
 package entidades;
 
-import java.sql.Date;
+
+import java.sql.Timestamp;
 
 /**
  *
@@ -15,7 +16,7 @@ public class Cita {
     private int idPaciente;
     private int idMedico;
     private int idUsuario;
-    private Date fecha;
+    private Timestamp fecha;
     private String estadoCita;
     private int folioCita;
     private String tipoCita;
@@ -23,42 +24,7 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(int idPaciente, int idMedico, Date fecha, String estadoCita) {
-        this.idPaciente = idPaciente;
-        this.idMedico = idMedico;
-        this.fecha = fecha;
-        this.estadoCita = estadoCita;
-    }
-
-    public Cita(int idPaciente, int idMedico, Date fecha, String estadoCita, String tipoCita) {
-        this.idPaciente = idPaciente;
-        this.idMedico = idMedico;
-        this.fecha = fecha;
-        this.estadoCita = estadoCita;
-        this.tipoCita = tipoCita;
-    }
-
-    public Cita(int idCita, int idPaciente, int idMedico, Date fecha, String estadoCita, String tipoCita) {
-        this.idCita = idCita;
-        this.idPaciente = idPaciente;
-        this.idMedico = idMedico;
-        this.fecha = fecha;
-        this.estadoCita = estadoCita;
-        this.tipoCita = tipoCita;
-    }
-
-    public Cita(int idCita, int idPaciente, int idMedico, Date fecha, String estadoCita, int folioCita, String tipoCita) {
-        this.idCita = idCita;
-        this.idPaciente = idPaciente;
-        this.idMedico = idMedico;
-        this.fecha = fecha;
-        this.estadoCita = estadoCita;
-        this.folioCita = folioCita;
-        this.tipoCita = tipoCita;
-    }
-    
-    public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, int folioCita, String tipoCita) {
-        this.idCita = idCita;
+    public Cita(int idPaciente, int idMedico, int idUsuario, Timestamp fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
         this.idUsuario = idUsuario;
@@ -100,11 +66,11 @@ public class Cita {
         this.idUsuario = idUsuario;
     }
 
-    public Date getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(Timestamp fecha) {
         this.fecha = fecha;
     }
 
@@ -132,8 +98,23 @@ public class Cita {
         this.tipoCita = tipoCita;
     }
 
-    public enum TipoCita{
-    Emergencia, Regular;
+    public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, Timestamp fecha, String estadoCita, int folioCita, String tipoCita) {
+        this.idCita = idCita;
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.idUsuario = idUsuario;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+        this.folioCita = folioCita;
+        this.tipoCita = tipoCita;
     }
-    
-}
+
+    public Cita(int idPaciente, int idMedico, Timestamp fecha, String estadoCita, String tipoCita) {
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+        this.tipoCita = tipoCita;
+    }
+
+}  

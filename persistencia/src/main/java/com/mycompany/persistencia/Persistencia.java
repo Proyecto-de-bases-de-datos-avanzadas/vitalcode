@@ -15,7 +15,11 @@ import entidades.Medico;
 import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,6 +35,33 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
+        
+        // Agregar una nueva cita
+            Cita nuevaCita = new Cita();
+            nuevaCita.setIdPaciente(37);
+            nuevaCita.setIdMedico(3);
+            nuevaCita.setFecha(Timestamp.valueOf("2025-03-01 10:00:00"));
+            nuevaCita.setEstadoCita("Pendiente");
+            nuevaCita.setFolioCita(12345);
+            nuevaCita.setTipoCita("Regular");
+
+            try {
+                citaDAO.agendarCita(nuevaCita);
+                System.out.println("Cita agregada exitosamente.");
+            } catch (PersistenciaException e) {
+                System.err.println("Error al agregar la cita: " + e.getMessage());
+            }
+
+            // Consultar todas las citas de un paciente
+            try {
+                List<Cita> citas = pacienteDAO.obtenerTodasLasCitas(1);
+                System.out.println("Citas del paciente:");
+                for (Cita cita : citas) {
+                    System.out.println(cita);
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al consultar las citas: " + e.getMessage());
+            }
         
         //probar metodo dar de baja medico
         int idMedicoBaja = 77;
@@ -315,27 +346,7 @@ public class Persistencia {
             ex.printStackTrace();
         }
         
-        //Pruebas citas:
         
-        Cita nuevaCita = new Cita();
-        nuevaCita.setIdPaciente(1);
-        nuevaCita.setIdMedico(3);
-        nuevaCita.setFecha(Date.valueOf("2025-03-20"));
-        nuevaCita.setEstadoCita("Pendiente");
-        nuevaCita.setTipoCita("Regular");
-        
-        // 1. Agendar una cita
-        try {
-            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
-            if (citaAgendada != null) {
-                System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
-                } else {
-                    System.out.println("Error al agendar la cita.");
-                }
-            } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
-
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
