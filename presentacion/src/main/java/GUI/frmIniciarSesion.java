@@ -176,6 +176,9 @@ public class frmIniciarSesion extends javax.swing.JFrame {
         String password = new String(pswContrasenia.getPassword());
         try {
             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(usuario);
+            if(usuarioRecuperado==null){
+                JOptionPane.showMessageDialog(null, "ombre de usuario no encontrado ","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
+            }
             String contrasenaEnc = usuarioRecuperado.getContraseniaUsuario();
 
             if (BCrypt.checkpw(password, contrasenaEnc)) {

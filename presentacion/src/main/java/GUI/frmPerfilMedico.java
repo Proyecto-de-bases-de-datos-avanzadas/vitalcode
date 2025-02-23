@@ -12,6 +12,7 @@ import entidades.Horario;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -125,6 +126,11 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
 
         btnCambiarEstado.setText("Modificar Estado");
+        btnCambiarEstado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCambiarEstadoMouseClicked(evt);
+            }
+        });
 
         txtAreaHorario.setColumns(20);
         txtAreaHorario.setRows(5);
@@ -231,6 +237,26 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
     private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
+
+    private void btnCambiarEstadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCambiarEstadoMouseClicked
+        try {
+            String estado = (String) cmbEstado.getSelectedItem();
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico().recuperarMedicoUsuario(nombre);
+            boolean cambioEstado=false;
+                   
+            if ("Activo".equals(estado)){
+              cambioEstado = DependencyInjector.consultarMedico().AltaMedico(medicoRecuperado.getId());
+            }
+            if("Inactivo".equals(estado)){
+               cambioEstado = DependencyInjector.consultarMedico().BajaMedico(medicoRecuperado.getId());         
+            }
+            if (cambioEstado==true){
+                JOptionPane.showMessageDialog(null, "Estado Actualizado con exito , estado: "+medicoRecuperado.getEstado(),"Actualizar estado", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(frmPerfilMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnCambiarEstadoMouseClicked
 
     /**
      * @param args the command line arguments
