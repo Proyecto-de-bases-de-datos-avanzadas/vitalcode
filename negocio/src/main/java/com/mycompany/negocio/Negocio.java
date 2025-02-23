@@ -32,6 +32,10 @@ public class Negocio {
         // Crear una instancia de MedicoBO
         MedicoBO medicoBO = new MedicoBO(conexionBD);
         
+        //recuperar medico por nombre de usuario
+        String usuarioMedido = "23623gf23";
+        MedicoDTO medicoPorUsuario = medicoBO.recuperarMedicoUsuario(usuarioMedido);
+        System.out.println("nombre medico: "+medicoPorUsuario.getNombre());
         
         try {
             // Llamar al método recuperarHorarioMedico
