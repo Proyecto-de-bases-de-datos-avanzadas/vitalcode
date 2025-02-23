@@ -33,6 +33,31 @@ public class Persistencia {
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
          try {
+            // Probar el método getDoctoresDisponibles
+            List<Medico> doctores = citaDAO.getDoctoresDisponibles("Cardiología");
+            System.out.println("Doctores disponibles en Cardiología:");
+            for (Medico doctor : doctores) {
+                System.out.println("ID: " + doctor.getIdUsuario() + ", Nombre: " + doctor.getNombre() + ", Especialidad: " + doctor.getEspecialidadMedico()+ ", Cédula: " + doctor.getCedulaMedico()+ ", Estado: " + doctor.getEstadoMedico());
+     
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
+         try {
+            // Probar el método getHorarioDisponible
+            int idMedico = 3; 
+            List<String> horarios = citaDAO.getHorarioDisponible(idMedico);
+
+            System.out.println("Horarios disponibles para el doctor con ID " + idMedico + ":");
+            for (String horario : horarios) {
+                System.out.println(horario);
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+         
+         try {
             // Crear un nuevo Usuario
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setNombre_usuario("dr.smith");

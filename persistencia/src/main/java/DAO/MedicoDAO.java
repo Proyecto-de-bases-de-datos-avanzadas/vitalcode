@@ -82,6 +82,9 @@ public class MedicoDAO {
         }
         return false;
     }
+    
+    
+    
     public boolean darDeBajaMedico(int idUsuario) throws PersistenciaException {
         String sql = "UPDATE Medico SET estado = 'Inactivo' WHERE id_usuario = ?";
 
@@ -153,7 +156,7 @@ public class MedicoDAO {
 
     public List<Horario> consultarHorarioMedico(int idMedico) throws PersistenciaException {
         String sql = "SELECT h.id, h.diaSemana, h.horaEntrada, h.horaSalida " +
-                     "FROM Horario h " +
+                     "FROM Horarios h " +
                      "INNER JOIN Medico_Horario mh ON h.id = mh.id_horario " +
                      "WHERE mh.id_medico = ?";
 

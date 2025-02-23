@@ -3,6 +3,7 @@ package DAO;
 import Exception.PersistenciaException;
 import conexion.IConexionBD;
 import entidades.Cita;
+import entidades.Medico;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -13,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,4 +135,55 @@ public class CitaDAO {
             throw new PersistenciaException("Error al asignar cita de emergencia.", ex);
         }
     }
+    
+    public List<Medico> getDoctoresDisponibles(String especialidad) throws PersistenciaException {
+    List<Medico> doctores = new ArrayList<>();
+    String sql = "SELECT * FROM Medico WHERE especialidad = ? AND estado = 'Activo'";
+    
+    try (Connection conn = conexion.crearConexion();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, especialidad);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Medico medico = new Medico(
+                rs.getInt("id_usuario"),
+                rs.getString("nombre"),
+                rs.getString("especialidad"),
+                rs.getString("cedulaProfesional"),
+                rs.getString("estado")
+            );
+            doctores.add(medico);
+        }
+    } catch (SQLException e) {
+        throw new PersistenciaException("Error al obtener doctores disponibles", e);
+    }
+    
+    return doctores;
+    }
+    
+    public List<String> getHorarioDisponible(int idMedico) throws PersistenciaException {
+        List<String> horarios = new ArrayList<>();
+        String sql = "SELECT h.diaSemana, h.horaEntrada, h.horaSalida " +
+                     "FROM Horarios h " +
+                     "INNER JOIN Medico_Horario mh ON h.id = mh.id_horario " +
+                     "WHERE mh.id_medico = ?";
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idMedico);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String horario = rs.getString("diaSemana") + " " + rs.getTime("horaEntrada") + "-" + rs.getTime("horaSalida");
+                    horarios.add(horario);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener horarios disponibles", e);
+        }
+
+        return horarios;
+    }
+    
+    
 }
