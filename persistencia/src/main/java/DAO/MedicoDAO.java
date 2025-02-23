@@ -6,6 +6,7 @@ import entidades.Medico;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +54,30 @@ public class MedicoDAO {
         } catch (SQLException ex) {
             Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new PersistenciaException("Error al dar de baja al médico en la base de datos.");
+        }
+    }
+    public Medico consultarMedicoID(int idMedico) throws PersistenciaException {
+        String sql = "SELECT * FROM medico WHERE id_usuario = ?;";
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idMedico);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Medico medico = new Medico();
+                    medico.setIdUsuario(rs.getInt("id_usuario"));
+                    medico.setNombre(rs.getString("nombre"));
+                    medico.setEspecialidadMedico("especialidad");
+                    medico.setCedulaMedico("cedula");
+                    medico.setEstadoMedico("estado");
+                    return medico;
+                } else {
+                    throw new PersistenciaException("El médico con ID " + idMedico + " no ha sido encontrado.");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, "Error al recuperar el médico con ID: " + idMedico, ex);
+            throw new PersistenciaException("Error al recuperar el médico en la base de datos.", ex);
         }
     }
 }

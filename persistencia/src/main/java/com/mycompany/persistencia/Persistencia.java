@@ -10,6 +10,7 @@ import conexion.ConexionBD;
 import conexion.IConexionBD;
 import entidades.Cita;
 import entidades.Direccion;
+import entidades.Medico;
 import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
@@ -28,6 +29,12 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
+        
+        //recuperar medico por id
+        int idMedico = 3;
+        Medico medicoRecuperado = medicoDAO.consultarMedicoID(idMedico);
+        System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
+        
         
         // modificar direccion 
         Direccion direccion1 = new Direccion(5, "calle1133", "245", "Colonia3525");
