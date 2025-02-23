@@ -5,8 +5,11 @@
 package GUI;
 
 import DTO.MedicoDTO;
+import Exception.NegocioException;
 import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
+import entidades.Horario;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +36,17 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
             txtNombre.setText(medicoRecuperado.getNombre());
             txtCedulaProf.setText(medicoRecuperado.getCedula());
             txtEspecialida.setText(medicoRecuperado.getEspecialidad());
+            List<Horario> horarios = DependencyInjector.consultarMedico().recuperarHorarioMedico(medicoRecuperado.getId());
+            // Mostrar la lista en el JTextArea
+
+            txtAreaHorario.setText(""); // Limpiar el área de texto antes de agregar nuevos horarios
+            for (Horario horario : horarios) {
+                txtAreaHorario.append(horario.getDiaSemana() + " " + horario.getHoraEntrada() + "-" + horario.getHoraSalida() + "\n");
+            }
+        
         } catch (PersistenciaException ex) {
+            Logger.getLogger(frmPerfilMedico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NegocioException ex) {
             Logger.getLogger(frmPerfilMedico.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -58,11 +71,12 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
         lblCedula = new javax.swing.JLabel();
         txtCedulaProf = new javax.swing.JTextField();
         lblHorario = new javax.swing.JLabel();
-        txtHorario = new javax.swing.JTextField();
         lblEstado = new javax.swing.JLabel();
         btnRegresar1 = new javax.swing.JButton();
         cmbEstado = new javax.swing.JComboBox<>();
         btnCambiarEstado = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtAreaHorario = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -91,8 +105,6 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
         lblHorario.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblHorario.setText("Horario de Atencion:");
 
-        txtHorario.setEditable(false);
-
         lblEstado.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblEstado.setText("Estado:");
 
@@ -113,6 +125,10 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
 
         btnCambiarEstado.setText("Modificar Estado");
+
+        txtAreaHorario.setColumns(20);
+        txtAreaHorario.setRows(5);
+        jScrollPane2.setViewportView(txtAreaHorario);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -139,8 +155,7 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblHorario)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addComponent(jScrollPane2)))))
                 .addGap(74, 74, 74))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(169, 169, 169)
@@ -178,17 +193,17 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
                     .addComponent(lblCedula)
                     .addComponent(txtCedulaProf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblHorario)
-                    .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEstado)
                     .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCambiarEstado))
                 .addGap(31, 31, 31)
                 .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -227,15 +242,16 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
     private javax.swing.JButton btnRegresar1;
     private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblEspecialidad;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblHorario;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextArea txtAreaHorario;
     private javax.swing.JTextField txtCedulaProf;
     private javax.swing.JTextField txtEspecialida;
-    private javax.swing.JTextField txtHorario;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
