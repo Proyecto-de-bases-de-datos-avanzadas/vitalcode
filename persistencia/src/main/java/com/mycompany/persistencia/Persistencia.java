@@ -32,7 +32,55 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
+         try {
+            // Probar el método getDoctoresDisponibles
+            List<Medico> doctores = citaDAO.getDoctoresDisponibles("Cardiología");
+            System.out.println("Doctores disponibles en Cardiología:");
+            for (Medico doctor : doctores) {
+                System.out.println("ID: " + doctor.getIdUsuario() + ", Nombre: " + doctor.getNombre() + ", Especialidad: " + doctor.getEspecialidadMedico()+ ", Cédula: " + doctor.getCedulaMedico()+ ", Estado: " + doctor.getEstadoMedico());
+     
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
+         try {
+            // Probar el método getHorarioDisponible
+            int idMedico = 3; 
+            List<String> horarios = citaDAO.getHorarioDisponible(idMedico);
+
+            System.out.println("Horarios disponibles para el doctor con ID " + idMedico + ":");
+            for (String horario : horarios) {
+                System.out.println(horario);
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
          
+         try {
+            // Crear un nuevo Usuario
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre_usuario("dr.smith");
+            nuevoUsuario.setContraseniaUsuario("password123");
+            nuevoUsuario.setTipo_usuario("Medico");
+
+            // Crear un nuevo Medico
+            Medico nuevoMedico = new Medico();
+            nuevoMedico.setNombre("Dr. John Smith");
+            nuevoMedico.setEspecialidadMedico("Cardiología");
+            nuevoMedico.setCedulaMedico("67890DEF");
+            nuevoMedico.setEstadoMedico("Activo");
+
+            // Llamar al método agregarMedicoYUsuario
+            boolean exito = medicoDAO.agregarMedicoYUsuario(nuevoMedico, nuevoUsuario);
+            if (exito) {
+                System.out.println("Médico y usuario agregados exitosamente.");
+            } else {
+                System.out.println("Error al agregar el médico y el usuario.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
             // Llamar al método consultarMedicoPorNombre
             Medico medico = medicoDAO.consultarMedicoPorNombre("dr.juarez");
             
