@@ -5,9 +5,11 @@
 package com.mycompany.negocio;
 
 import BO.DireccionBO;
+import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.DireccionNDTO;
+import DTO.MedicoDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
 import configuracion.DependencyInjector;
@@ -25,6 +27,25 @@ public class Negocio {
     public static void main(String[] args) throws PersistenciaException, NegocioException {
         IConexionBD conexionBD = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
+        // Crear una instancia de MedicoBO
+        MedicoBO medicoBO = new MedicoBO(conexionBD);
+         try {
+            // Llamar al método recuperarMedicoPorID
+            MedicoDTO medicoDTO = medicoBO.recuperarMedicoID(3); // Cambia el ID por el que deseas probar
+            if (medicoDTO != null) {
+                // Imprimir los detalles del médico recuperado
+                System.out.println("ID Usuario: " + medicoDTO.getId());
+                System.out.println("Nombre: " + medicoDTO.getNombre());
+                System.out.println("Especialidad: " + medicoDTO.getEspecialidad());
+                System.out.println("Cedula: " + medicoDTO.getCedula());
+                System.out.println("Estado: " + medicoDTO.getEstado());
+            } else {
+                System.out.println("No se encontró ningún médico con ese ID.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
         //Actualizar paciente 
         PacienteNDTO pacienteActualizar = new PacienteNDTO(18, "CorreoNegocio@gmail.com", "Negocio", "Capa", "Negpcio", "852085720", Date.valueOf("2005-05-20"));
         try {

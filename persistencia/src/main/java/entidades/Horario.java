@@ -11,32 +11,18 @@ import java.sql.Time;
  * @author erika
  */
 public class Horario {
-    private int idHorario; 
-    private String diaSemana; 
-    private Time hora_Entrada;
+    private int id;
+    private String diaSemana;
+    private Time horaEntrada;
+    private Time horaSalida;
 
-    @Override
-    public String toString() {
-        return "Horario{" + "idHorario=" + idHorario + ", diaSemana=" + diaSemana + ", hora_Entrada=" + hora_Entrada + '}';
+    // Getters y Setters
+    public int getId() {
+        return id;
     }
 
-    public Horario(int idHorario, String diaSemana, Time hora_Entrada) {
-        this.idHorario = idHorario;
-        this.diaSemana = diaSemana;
-        this.hora_Entrada = hora_Entrada;
-    }
-
-    public Horario(String diaSemana, Time hora_Entrada) {
-        this.diaSemana = diaSemana;
-        this.hora_Entrada = hora_Entrada;
-    }
-
-    public int getIdHorario() {
-        return idHorario;
-    }
-
-    public void setIdHorario(int idHorario) {
-        this.idHorario = idHorario;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDiaSemana() {
@@ -47,12 +33,19 @@ public class Horario {
         this.diaSemana = diaSemana;
     }
 
-    public Time getHora_Entrada() {
-        return hora_Entrada;
+    public Time getHoraEntrada() {
+        return horaEntrada;
     }
 
-    public void setHora_Entrada(Time hora_Entrada) {
-        this.hora_Entrada = hora_Entrada;
+    public void setHoraEntrada(Time horaEntrada) {
+        this.horaEntrada = horaEntrada;
     }
-    
+
+    public Time getHoraSalida() {
+        return horaSalida;
+    }
+
+    public void setHoraSalida(Time horaSalida) {
+        this.horaSalida = horaSalida;
+    }
 }

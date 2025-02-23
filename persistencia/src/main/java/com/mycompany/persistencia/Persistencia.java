@@ -10,9 +10,12 @@ import conexion.ConexionBD;
 import conexion.IConexionBD;
 import entidades.Cita;
 import entidades.Direccion;
+import entidades.Horario;
+import entidades.Medico;
 import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
+import java.util.List;
 
 /**
  *
@@ -28,6 +31,33 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
+        
+        try {
+            // Llamar al método consultarHorarioMedico
+            List<Horario> horarios = medicoDAO.consultarHorarioMedico(3); 
+
+            if (!horarios.isEmpty()) {
+                // Imprimir los detalles del horario recuperado
+                for (Horario horario : horarios) {
+                    System.out.println("ID Horario: " + horario.getId());
+                    System.out.println("Día de la Semana: " + horario.getDiaSemana());
+                    System.out.println("Hora de Entrada: " + horario.getHoraEntrada());
+                    System.out.println("Hora de Salida: " + horario.getHoraSalida());
+                    System.out.println("-----------------------------------");
+                }
+            } else {
+                System.out.println("No se encontró ningún horario para el médico con ese ID.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+    
+        
+        //recuperar medico por id
+        int idMedico = 3;
+        Medico medicoRecuperado = medicoDAO.consultarMedicoID(idMedico);
+        System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
+        
         
         // modificar direccion 
         Direccion direccion1 = new Direccion(5, "calle1133", "245", "Colonia3525");
@@ -263,5 +293,7 @@ public class Persistencia {
         }
 
 
-    } 
+    }
+    
+    
 }

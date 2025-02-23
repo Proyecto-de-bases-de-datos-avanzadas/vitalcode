@@ -16,6 +16,14 @@ public class Medico {
     private String especialidadMedico;
     private String cedulaMedico;
     private String estadoMedico; 
+
+    public Medico(int idUsuario, String nombre, String especialidadMedico, String cedulaMedico, String estadoMedico) {
+        this.idUsuario = idUsuario;
+        this.nombre = nombre;
+        this.especialidadMedico = especialidadMedico;
+        this.cedulaMedico = cedulaMedico;
+        this.estadoMedico = estadoMedico;
+    }
     private List<Horario> horarioMedico; 
 
     public Medico(String nombre, String especialidadMedico, String cedulaMedico, String estadoMedico, List<Horario> horarioMedico) {
