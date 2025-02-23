@@ -4,6 +4,14 @@
  */
 package entidades;
 
+/**
+ *
+ * @author erika
+ */
+
+
+import java.util.List;
+
 import java.util.List;
 
 /**

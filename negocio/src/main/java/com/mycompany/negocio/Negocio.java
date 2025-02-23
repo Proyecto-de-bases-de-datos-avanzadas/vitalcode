@@ -8,6 +8,7 @@ import BO.DireccionBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
+import DTO.CitaDTO;
 import DTO.DireccionNDTO;
 import DTO.MedicoDTO;
 import DTO.PacienteNDTO;
@@ -19,6 +20,7 @@ import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
 import entidades.Horario;
+import java.sql.SQLException;
 import java.util.List;
 /**
  *
@@ -30,7 +32,34 @@ public class Negocio {
         IConexionBD conexionBD = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
         // Crear una instancia de MedicoBO
+        //faltan inserts en la tabla jsj
         MedicoBO medicoBO = new MedicoBO(conexionBD);
+
+        // Consultar todas las citas de un paciente
+            try {
+                List<CitaDTO> todasLasCitas = pacienteBO.obtenerTodasLasCitas(4);
+                System.out.println("Todas las citas del paciente:");
+                for (CitaDTO citaDTO : todasLasCitas) {
+                    System.out.println(citaDTO.getFecha());
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al consultar todas las citas: " + e.getMessage());
+            }
+
+            // Consultar citas pendientes de un paciente
+            try {
+                List<CitaDTO> citasPendientes = pacienteBO.obtenerCitasPendientes(4);
+                System.out.println("Citas pendientes del paciente:");
+                for (CitaDTO citaDTO : citasPendientes) {
+                    System.out.println(citaDTO.getFecha());
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al consultar las citas pendientes: " + e.getMessage());
+            }
+
+        
+        
+
         //Actualizar paciente 
         PacienteNDTO pacienteActualizar = new PacienteNDTO(18, "CorreoNegocio11@gmail.com", "Negocio", "Capa", "Negpcio", "852085720", Date.valueOf("2005-05-20"));
         try {
@@ -44,6 +73,7 @@ public class Negocio {
         } catch (NegocioException | PersistenciaException e) {
             e.printStackTrace();
         }
+
         System.out.println("prueba baja medico");
         
         boolean baja = medicoBO.BajaMedico(77);
