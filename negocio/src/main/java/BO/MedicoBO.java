@@ -32,6 +32,13 @@ public class MedicoBO {
         return medico; 
         
     }
+    public MedicoDTO recuperarMedicoUsuario (String usuario ) throws PersistenciaException{
+        Medico medicoRecuperado = medicoDAO.consultarMedicoPorNombre(usuario);
+        MedicoMapper convertidorMedico = new MedicoMapper();
+        MedicoDTO medico = convertidorMedico.toDTO(medicoRecuperado);
+        return medico;
+    }
+    
     public List<Horario> recuperarHorarioMedico(int idMedico) throws NegocioException, PersistenciaException {
         try {
             return medicoDAO.consultarHorarioMedico(idMedico);
