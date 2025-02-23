@@ -18,6 +18,8 @@ import Exception.NegocioException;
 import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
+import entidades.Horario;
+import java.util.List;
 /**
  *
  * @author alexnieblas
@@ -29,6 +31,28 @@ public class Negocio {
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
         // Crear una instancia de MedicoBO
         MedicoBO medicoBO = new MedicoBO(conexionBD);
+        
+        
+        try {
+            // Llamar al método recuperarHorarioMedico
+            List<Horario> horarios = medicoBO.recuperarHorarioMedico(3); // Cambia el ID por el que deseas probar
+
+            if (!horarios.isEmpty()) {
+                // Imprimir los detalles del horario recuperado
+                for (Horario horario : horarios) {
+                    System.out.println("ID Horario: " + horario.getId());
+                    System.out.println("Día de la Semana: " + horario.getDiaSemana());
+                    System.out.println("Hora de Entrada: " + horario.getHoraEntrada());
+                    System.out.println("Hora de Salida: " + horario.getHoraSalida());
+                    System.out.println("-----------------------------------");
+                }
+            } else {
+                System.out.println("No se encontró ningún horario para el médico con ese ID.");
+            }
+        } catch (NegocioException | PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
          try {
             // Llamar al método recuperarMedicoPorID
             MedicoDTO medicoDTO = medicoBO.recuperarMedicoID(3); // Cambia el ID por el que deseas probar

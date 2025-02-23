@@ -10,7 +10,9 @@ import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.MedicoMapper;
 import conexion.IConexionBD;
+import entidades.Horario;
 import entidades.Medico;
+import java.util.List;
 
 /**
  *
@@ -29,5 +31,12 @@ public class MedicoBO {
         MedicoDTO medico = convertidorMedico.toDTO(medicoRecuperado);
         return medico; 
         
+    }
+    public List<Horario> recuperarHorarioMedico(int idMedico) throws NegocioException, PersistenciaException {
+        try {
+            return medicoDAO.consultarHorarioMedico(idMedico);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al recuperar el horario del médico con ID: " + idMedico, e);
+        }
     }
 }
