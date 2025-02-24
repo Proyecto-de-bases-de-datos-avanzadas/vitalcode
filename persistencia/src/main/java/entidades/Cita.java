@@ -23,6 +23,11 @@ public class Cita {
     public Cita() {
     }
 
+    @Override
+    public String toString() {
+        return "Cita{" + "idCita=" + idCita + ", idPaciente=" + idPaciente + ", idMedico=" + idMedico + ", fecha=" + fecha + ", estadoCita=" + estadoCita + ", folioCita=" + folioCita + ", tipoCita=" + tipoCita + '}';
+    }
+
     public Cita(int idCita, int idPaciente, int idMedico, LocalDateTime fecha, String estadoCita, String tipoCita) {
         this.idCita = idCita;
         this.idPaciente = idPaciente;

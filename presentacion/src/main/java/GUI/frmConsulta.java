@@ -41,12 +41,9 @@ public class frmConsulta extends javax.swing.JFrame {
         txtHoraLlegada = new javax.swing.JTextField();
         txtDiagnostico = new javax.swing.JTextField();
         txtTratamiento = new javax.swing.JTextField();
-        cmbCita = new javax.swing.JComboBox<>();
-        lblCita = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(854, 498));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -88,11 +85,6 @@ public class frmConsulta extends javax.swing.JFrame {
 
         txtEdad.setEditable(false);
 
-        cmbCita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "7:00", "7:30", "9:00" }));
-
-        lblCita.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        lblCita.setText("Cita:");
-
         btnGuardar.setText("Guardar");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -126,13 +118,11 @@ public class frmConsulta extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblPaciente)
-                            .addComponent(lblEdad)
-                            .addComponent(lblCita, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(lblEdad))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNombrePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbCita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtNombrePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(txtMotivo))
                 .addContainerGap(160, Short.MAX_VALUE))
         );
@@ -141,11 +131,7 @@ public class frmConsulta extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbCita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCita))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPaciente)
                     .addComponent(txtNombrePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -173,7 +159,7 @@ public class frmConsulta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegresar2)
                     .addComponent(btnGuardar))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -234,9 +220,7 @@ public class frmConsulta extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnRegresar2;
-    private javax.swing.JComboBox<String> cmbCita;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblCita;
     private javax.swing.JLabel lblEdad;
     private javax.swing.JLabel lblMotivo;
     private javax.swing.JLabel lblPaciente;

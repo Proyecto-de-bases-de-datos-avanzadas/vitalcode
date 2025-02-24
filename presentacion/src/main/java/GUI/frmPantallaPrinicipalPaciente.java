@@ -280,7 +280,7 @@ public class frmPantallaPrinicipalPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPerfilMouseClicked
 
     private void btnCitaEmergenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCitaEmergenciaMouseClicked
-        frmCitaEmergencia citaEmergencia = new frmCitaEmergencia();
+        frmCitaEmergencia citaEmergencia = new frmCitaEmergencia(nombrePaciente);
         citaEmergencia.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnCitaEmergenciaMouseClicked

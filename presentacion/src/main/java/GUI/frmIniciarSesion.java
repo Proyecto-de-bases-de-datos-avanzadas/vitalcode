@@ -176,9 +176,9 @@ public class frmIniciarSesion extends javax.swing.JFrame {
         String password = new String(pswContrasenia.getPassword());
         try {
             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(usuario);
-            if(usuarioRecuperado==null){
-                JOptionPane.showMessageDialog(null, "ombre de usuario no encontrado ","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
-            }
+            if(usuarioRecuperado == null){
+                JOptionPane.showMessageDialog(null, "Nombre de usuario no encontrado ","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
+            }else{
             String contrasenaEnc = usuarioRecuperado.getContraseniaUsuario();
 
             if (BCrypt.checkpw(password, contrasenaEnc)) {
@@ -192,10 +192,10 @@ public class frmIniciarSesion extends javax.swing.JFrame {
                     pantallaMedico.setNombreMedico(usuario);
                     pantallaMedico.setVisible(true);
                     this.setVisible(false);
-                } 
-            }else{JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrectos","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
+                }} 
+            else{JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrectos","iniciar sesion", JOptionPane.INFORMATION_MESSAGE);
                 }
-           
+            }
         } catch (NegocioException | PersistenciaException ex) {
             Logger.getLogger(frmIniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
