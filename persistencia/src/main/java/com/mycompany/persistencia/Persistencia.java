@@ -16,7 +16,9 @@ import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +38,7 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
-        // Agregar una nueva cita
+        /*// Agregar una nueva cita
             Cita nuevaCita = new Cita();
             nuevaCita.setIdPaciente(37);
             nuevaCita.setIdMedico(3);
@@ -345,17 +347,15 @@ public class Persistencia {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
         }
-=//no jala hay q arreglar 
+*/
+//no jala hay q arreglar 
         //Pruebas citas:
-        Cita nuevaCita = new Cita();
-        nuevaCita.setIdPaciente(1);
-        nuevaCita.setIdMedico(3);
-        nuevaCita.setFecha(Date.valueOf("2025-03-20"));
-        nuevaCita.setEstadoCita("Pendiente");
-        nuevaCita.setTipoCita("Regular");
+
         
         // 1. Agendar una cita
         try {
+            LocalDateTime fecha = LocalDateTime.of(2025, 2, 21, 10, 0, 0);
+            Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
             Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
             if (citaAgendada != null) {
                 System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
@@ -397,5 +397,6 @@ public class Persistencia {
             System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
             e.printStackTrace();
         }
+
     }
 }

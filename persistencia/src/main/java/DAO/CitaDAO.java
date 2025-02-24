@@ -33,6 +33,30 @@ public class CitaDAO {
     
     //agrgar cita
 
+    // vamos a separarlo y a usar este
+    public int validarDisponibilidad(int idMedico, LocalDateTime fecha) throws PersistenciaException {
+        String sqlValidacion = "CALL VerificarDisponibilidadMedico(?,?)";
+
+        try (Connection conn = conexion.crearConexion();
+                CallableStatement cs = conn.prepareCall(sqlValidacion)) {
+
+            cs.setInt(1, idMedico);
+            cs.setTimestamp(2, Timestamp.valueOf(fecha));
+
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    int disponibilidad = rs.getInt(1); // Leer el resultado
+                    System.out.println("Resultado SQL: " + disponibilidad);
+                    return disponibilidad;
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al validar disponibilidad: " + e.getMessage(), e);
+        }
+
+        return 0; // Si no devuelve nada, asumimos que el médico NO está disponible
+    }
+    
     public Cita agendarCita(Cita cita) throws PersistenciaException {
         String sqlValidacion = "CALL VerificarDisponibilidadMedico(?,?)";
         String sqlCita = "{CALL agregar_cita(?, ?, ?, ?, ?, ?)}";

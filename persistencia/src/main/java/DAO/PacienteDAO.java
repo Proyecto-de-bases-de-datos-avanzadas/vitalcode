@@ -176,7 +176,8 @@ public class PacienteDAO {
                     cita.setIdCita(rs.getInt("id"));
                     cita.setIdPaciente(rs.getInt("id_paciente"));
                     cita.setIdMedico(rs.getInt("id_medico"));
-                    cita.setFecha(rs.getDate("fechaHora"));
+                    
+                    cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
                     cita.setEstadoCita(rs.getString("estado"));
                     cita.setTipoCita(rs.getString("tipoDeCita"));
                     citas.add(cita);
@@ -226,7 +227,7 @@ public class PacienteDAO {
                 cita.setIdCita(rs.getInt("id"));
                 cita.setIdPaciente(rs.getInt("id_paciente"));
                 cita.setIdMedico(rs.getInt("id_medico"));
-                cita.setFecha(rs.getDate("fechaHora"));
+                cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
                 cita.setEstadoCita(rs.getString("estado"));
                 cita.setTipoCita(rs.getString("tipoDeCita"));
                 citas.add(cita);
