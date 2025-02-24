@@ -4,6 +4,17 @@
  */
 package GUI;
 
+import DTO.CitaDTO;
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -13,10 +24,34 @@ public class frmHistorialCitas extends javax.swing.JFrame {
     /**
      * Creates new form frmHistorialCitas
      */
-    public frmHistorialCitas() {
+    
+    public final String nombrePaciente;
+    public frmHistorialCitas(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+        
         initComponents();
+        mostrarHistorialCitas();
+        
     }
-
+    public void mostrarHistorialCitas(){
+        try {
+             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+             int idUsuario = usuarioRecuperado.getId();
+             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+              List<CitaDTO> Citas = DependencyInjector.actualizarPaciente().obtenerTodasLasCitas(idUsuario);
+              if(Citas.isEmpty()){
+                  txtCitasHist.append("No tiene citas registradas");
+              }else{
+                  txtCitasHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                    txtCitasHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+cita.getIdMedico()+"\n");
+            }
+              }
+             
+         } catch (NegocioException | PersistenciaException | SQLException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -126,6 +161,7 @@ public class frmHistorialCitas extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
+        pantallaprincipal.setNombrePaciente(nombrePaciente);
         pantallaprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresar1MouseClicked
@@ -134,40 +170,7 @@ public class frmHistorialCitas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmHistorialCitas().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFiltro;
