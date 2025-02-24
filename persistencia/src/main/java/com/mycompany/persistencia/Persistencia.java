@@ -26,8 +26,8 @@ import java.util.logging.Logger;
  */
 public class Persistencia {
 
-    public static void main(String[] args) throws PersistenciaException {
-        
+    public static void main(String[] args) throws PersistenciaException 
+      
          try {
              
              IConexionBD conexionBD = new ConexionBD();
@@ -406,6 +406,7 @@ public class Persistencia {
              }
          } catch (SQLException ex) {
             Logger.getLogger(Persistencia.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 }
