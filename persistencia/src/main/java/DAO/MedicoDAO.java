@@ -2,6 +2,7 @@ package DAO;
 
 import Exception.PersistenciaException;
 import conexion.IConexionBD;
+import entidades.Cita;
 import entidades.Horario;
 import entidades.Medico;
 import entidades.Usuario;
@@ -213,4 +214,36 @@ public class MedicoDAO {
             throw new PersistenciaException("Error al actualizar el estado del médico", e);
         }
     }
-}
+    
+    public List<Cita> obtenerTodasLasCitas (int idMedico) throws PersistenciaException{
+        // declarar una lista para guardar todas las citas del medico
+        List<Cita> citas = new ArrayList<>();
+        
+        String query = "SELECT * FROM Cita WHERE id_medico = ?";
+        
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idMedico);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+                    cita.setIdCita(rs.getInt("id"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setFecha(rs.getDate("fechaHora"));
+                    cita.setEstadoCita(rs.getString("estado"));
+                    cita.setTipoCita(rs.getString("tipoDeCita"));
+                    citas.add(cita);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citas;
+    }
+        
+        
+    
+}   
