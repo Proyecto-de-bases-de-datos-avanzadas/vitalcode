@@ -38,14 +38,14 @@ public class CitaDAO {
         String sqlValidacion = "CALL VerificarDisponibilidadMedico(?,?)";
 
         try (Connection conn = conexion.crearConexion();
-                CallableStatement cs = conn.prepareCall(sqlValidacion)) {
+             CallableStatement cs = conn.prepareCall(sqlValidacion)) {
 
             cs.setInt(1, idMedico);
             cs.setTimestamp(2, Timestamp.valueOf(fecha));
 
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
-                    int disponibilidad = rs.getInt(1); // Leer el resultado
+                    int disponibilidad = rs.getInt(1);
                     System.out.println("Resultado SQL: " + disponibilidad);
                     return disponibilidad;
                 }
@@ -54,7 +54,7 @@ public class CitaDAO {
             throw new PersistenciaException("Error al validar disponibilidad: " + e.getMessage(), e);
         }
 
-        return 0; // Si no devuelve nada, asumimos que el médico NO está disponible
+        return 0;
     }
     
       public Cita agendarCita(Cita cita) throws PersistenciaException {
@@ -65,19 +65,13 @@ public class CitaDAO {
             conn.setAutoCommit(false);
 
             try (CallableStatement cs = conn.prepareCall(sqlValidacion)) {
-                System.out.println(cita.getIdMedico());
-                System.out.println(Timestamp.valueOf(cita.getFecha()).toString());  // Verifica el valor de la fecha
-
-                // AsegÃºrate de pasar el Timestamp correctamente
-                cs.setInt(1, 2);
+                cs.setInt(1, cita.getIdMedico());
                 cs.setTimestamp(2, Timestamp.valueOf(cita.getFecha()));
 
                 try (ResultSet rs = cs.executeQuery()) {
                     if (rs.next()) {
-
-                        // Obtener el valor que devuelve el procedimiento
-                        disponibilidad = rs.getInt(1);  // El primer valor de la primera columna
-                        System.out.println("Resultado de la validaciÃ³n: " + disponibilidad);  // AsegÃºrate de ver el valor que se obtiene
+                        disponibilidad = rs.getInt(1);
+                        System.out.println("Resultado de la validación: " + disponibilidad);
                     }
                 }
             }
@@ -86,7 +80,6 @@ public class CitaDAO {
                 throw new PersistenciaException("Error: El médico NO está disponible en este horario.");
             }
 
-            // 2. Si estÃ¡ disponible, se aÃ±ade la cita
             try (CallableStatement csCita = conn.prepareCall(sqlCita)) {
                 csCita.setInt(1, cita.getIdPaciente());
                 csCita.setInt(2, cita.getIdMedico());
@@ -190,6 +183,30 @@ public class CitaDAO {
             throw new PersistenciaException("Error al obtener horarios disponibles", e);
         }
         return horarios;
+    }
+
+    // Consultar cita por ID
+    public Cita consultarCitaPorID(int idCita) throws PersistenciaException {
+        String sql = "SELECT * FROM Cita WHERE id = ?";
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idCita);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Cita(
+                        rs.getInt("id_paciente"),
+                        rs.getInt("id_medico"),
+                        rs.getObject("fechaHora", LocalDateTime.class),
+                        rs.getString("estado"),
+                        rs.getString("tipoDeCita")
+                    );
+                } else {
+                    throw new PersistenciaException("Cita no encontrada.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al consultar la cita: " + e.getMessage(), e);
+        }
     }
 
 }

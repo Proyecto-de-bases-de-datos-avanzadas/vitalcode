@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author JR
+ * @author ErnestoLpz_252663
  */
 public class ConsultaDAO {
 

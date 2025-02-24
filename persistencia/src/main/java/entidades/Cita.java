@@ -96,6 +96,8 @@ public class Cita {
     public void setTipoCita(String tipoCita) {
         this.tipoCita = tipoCita;
     }
+    
+    
 
     public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idCita = idCita;
@@ -115,5 +117,4 @@ public class Cita {
         this.estadoCita = estadoCita;
         this.tipoCita = tipoCita;
     }
-
 }  
