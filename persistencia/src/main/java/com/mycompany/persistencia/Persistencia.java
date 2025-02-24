@@ -354,7 +354,7 @@ public class Persistencia {
         
         // 1. Agendar una cita
         try {
-            LocalDateTime fecha = LocalDateTime.of(2025, 2, 21, 10, 0, 0);
+            LocalDateTime fecha = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
             Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
             Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
             if (citaAgendada != null) {
@@ -365,6 +365,7 @@ public class Persistencia {
             } catch (PersistenciaException e) {
             e.printStackTrace();
         }
+        /*
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
@@ -397,6 +398,7 @@ public class Persistencia {
             System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
             e.printStackTrace();
         }
+*/
 
     }
 }

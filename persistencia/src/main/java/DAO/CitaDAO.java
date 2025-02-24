@@ -57,9 +57,9 @@ public class CitaDAO {
         return 0; // Si no devuelve nada, asumimos que el médico NO está disponible
     }
     
-    public Cita agendarCita(Cita cita) throws PersistenciaException {
-        String sqlValidacion = "CALL VerificarDisponibilidadMedico(?,?)";
-        String sqlCita = "{CALL agregar_cita(?, ?, ?, ?, ?, ?)}";
+      public Cita agendarCita(Cita cita) throws PersistenciaException {
+        String sqlValidacion = "CALL VerificarDisponibilidadMedico3(?,?)";
+        String sqlCita = "CALL agregar_cita(?, ?, ?, ?, ?, ?)";
         int disponibilidad = 0;
         try (Connection conn = conexion.crearConexion()) {
             conn.setAutoCommit(false);
