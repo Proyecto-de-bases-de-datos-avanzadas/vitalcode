@@ -121,5 +121,29 @@ public class PacienteBO {
 
         return citasDTO;
     }
+    
+    public List<CitaDTO> obtenerCitasOrdenadasPorFecha(int idPaciente) throws SQLException {
+        List<CitaDTO> citasDTO = new ArrayList<>();
+        List<Cita> citas = pacienteDAO.obtenerCitasOrdenadasPorFecha(idPaciente);
+
+        for (Cita cita : citas) {
+            CitaDTO citaDTO = PacienteMapper.toDTO(cita);
+            citasDTO.add(citaDTO);
+        }
+
+        return citasDTO;
+    }
+
+    public List<CitaDTO> obtenerCitasOrdenadasPorEspecialidad(int idPaciente) throws SQLException {
+        List<CitaDTO> citasDTO = new ArrayList<>();
+        List<Cita> citas = pacienteDAO.obtenerCitasOrdenadasPorEspecialidad(idPaciente);
+
+        for (Cita cita : citas) {
+            CitaDTO citaDTO = PacienteMapper.toDTO(cita);
+            citasDTO.add(citaDTO);
+        }
+
+        return citasDTO;
+    }
 
 }

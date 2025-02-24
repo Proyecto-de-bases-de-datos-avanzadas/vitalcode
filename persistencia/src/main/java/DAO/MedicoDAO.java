@@ -124,11 +124,12 @@ public class MedicoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Medico medico = new Medico();
-                    medico.setIdUsuario(rs.getInt("id_usuario"));
+                     medico.setIdUsuario(rs.getInt("id_usuario"));
                     medico.setNombre(rs.getString("nombre"));
-                    medico.setEspecialidadMedico("especialidad");
-                    medico.setCedulaMedico("cedula");
-                    medico.setEstadoMedico("estado");
+                    medico.setEspecialidadMedico(rs.getString("especialidad"));
+                    medico.setCedulaMedico(rs.getString("cedulaProfesional"));
+                    medico.setEstadoMedico(rs.getString("estado"));
+                
                     return medico;
                 } else {
                     throw new PersistenciaException("El médico con ID " + idMedico + " no ha sido encontrado.");
@@ -244,7 +245,88 @@ public class MedicoDAO {
         }
         return citas;
     }
+     public List<Cita> obtenerTodasLasCitasPendientes (int idMedico) throws PersistenciaException{
+        // declarar una lista para guardar todas las citas del medico
+        List<Cita> citas = new ArrayList<>();
         
+        String query = "SELECT * FROM Cita WHERE id_medico = ? AND estado = 'Pendiente'";
         
-    
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idMedico);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+                    cita.setIdCita(rs.getInt("id"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
+                    cita.setEstadoCita(rs.getString("estado"));
+                    cita.setTipoCita(rs.getString("tipoDeCita"));
+                    citas.add(cita);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citas;
+    }   
+         public List<Cita> obtenerTodasLasCitasPorEstado(int idMedico) throws PersistenciaException{
+        // declarar una lista para guardar todas las citas del medico
+        List<Cita> citas = new ArrayList<>();
+        
+        String query = "SELECT * FROM Cita WHERE id_medico = ? order by estado desc;";
+        
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idMedico);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+                    cita.setIdCita(rs.getInt("id"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
+                    cita.setEstadoCita(rs.getString("estado"));
+                    cita.setTipoCita(rs.getString("tipoDeCita"));
+                    citas.add(cita);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citas;
+    } 
+            public List<Cita> obtenerTodasLasCitasPorFecha(int idMedico) throws PersistenciaException{
+        // declarar una lista para guardar todas las citas del medico
+        List<Cita> citas = new ArrayList<>();
+        
+        String query = "SELECT * FROM Cita WHERE id_medico = ? order by fechaHora;";
+        
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idMedico);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+                    cita.setIdCita(rs.getInt("id"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
+                    cita.setEstadoCita(rs.getString("estado"));
+                    cita.setTipoCita(rs.getString("tipoDeCita"));
+                    citas.add(cita);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citas;
+    } 
 }   

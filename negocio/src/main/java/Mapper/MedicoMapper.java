@@ -4,7 +4,9 @@
  */
 package Mapper;
 
+import DTO.CitaDTO;
 import DTO.MedicoDTO;
+import entidades.Cita;
 import entidades.Medico;
 
 /**
@@ -12,7 +14,18 @@ import entidades.Medico;
  * @author erika
  */
 public class MedicoMapper {
-    // Convertir de entidad a DTO
+    public static CitaDTO toDTO(Cita cita) {
+        CitaDTO dto = new CitaDTO();
+        dto.setIdCita(cita.getIdCita());
+        dto.setIdPaciente(cita.getIdPaciente());
+        dto.setIdMedico(cita.getIdMedico());
+        dto.setFecha(cita.getFecha());
+        dto.setEstadoCita(cita.getEstadoCita());
+        dto.setTipoCita(cita.getTipoCita());
+        return dto;
+    }    
+
+// Convertir de entidad a DTO
     public MedicoDTO toDTO(Medico medico) {
         return new MedicoDTO(
             medico.getIdUsuario(),

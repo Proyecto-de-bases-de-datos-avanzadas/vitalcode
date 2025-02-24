@@ -4,6 +4,18 @@
  */
 package GUI;
 
+import DTO.CitaDTO;
+import DTO.MedicoDTO;
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -13,10 +25,76 @@ public class frmHistorialCitasMedico extends javax.swing.JFrame {
     /**
      * Creates new form frmHistorialCitasMedico
      */
-    public frmHistorialCitasMedico() {
+    public final String nombreMedico;
+    public frmHistorialCitasMedico(String nombreMedico) {
+        this.nombreMedico=nombreMedico;
         initComponents();
+        mostrarCitas();
+        
     }
-
+    public void mostrarCitas(){
+        try {
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico().recuperarMedicoUsuario(nombreMedico);
+            
+              List<CitaDTO> Citas = DependencyInjector.consultarMedico().obtenerCitas(medicoRecuperado.getId());
+              if(Citas.isEmpty()){
+                  txtHist.append("No tiene citas registradas");
+              }else{
+                  txtHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                     PacienteNDTO pacienteCita = DependencyInjector.actualizarPaciente().recuperarPacienteID(cita.getIdPaciente());
+                     String nombrePaciente = pacienteCita.getNombre();
+                    txtHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+nombrePaciente+"\n");
+            }
+              }
+             
+         } catch (PersistenciaException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
+    
+    public void mostrarCitasFecha(){
+    
+    try {
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico().recuperarMedicoUsuario(nombreMedico);
+              
+              List<CitaDTO> Citas = DependencyInjector.consultarMedico().obtenerCitasFecha(medicoRecuperado.getId());
+              if(Citas.isEmpty()){
+                  txtHist.append("No tiene citas registradas");
+              }else{
+                  txtHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                     PacienteNDTO pacienteCita = DependencyInjector.actualizarPaciente().recuperarPacienteID(cita.getIdPaciente());
+                     String nombrePaciente = pacienteCita.getNombre();
+                    txtHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+cita.getEstadoCita()+nombrePaciente+"\n");
+            }
+              }
+             
+         } catch (PersistenciaException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
+    
+    public void mostrarCitasEstado(){
+      try {
+            MedicoDTO medicoRecuperado = DependencyInjector.consultarMedico().recuperarMedicoUsuario(nombreMedico);
+            
+              List<CitaDTO> Citas = DependencyInjector.consultarMedico().obtenerCitasEstado(medicoRecuperado.getId());
+              if(Citas.isEmpty()){
+                  txtHist.append("No tiene citas registradas");
+              }else{
+                  txtHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                     PacienteNDTO pacienteCita = DependencyInjector.actualizarPaciente().recuperarPacienteID(cita.getIdPaciente());
+                     String nombrePaciente = pacienteCita.getNombre();
+                    txtHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+nombrePaciente+" "+cita.getEstadoCita()+"\n");
+            }
+              }
+             
+         } catch (PersistenciaException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }  
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,14 +107,13 @@ public class frmHistorialCitasMedico extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         lblFiltro = new javax.swing.JLabel();
-        rbFecha = new javax.swing.JRadioButton();
-        rbEstado = new javax.swing.JRadioButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lstHistorial = new javax.swing.JList<>();
         btnRegresar1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtHist = new javax.swing.JTextArea();
+        cmbFiltrar = new javax.swing.JComboBox<>();
+        btnFiltro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(854, 498));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -47,17 +124,6 @@ public class frmHistorialCitasMedico extends javax.swing.JFrame {
 
         lblFiltro.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblFiltro.setText("Filtrar por:");
-
-        rbFecha.setText("Fecha");
-
-        rbEstado.setText("Estado");
-
-        lstHistorial.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Martes 16 de Enero - estado - paciente", "Viernes 03 de Febrero - estado. paciente tal" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(lstHistorial);
 
         btnRegresar1.setBackground(new java.awt.Color(0, 0, 0));
         btnRegresar1.setForeground(new java.awt.Color(255, 255, 255));
@@ -73,46 +139,59 @@ public class frmHistorialCitasMedico extends javax.swing.JFrame {
             }
         });
 
+        txtHist.setColumns(20);
+        txtHist.setRows(5);
+        jScrollPane2.setViewportView(txtHist);
+
+        cmbFiltrar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Estado" }));
+
+        btnFiltro.setText("Filtrar");
+        btnFiltro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFiltroMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(282, 282, 282)
-                .addComponent(lblFiltro)
-                .addGap(35, 35, 35)
-                .addComponent(rbFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(rbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(216, Short.MAX_VALUE)
+                .addContainerGap(196, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(lblFiltro)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(cmbFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblTitulo)
+                                .addGap(196, 196, 196))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(309, 309, 309))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTitulo))
-                        .addGap(196, 196, 196))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(307, 307, 307))))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(154, 154, 154))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblFiltro)
-                        .addComponent(rbFecha))
-                    .addComponent(rbEstado))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFiltro)
+                    .addComponent(cmbFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFiltro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(175, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,6 +210,7 @@ public class frmHistorialCitasMedico extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrincipalMedico pantallaprincipalMed = new frmPantallaPrincipalMedico();
+        pantallaprincipalMed.setNombreMedico(nombreMedico);
         pantallaprincipalMed.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresar1MouseClicked
@@ -139,49 +219,25 @@ public class frmHistorialCitasMedico extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitasMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitasMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitasMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitasMedico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void btnFiltroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFiltroMouseClicked
+        String filtro = (String)cmbFiltrar.getSelectedItem();
+        
+        if (filtro =="Fecha"){
+            mostrarCitasFecha();
+        }else{
+            mostrarCitasEstado();
         }
-        //</editor-fold>
+    }//GEN-LAST:event_btnFiltroMouseClicked
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmHistorialCitasMedico().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFiltro;
     private javax.swing.JButton btnRegresar1;
+    private javax.swing.JComboBox<String> cmbFiltrar;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JList<String> lstHistorial;
-    private javax.swing.JRadioButton rbEstado;
-    private javax.swing.JRadioButton rbFecha;
+    private javax.swing.JTextArea txtHist;
     // End of variables declaration//GEN-END:variables
 }

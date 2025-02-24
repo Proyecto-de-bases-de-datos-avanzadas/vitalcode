@@ -5,6 +5,7 @@
 package DTO;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -15,7 +16,7 @@ public class CitaDTO {
     private int idPaciente;
     private int idMedico;
     private int idUsuario;
-    private Date fecha;
+    private LocalDateTime fecha;
     private String estadoCita;
     private int folioCita;
     private String tipoCita;
@@ -23,7 +24,17 @@ public class CitaDTO {
     public CitaDTO() {
     }
 
-    public CitaDTO(int idCita, int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, int folioCita, String tipoCita) {
+    public CitaDTO(int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.idUsuario = idUsuario;
+        this.fecha = fecha;
+        this.estadoCita = estadoCita;
+        this.folioCita = folioCita;
+        this.tipoCita = tipoCita;
+    }
+
+    public CitaDTO(int idCita, int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idCita = idCita;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
@@ -34,8 +45,7 @@ public class CitaDTO {
         this.tipoCita = tipoCita;
     }
 
-    public CitaDTO(int idCita, int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, String tipoCita) {
-        this.idCita = idCita;
+    public CitaDTO(int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, String tipoCita) {
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
         this.idUsuario = idUsuario;
@@ -44,13 +54,13 @@ public class CitaDTO {
         this.tipoCita = tipoCita;
     }
 
-    public CitaDTO(int idPaciente, int idMedico, int idUsuario, Date fecha, String estadoCita, int folioCita, String tipoCita) {
+    public CitaDTO(int idCita, int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, String tipoCita) {
+        this.idCita = idCita;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
         this.idUsuario = idUsuario;
         this.fecha = fecha;
         this.estadoCita = estadoCita;
-        this.folioCita = folioCita;
         this.tipoCita = tipoCita;
     }
 
@@ -86,11 +96,11 @@ public class CitaDTO {
         this.idUsuario = idUsuario;
     }
 
-    public Date getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 
@@ -117,6 +127,5 @@ public class CitaDTO {
     public void setTipoCita(String tipoCita) {
         this.tipoCita = tipoCita;
     }
-    
-    
+
 }

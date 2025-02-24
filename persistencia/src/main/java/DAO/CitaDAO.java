@@ -184,6 +184,7 @@ public class CitaDAO {
         }
         return horarios;
     }
+
     // Consultar cita por ID
     public Cita consultarCitaPorID(int idCita) throws PersistenciaException {
         String sql = "SELECT * FROM Cita WHERE id = ?";
@@ -207,4 +208,5 @@ public class CitaDAO {
             throw new PersistenciaException("Error al consultar la cita: " + e.getMessage(), e);
         }
     }
+
 }
