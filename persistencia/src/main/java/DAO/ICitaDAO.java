@@ -3,6 +3,7 @@ package DAO;
 import Exception.PersistenciaException;
 import entidades.Cita;
 import entidades.Medico;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,4 +39,14 @@ public interface ICitaDAO {
     public List<Medico> obtenerDoctoresDisponibles(String especialidad) throws PersistenciaException;
     
     public List<String> obtenerHorarioDisponible(int idMedico) throws PersistenciaException;
+    
+    public int validarDisponibilidad(int idMedico, LocalDateTime fecha) throws PersistenciaException;
+    
+    public Cita agendarCita(Cita cita) throws PersistenciaException;
+    
+    public boolean cancelarCita(int idCita) throws PersistenciaException;
+    
+    public boolean agendarCitaEmergencia(int idPaciente) throws PersistenciaException;
+    
+    public Cita consultarCitaPorID(int idCita) throws PersistenciaException;
 }

@@ -37,8 +37,8 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
-        
-        /*// Agregar una nueva cita
+
+        /*//Agregar una nueva cita
             Cita nuevaCita = new Cita();
             nuevaCita.setIdPaciente(37);
             nuevaCita.setIdMedico(3);
@@ -351,52 +351,51 @@ public class Persistencia {
 //no jala hay q arreglar 
         //Pruebas citas:
 
-        
         // 1. Agendar una cita
         try {
             LocalDateTime fecha = LocalDateTime.of(2025, 2, 21, 10, 0, 0);
-            Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
+            Cita nuevaCita = new Cita(3, 3, fecha, "Pendiente", "Regular");
             Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
             if (citaAgendada != null) {
                 System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
-                } else {
-                    System.out.println("Error al agendar la cita.");
-                }
-            } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
-        // 2. Consultar una cita por ID
-        Cita citaConsultada = citaDAO.consultarCitaPorID(1);
-        if (citaConsultada != null) {
-            System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
-            System.out.println("ID Medico: " + citaConsultada.getIdMedico());
-            System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
-            System.out.println("Estado: " + citaConsultada.getEstadoCita());
-            System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
-        } else {
-            System.out.println("Cita no encontrada.");
-        }
-
-        // 3. Cancelar una cita
-        boolean citaCancelada = citaDAO.cancelarCita(9);
-        System.out.println("Cita cancelada: " + citaCancelada);
-        
-        //Cita emergencia
-        try {
-            int idPaciente = 4;
-
-            boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
-
-            if (citaEmergenciaAgendada) {
-                System.out.println("Cita de emergencia agendada con éxito.");
             } else {
-                System.out.println("Error al agendar la cita de emergencia.");
+                System.out.println("Error al agendar la cita.");
             }
-
         } catch (PersistenciaException e) {
-            System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
             e.printStackTrace();
         }
-
+        
+//        // 2. Consultar una cita por ID
+//        Cita citaConsultada = citaDAO.consultarCitaPorID(1);
+//        if (citaConsultada != null) {
+//            System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
+//            System.out.println("ID Medico: " + citaConsultada.getIdMedico());
+//            System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
+//            System.out.println("Estado: " + citaConsultada.getEstadoCita());
+//            System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
+//        } else {
+//            System.out.println("Cita no encontrada.");
+//        }
+//
+//        // 3. Cancelar una cita
+//        boolean citaCancelada = citaDAO.cancelarCita(9);
+//        System.out.println("Cita cancelada: " + citaCancelada);
+//        
+//        //Cita emergencia
+//        try {
+//            int idPaciente = 4;
+//
+//            boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
+//
+//            if (citaEmergenciaAgendada) {
+//                System.out.println("Cita de emergencia agendada con éxito.");
+//            } else {
+//                System.out.println("Error al agendar la cita de emergencia.");
+//            }
+//
+//        } catch (PersistenciaException e) {
+//            System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 }
