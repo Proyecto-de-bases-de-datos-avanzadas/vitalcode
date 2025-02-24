@@ -121,7 +121,7 @@ public class frmAgregarCita extends javax.swing.JFrame {
 
         return LocalDateTime.of(fechaDia, tiempo);
     }
-    public void agendarCita() throws NegocioException {
+public void agendarCita() throws NegocioException {
     try {
         String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
         MedicoDTO medicoSeleccionado = medicosMap.get(nombreSeleccionado);
@@ -132,21 +132,30 @@ public class frmAgregarCita extends javax.swing.JFrame {
         String estadoCita = "Pendiente";
         String tipoCita = "Regular";
         
-         UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
-             int idUsuario = usuarioRecuperado.getId();
-             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+        UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+        int idUsuario = usuarioRecuperado.getId();
+        PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+
         // Crear una nueva cita
         CitaDTO nuevaCita = new CitaDTO(paciente.getIdUsuario(), medicoSeleccionado.getId(), fecha, estadoCita, tipoCita);
 
-        // Guardar la cita en la base de datos
-        DependencyInjector.agendarCita().agregarCitaSimple(nuevaCita);
+       boolean existeCita = DependencyInjector.agendarCita().existeCita(medicoSeleccionado.getId(), fecha);
 
-        JOptionPane.showMessageDialog(null, "Cita agendada.");
+        // Verificar si ya existe una cita en la misma fecha y hora para el mismo médico
+        if (existeCita) {
+            JOptionPane.showMessageDialog(null, "El médico ya tiene una cita agendada en la misma fecha y hora.", "Error al agendar cita", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Guardar la cita en la base de datos
+            DependencyInjector.agendarCita().agregarCitaSimple(nuevaCita);
+            JOptionPane.showMessageDialog(null, "Cita agendada.");
+        }
 
     } catch (PersistenciaException e) {
         e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al agendar la cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+
 
 
     

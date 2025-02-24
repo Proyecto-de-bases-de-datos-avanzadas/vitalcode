@@ -133,7 +133,22 @@ public class CitaDAO {
             throw new PersistenciaException("Error al cancelar la cita: " + e.getMessage(), e);
         }
     }
-    
+    public boolean existeCita(int idMedico, LocalDateTime fecha) throws PersistenciaException {
+    String sql = "SELECT COUNT(*) FROM Cita WHERE id_medico = ? AND fechaHora = ?";
+    try (Connection conn = conexion.crearConexion();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, idMedico);
+        ps.setTimestamp(2, Timestamp.valueOf(fecha));
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    } catch (SQLException ex) {
+        throw new PersistenciaException("Error al verificar la disponibilidad de la cita", ex);
+    }
+}
     //???
     public boolean agendarCitaEmergencia(int idPaciente) throws PersistenciaException {
         String sql = "{CALL AsignarCitaEmergencia(?)}";

@@ -209,7 +209,7 @@ public class frmPantallaPrincipalMedico extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void btnCitasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCitasMouseClicked
-        frmCitasMedico citas = new frmCitasMedico();
+        frmCitasMedico citas = new frmCitasMedico(nombreMedico);
         citas.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnCitasMouseClicked
