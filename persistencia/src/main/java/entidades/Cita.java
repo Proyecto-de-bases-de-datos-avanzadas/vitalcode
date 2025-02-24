@@ -23,15 +23,16 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
+    public Cita(int idCita, int idPaciente, int idMedico, LocalDateTime fecha, String estadoCita, String tipoCita) {
+        this.idCita = idCita;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
-        this.idUsuario = idUsuario;
         this.fecha = fecha;
         this.estadoCita = estadoCita;
-        this.folioCita = folioCita;
         this.tipoCita = tipoCita;
     }
+
+    
 
     public int getIdCita() {
         return idCita;
@@ -96,6 +97,8 @@ public class Cita {
     public void setTipoCita(String tipoCita) {
         this.tipoCita = tipoCita;
     }
+    
+    
 
     public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idCita = idCita;
@@ -115,5 +118,4 @@ public class Cita {
         this.estadoCita = estadoCita;
         this.tipoCita = tipoCita;
     }
-
 }  

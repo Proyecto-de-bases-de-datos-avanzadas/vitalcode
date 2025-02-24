@@ -190,7 +190,7 @@ public class frmCitasPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarCitaMouseClicked
 
     private void btnAgregarCitaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarCitaMouseClicked
-        frmAgregarCita agregarCita = new frmAgregarCita();
+        frmAgregarCita agregarCita = new frmAgregarCita(nombrePaciente);
         agregarCita.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarCitaMouseClicked

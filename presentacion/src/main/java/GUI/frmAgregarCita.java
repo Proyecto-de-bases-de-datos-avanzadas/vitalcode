@@ -4,6 +4,11 @@
  */
 package GUI;
 
+import DTO.MedicoDTO;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.util.List;
+
 /**
  *
  * @author erika
@@ -13,10 +18,31 @@ public class frmAgregarCita extends javax.swing.JFrame {
     /**
      * Creates new form frmAgregarCita
      */
-    public frmAgregarCita() {
+    public final String nombrePaciente;
+    public frmAgregarCita(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
         initComponents();
     }
+    public void mostrarDoctores (String especialidad){
+         try {
+            List<MedicoDTO> medicos = DependencyInjector.agendarCita().obtenerDoctoresDisponibles(especialidad);
+        if (medicos.isEmpty()) {
+            System.out.println("No se encontraron doctores para la especialidad: " + especialidad);
+        } else {
+            System.out.println("Doctores encontrados: " + medicos.size());
+        }
 
+        // Limpiar el comboBox antes de agregar nuevos items
+        cmbMedico.removeAllItems();
+
+        for (MedicoDTO medico : medicos) {
+            System.out.println("Nombre: " + medico.getNombre());
+            cmbMedico.addItem(medico.getNombre());
+        }
+    } catch (PersistenciaException e) {
+        e.printStackTrace();
+    }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,13 +62,11 @@ public class frmAgregarCita extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         lblMedico = new javax.swing.JLabel();
         cmbMedico = new javax.swing.JComboBox<>();
-        lblHora1 = new javax.swing.JLabel();
-        txtMotivoConsulta = new javax.swing.JTextField();
         btnRegresar1 = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
+        btnEsp = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(859, 510));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -54,7 +78,7 @@ public class frmAgregarCita extends javax.swing.JFrame {
         lblEspecialidad.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblEspecialidad.setText("Especialidad:");
 
-        cmbEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Medicina Familiar", "Cardiologia", "Neurologia", "Ginecologia" }));
+        cmbEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Medicina General", "Cirujia", "Cardiología", "Neurologia", "Ginecologia" }));
 
         lblDia.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblDia.setText("Dia:");
@@ -74,11 +98,6 @@ public class frmAgregarCita extends javax.swing.JFrame {
         lblMedico.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblMedico.setText("Medico:");
 
-        cmbMedico.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "doctor1", "doctor 2", "doctor 3" }));
-
-        lblHora1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        lblHora1.setText("Motivo de consulta:");
-
         btnRegresar1.setBackground(new java.awt.Color(0, 0, 0));
         btnRegresar1.setForeground(new java.awt.Color(255, 255, 255));
         btnRegresar1.setText("Regresar");
@@ -95,6 +114,13 @@ public class frmAgregarCita extends javax.swing.JFrame {
 
         btnAgregar.setText("Agendar");
 
+        btnEsp.setText("buscar medicos");
+        btnEsp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEspMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -108,28 +134,22 @@ public class frmAgregarCita extends javax.swing.JFrame {
                         .addGap(348, 348, 348)
                         .addComponent(lblMedico))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(271, 271, 271)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(365, 365, 365)
                         .addComponent(lblDia))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(353, 353, 353)
                         .addComponent(lblHora))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(295, 295, 295)
-                        .addComponent(lblHora1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(329, 329, 329)
-                        .addComponent(lblEspecialidad))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(207, 207, 207)
-                        .addComponent(txtMotivoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(205, 205, 205)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmbEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblEspecialidad)
+                            .addComponent(cmbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addComponent(btnEsp, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(253, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 193, Short.MAX_VALUE)
                 .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -145,7 +165,9 @@ public class frmAgregarCita extends javax.swing.JFrame {
                 .addGap(11, 11, 11)
                 .addComponent(lblEspecialidad)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEsp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblMedico)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -158,15 +180,11 @@ public class frmAgregarCita extends javax.swing.JFrame {
                 .addComponent(lblHora)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblHora1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtMotivoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(112, 112, 112)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -189,6 +207,7 @@ public class frmAgregarCita extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
+        pantallaprincipal.setNombrePaciente(nombrePaciente);
         pantallaprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresar1MouseClicked
@@ -197,43 +216,19 @@ public class frmAgregarCita extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
+    private void btnEspMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEspMouseClicked
+        String seleccion =(String) cmbEspecialidad.getSelectedItem();
+        mostrarDoctores(seleccion);
+    }//GEN-LAST:event_btnEspMouseClicked
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmAgregarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmAgregarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmAgregarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmAgregarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmAgregarCita().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEsp;
     private javax.swing.JButton btnRegresar1;
     private javax.swing.JComboBox<String> cmbDia;
     private javax.swing.JComboBox<String> cmbEspecialidad;
@@ -243,9 +238,7 @@ public class frmAgregarCita extends javax.swing.JFrame {
     private javax.swing.JLabel lblDia;
     private javax.swing.JLabel lblEspecialidad;
     private javax.swing.JLabel lblHora;
-    private javax.swing.JLabel lblHora1;
     private javax.swing.JLabel lblMedico;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JTextField txtMotivoConsulta;
     // End of variables declaration//GEN-END:variables
 }
