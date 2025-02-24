@@ -276,9 +276,10 @@ public final class frmModificarPerfil extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresar1MouseClicked
 
     private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
-       /* frmPerfilPaciente perfil = new frmPerfilPaciente();
-        perfil.setVisible(true);
-        this.setVisible(false);*/
+       frmPerfilPaciente perfil = new frmPerfilPaciente(nombrePaciente);
+       perfil.mostrarPerfil(nombrePaciente);
+       perfil.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
     private void txtColoniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtColoniaActionPerformed

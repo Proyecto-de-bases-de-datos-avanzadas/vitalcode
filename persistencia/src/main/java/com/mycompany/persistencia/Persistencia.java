@@ -37,6 +37,31 @@ public class Persistencia {
              UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
              CitaDAO citaDAO = new CitaDAO(conexionBD);
              
+             try {
+                 // Crear un nuevo Usuario
+                 Usuario nuevoUsuario = new Usuario();
+                 nuevoUsuario.setNombre_usuario("dr.smith");
+                 nuevoUsuario.setContraseniaUsuario("password123");
+                 nuevoUsuario.setTipo_usuario("Medico");
+                 
+                 // Crear un nuevo Medico
+                 Medico nuevoMedico = new Medico();
+                 nuevoMedico.setNombre("Dr. John Smith");
+                 nuevoMedico.setEspecialidadMedico("Cardiología");
+                 nuevoMedico.setCedulaMedico("67890DEF");
+                 nuevoMedico.setEstadoMedico("Activo");
+                 
+                 // Llamar al método agregarMedicoYUsuario
+                 boolean exito = medicoDAO.agregarMedicoYUsuario(nuevoMedico, nuevoUsuario);
+                 if (exito) {
+                     System.out.println("Médico y usuario agregados exitosamente.");
+                 } else {
+                     System.out.println("Error al agregar el médico y el usuario.");
+                 }
+             } catch (PersistenciaException e) {
+                 e.printStackTrace();
+             }
+             
              // Consultar todas las citas de un paciente
              
              List<Cita> todasLasCitas = pacienteDAO.obtenerTodasLasCitas(4);
@@ -94,30 +119,7 @@ public class Persistencia {
                  e.printStackTrace();
              }
              
-             try {
-                 // Crear un nuevo Usuario
-                 Usuario nuevoUsuario = new Usuario();
-                 nuevoUsuario.setNombre_usuario("dr.smith");
-                 nuevoUsuario.setContraseniaUsuario("password123");
-                 nuevoUsuario.setTipo_usuario("Medico");
-                 
-                 // Crear un nuevo Medico
-                 Medico nuevoMedico = new Medico();
-                 nuevoMedico.setNombre("Dr. John Smith");
-                 nuevoMedico.setEspecialidadMedico("Cardiología");
-                 nuevoMedico.setCedulaMedico("67890DEF");
-                 nuevoMedico.setEstadoMedico("Activo");
-                 
-                 // Llamar al método agregarMedicoYUsuario
-                 boolean exito = medicoDAO.agregarMedicoYUsuario(nuevoMedico, nuevoUsuario);
-                 if (exito) {
-                     System.out.println("Médico y usuario agregados exitosamente.");
-                 } else {
-                     System.out.println("Error al agregar el médico y el usuario.");
-                 }
-             } catch (PersistenciaException e) {
-                 e.printStackTrace();
-             }
+             
              // Llamar al método consultarMedicoPorNombre
              Medico medico = medicoDAO.consultarMedicoPorNombre("dr.juarez");
              
