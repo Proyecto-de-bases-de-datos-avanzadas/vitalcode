@@ -37,18 +37,32 @@ public class Persistencia {
              UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
              CitaDAO citaDAO = new CitaDAO(conexionBD);
              
+             System.out.println("Prueba ordenar citas ");
+             System.out.println("citas por fecha");
+             
+             List<Cita> citasPorFecha = pacienteDAO.obtenerCitasOrdenadasPorFecha(3);
+             for (Cita cita : citasPorFecha) {
+                 System.out.println(cita.getFecha());
+             }
+             
+             List<Cita> citasPorEspecialidad = pacienteDAO.obtenerCitasOrdenadasPorEspecialidad(3);
+             
+             System.out.println("Citas: ");
+             for (Cita cita : citasPorEspecialidad) {
+                 System.out.println(cita.getIdMedico());
+             }
              try {
                  // Crear un nuevo Usuario
                  Usuario nuevoUsuario = new Usuario();
-                 nuevoUsuario.setNombre_usuario("dr.smith");
+                 nuevoUsuario.setNombre_usuario("dr.Castro");
                  nuevoUsuario.setContraseniaUsuario("password123");
                  nuevoUsuario.setTipo_usuario("Medico");
                  
                  // Crear un nuevo Medico
                  Medico nuevoMedico = new Medico();
-                 nuevoMedico.setNombre("Dr. John Smith");
-                 nuevoMedico.setEspecialidadMedico("Cardiología");
-                 nuevoMedico.setCedulaMedico("67890DEF");
+                 nuevoMedico.setNombre("Dr. Angel De Belem");
+                 nuevoMedico.setEspecialidadMedico("Cirujia");
+                 nuevoMedico.setCedulaMedico("67890DE22F");
                  nuevoMedico.setEstadoMedico("Activo");
                  
                  // Llamar al método agregarMedicoYUsuario
