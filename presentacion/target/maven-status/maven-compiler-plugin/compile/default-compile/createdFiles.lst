@@ -2,7 +2,6 @@ GUI\frmRegistro.class
 GUI\frmIniciarSesion$4.class
 GUI\frmRegistro$1.class
 GUI\frmPantallaPrincipalMedico$4.class
-GUI\frmCitasMedico$5.class
 GUI\frmPantallaPrincipalMedico.class
 GUI\frmHistorialCitas$2.class
 GUI\frmPantallaPrinicipalPaciente$10.class
@@ -63,7 +62,6 @@ GUI\frmPantallaPrincipalMedico$2.class
 GUI\frmPantallaPrinicipalPaciente.class
 GUI\frmRegistro$3.class
 GUI\frmIniciarSesion.class
-GUI\frmHistorialCitasMedico$4.class
 GUI\frmPantallaPrincipalMedico$5.class
 GUI\frmModificarPerfil$1.class
 GUI\frmCitasMedico$4.class

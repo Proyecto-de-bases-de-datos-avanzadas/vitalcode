@@ -191,28 +191,5 @@ public class CitaDAO {
         }
         return horarios;
     }
- // Consultar cita por ID
-    public Cita consultarCitaPorID(int idCita) throws PersistenciaException {
-    String sql = "SELECT * FROM Cita WHERE id = ?";
-    try (Connection conn = conexion.crearConexion();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, idCita);
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return new Cita(
-                    rs.getInt("id_paciente"),
-                    rs.getInt("id_medico"),
-                    rs.getObject("fechaHora", LocalDateTime.class),
-                    rs.getString("estado"),
-                    rs.getString("tipoDeCita")
-                );
-            } else {
-                throw new PersistenciaException("Cita no encontrada.");
-            }
-        }
-    } catch (SQLException e) {
-        throw new PersistenciaException("Error al consultar la cita: " + e.getMessage(), e);
-    }
-    }
-  
+
 }
