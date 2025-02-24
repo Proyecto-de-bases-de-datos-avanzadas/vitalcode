@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -147,7 +148,7 @@ public class PacienteDAO {
                     cita.setIdCita(rs.getInt("id"));
                     cita.setIdPaciente(rs.getInt("id_paciente"));
                     cita.setIdMedico(rs.getInt("id_medico"));
-                    cita.setFecha(rs.getTimestamp("fechaHora"));
+                    cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
                     cita.setEstadoCita(rs.getString("estado"));
                     cita.setTipoCita(rs.getString("tipoDeCita"));
                     citas.add(cita);
@@ -171,7 +172,7 @@ public class PacienteDAO {
                 cita.setIdCita(rs.getInt("id"));
                 cita.setIdPaciente(rs.getInt("id_paciente"));
                 cita.setIdMedico(rs.getInt("id_medico"));
-                cita.setFecha(rs.getTimestamp("fechaHora"));
+                cita.setFecha(rs.getObject("fechaHora", LocalDateTime.class));
                 cita.setEstadoCita(rs.getString("estado"));
                 cita.setTipoCita(rs.getString("tipoDeCita"));
                 citas.add(cita);

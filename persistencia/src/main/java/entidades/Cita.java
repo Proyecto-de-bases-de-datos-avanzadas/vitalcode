@@ -4,8 +4,7 @@
  */
 package entidades;
 
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -16,7 +15,7 @@ public class Cita {
     private int idPaciente;
     private int idMedico;
     private int idUsuario;
-    private Timestamp fecha;
+    private LocalDateTime fecha;
     private String estadoCita;
     private int folioCita;
     private String tipoCita;
@@ -24,7 +23,7 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(int idPaciente, int idMedico, int idUsuario, Timestamp fecha, String estadoCita, int folioCita, String tipoCita) {
+    public Cita(int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
         this.idUsuario = idUsuario;
@@ -66,11 +65,11 @@ public class Cita {
         this.idUsuario = idUsuario;
     }
 
-    public Timestamp getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(Timestamp fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 
@@ -98,7 +97,7 @@ public class Cita {
         this.tipoCita = tipoCita;
     }
 
-    public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, Timestamp fecha, String estadoCita, int folioCita, String tipoCita) {
+    public Cita(int idCita, int idPaciente, int idMedico, int idUsuario, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idCita = idCita;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
@@ -109,7 +108,7 @@ public class Cita {
         this.tipoCita = tipoCita;
     }
 
-    public Cita(int idPaciente, int idMedico, Timestamp fecha, String estadoCita, String tipoCita) {
+    public Cita(int idPaciente, int idMedico, LocalDateTime fecha, String estadoCita, String tipoCita) {
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
         this.fecha = fecha;
