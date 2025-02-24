@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -14,24 +11,24 @@ public class Consulta {
     private int idConsulta;
     private int idCita;
     private String tipoConsulta; 
-    private Date fecha;
+    private LocalDateTime fecha;
     private String diagnosticoConsulta;
     private String notasConsulta; 
 
-    public Consulta(int idCita, String tipoConsulta, Date fecha) {
+    public Consulta(int idCita, String tipoConsulta, LocalDateTime fecha) {
         this.idCita = idCita;
         this.tipoConsulta = tipoConsulta;
         this.fecha = fecha;
     }
 
-    public Consulta(int idCita, String tipoConsulta, Date fecha, String diagnosticoConsulta) {
+    public Consulta(int idCita, String tipoConsulta, LocalDateTime fecha, String diagnosticoConsulta) {
         this.idCita = idCita;
         this.tipoConsulta = tipoConsulta;
         this.fecha = fecha;
         this.diagnosticoConsulta = diagnosticoConsulta;
     }
 
-    public Consulta(int idCita, String tipoConsulta, Date fecha, String diagnosticoConsulta, String notasConsulta) {
+    public Consulta(int idCita, String tipoConsulta, LocalDateTime fecha, String diagnosticoConsulta, String notasConsulta) {
         this.idCita = idCita;
         this.tipoConsulta = tipoConsulta;
         this.fecha = fecha;
@@ -39,7 +36,7 @@ public class Consulta {
         this.notasConsulta = notasConsulta;
     }
 
-    public Consulta(int idConsulta, int idCita, String tipoConsulta, Date fecha, String diagnosticoConsulta, String notasConsulta) {
+    public Consulta(int idConsulta, int idCita, String tipoConsulta, LocalDateTime fecha, String diagnosticoConsulta, String notasConsulta) {
         this.idConsulta = idConsulta;
         this.idCita = idCita;
         this.tipoConsulta = tipoConsulta;
@@ -75,11 +72,11 @@ public class Consulta {
         this.tipoConsulta = tipoConsulta;
     }
 
-    public Date getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 
@@ -98,8 +95,4 @@ public class Consulta {
     public void setNotasConsulta(String notasConsulta) {
         this.notasConsulta = notasConsulta;
     }
-    
-    
-    
 }
-
