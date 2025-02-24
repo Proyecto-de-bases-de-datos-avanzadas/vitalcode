@@ -10,8 +10,10 @@ import conexion.IConexionBD;
 import entidades.Cita;
 import entidades.Horario;
 import entidades.Medico;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -136,6 +138,11 @@ public class MedicoBO {
             Logger.getLogger(MedicoBO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    
+    public Map<String, List<Time>> obtenerIntervalosMedico(int idMedico) throws PersistenciaException {
+        return medicoDAO.consultarIntervalosMedico(idMedico);
     }
     
     

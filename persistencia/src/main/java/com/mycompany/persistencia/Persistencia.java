@@ -43,7 +43,7 @@ public class Persistencia {
             UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
             CitaDAO citaDAO = new CitaDAO(conexionBD);
             
-            // Consultar todas las citas de un médico por fecha
+ /*           // Consultar todas las citas de un médico por fecha
             List<Cita> todasLasCitasFecha = medicoDAO.obtenerTodasLasCitasPorFecha(5);
             System.out.println("Todas las citas del médico:");
             for (Cita cita : todasLasCitasFecha) {
@@ -88,16 +88,14 @@ public class Persistencia {
             System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
             System.out.println("Especialidad: "+medicoRecuperado.getEspecialidadMedico());
             
-            /*// Agregar una nueva cita
-=======
-        IConexionBD conexionBD = new ConexionBD();
-        PacienteDAO pacienteDAO = new PacienteDAO(conexionBD);
-        MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
-        DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
-        CitaDAO citaDAO = new CitaDAO(conexionBD);
 
-        /*//Agregar una nueva cita
+            
+
+   
+
+        /*
+        //Agregar una nueva cita
+
 
             Cita nuevaCita = new Cita();
             nuevaCita.setIdPaciente(37);
@@ -254,9 +252,182 @@ public class Persistencia {
             } else {
             System.out.println("Error al actualizar el paciente.");
             }
-            } catch (PersistenciaException e) {
+
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        // prueba recuperar direecion por id
+        try{
+            Direccion direccion = direccionDAO.obtenerDireccionPorIdPaciente(17);
+            if(direccion!=null){
+                System.out.println("Direccion encontrada");
+                System.out.println("Calle: "+direccion.getCalle());
+            }
+        }catch (PersistenciaException e) {
             e.printStackTrace();
             }
+
+        // prueba recuperar paciente por id
+        try{
+            Paciente paciente1 = pacienteDAO.consultarPacientePorID(17);
+            if(paciente!=null){
+                System.out.println("Paciente encontrado");
+                System.out.println("Nombre: "+paciente.getNombrePaciente());
+            }
+        }catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        // prueba recuperar usuario por nombre
+        try {
+            Usuario usuario = usuarioDAO.buscarUsuarioPorUsuario("lucia123");
+            if (usuario != null) {
+                System.out.println("Usuario encontrado:");
+                System.out.println("ID: " + usuario.getIdUsuario());
+                System.out.println("Nombre de Usuario: " + usuario.getNombre_usuario());
+                System.out.println("Contraseña: " + usuario.getContraseniaUsuario());
+                System.out.println("Tipo de Usuario: " + usuario.getTipo_usuario());
+            } else {
+                System.out.println("Usuario no encontrado.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
+        // AÑADIR USUARIO Y PACIENTE
+        try {
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre_usuario("Luci");
+            nuevoUsuario.setContraseniaUsuario("miisis");
+            nuevoUsuario.setTipo_usuario("Paciente");
+
+            Paciente nuevoPaciente = new Paciente();
+            nuevoPaciente.setCorreoElectronicoPaciente("lucia1111@gmail.com");
+            nuevoPaciente.setNombrePaciente("Lucia");
+            nuevoPaciente.setApellidoPaterno("Vasquez");
+            nuevoPaciente.setApellidoMateno("Gastelum");
+            nuevoPaciente.setTelefono("64424235");
+            nuevoPaciente.setFechaNacPaciente(Date.valueOf("2005-07-05"));
+
+            // Agregar Usuario y Paciente
+            boolean exito = pacienteDAO.agregarUsuarioYPaciente(nuevoUsuario, nuevoPaciente);
+
+            if (exito) {
+                System.out.println("Usuario y paciente agregados con éxito.");
+
+                // Asignar el idPaciente (por ejemplo, si es generado automáticamente)
+                int idPaciente = nuevoPaciente.getIdUsuario(); // Asegúrate de que se asigne correctamente
+
+                // Crear y agregar la dirección del paciente
+                Direccion nuevaDireccion = new Direccion();
+                nuevaDireccion.setId_Paciente(idPaciente);
+                nuevaDireccion.setCalle("Av. Reforma");
+                nuevaDireccion.setNumero("123");
+                nuevaDireccion.setColonia("Centro");
+
+                try {
+                    direccionDAO.agregarDireccion(nuevaDireccion);
+                    System.out.println("Dirección agregada con éxito.");
+                } catch (PersistenciaException e) {
+                    System.err.println("Error al agregar la dirección: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Error al agregar usuario y paciente.");
+            }
+        } catch (PersistenciaException ex) {
+            System.err.println("Error en la persistencia: " + ex.getMessage());
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+        
+        // prueba recuperar usuario por nombre
+        try {
+            Usuario usuario = usuarioDAO.buscarUsuarioPorUsuario("lucia123");
+            if (usuario != null) {
+                System.out.println("Usuario encontrado:");
+                System.out.println("ID: " + usuario.getIdUsuario());
+                System.out.println("Nombre de Usuario: " + usuario.getNombre_usuario());
+                System.out.println("Contraseña: " + usuario.getContraseniaUsuario());
+                System.out.println("Tipo de Usuario: " + usuario.getTipo_usuario());
+            } else {
+                System.out.println("Usuario no encontrado.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
+        // AÑADIR USUARIO Y PACIENTE
+        try {
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre_usuario("Luci");
+            nuevoUsuario.setContraseniaUsuario("miisis");
+            nuevoUsuario.setTipo_usuario("Paciente");
+
+            Paciente nuevoPaciente = new Paciente();
+            nuevoPaciente.setCorreoElectronicoPaciente("lucia1111@gmail.com");
+            nuevoPaciente.setNombrePaciente("Lucia");
+            nuevoPaciente.setApellidoPaterno("Vasquez");
+            nuevoPaciente.setApellidoMateno("Gastelum");
+            nuevoPaciente.setTelefono("64424235");
+            nuevoPaciente.setFechaNacPaciente(Date.valueOf("2005-07-05"));
+
+            // Agregar Usuario y Paciente
+            boolean exito = pacienteDAO.agregarUsuarioYPaciente(nuevoUsuario, nuevoPaciente);
+
+            if (exito) {
+                System.out.println("Usuario y paciente agregados con éxito.");
+
+                // Asignar el idPaciente (por ejemplo, si es generado automáticamente)
+                int idPaciente = nuevoPaciente.getIdUsuario(); // Asegúrate de que se asigne correctamente
+
+                // Crear y agregar la dirección del paciente
+                Direccion nuevaDireccion = new Direccion();
+                nuevaDireccion.setId_Paciente(idPaciente);
+                nuevaDireccion.setCalle("Av. Reforma");
+                nuevaDireccion.setNumero("123");
+                nuevaDireccion.setColonia("Centro");
+
+                try {
+                    direccionDAO.agregarDireccion(nuevaDireccion);
+                    System.out.println("Dirección agregada con éxito.");
+                } catch (PersistenciaException e) {
+                    System.err.println("Error al agregar la dirección: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Error al agregar usuario y paciente.");
+            }
+        } catch (PersistenciaException ex) {
+            System.err.println("Error en la persistencia: " + ex.getMessage());
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+*/
+            /*
+//no jala hay q arreglar 
+        //Pruebas citas:
+
+        // 1. Agendar una cita
+        try {
+
+            LocalDateTime fecha = LocalDateTime.of(2025, 2, 21, 10, 0, 0);
+            Cita nuevaCita = new Cita(3, 3, fecha, "Pendiente", "Regular");
+            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
+            if (citaAgendada != null) {
+
+            LocalDateTime fecha = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
+            Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
+            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
+            if (citaAgendada != null) {
+                System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
+                } else {
+                    System.out.println("Error al agendar la cita.");
+                }
+
             // prueba recuperar direecion por id
             try{
             Direccion direccion = direccionDAO.obtenerDireccionPorIdPaciente(17);
@@ -407,7 +578,7 @@ public class Persistencia {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
             }
-            */
+            
 //no jala hay q arreglar
 //Pruebas citas:
 
@@ -460,29 +631,7 @@ e.printStackTrace();
 }
 */
 
-
-
-        /*
-
-        // 1. Agendar una cita
-        try {
-
-            LocalDateTime fecha = LocalDateTime.of(2025, 2, 21, 10, 0, 0);
-            Cita nuevaCita = new Cita(3, 3, fecha, "Pendiente", "Regular");
-            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
-            if (citaAgendada != null) {
-
-            LocalDateTime fecha = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
-            Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
-            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
-            if (citaAgendada != null) {
-                System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
-                } else {
-                    System.out.println("Error al agendar la cita.");
-                }
-            } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+/*
 
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
@@ -577,6 +726,10 @@ e.printStackTrace();
             System.out.println("Consulta eliminada correctamente.");
         } else {
             System.out.println("No se pudo eliminar la consulta.");
+
+        }*/
+
         }
+
     }
 }

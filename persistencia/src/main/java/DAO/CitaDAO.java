@@ -32,6 +32,23 @@ public class CitaDAO {
     }
     
     //agrgar cita
+    public void agregarCitaSimple(Cita cita) throws PersistenciaException {
+        String sql = "INSERT INTO Cita (id_paciente, id_medico, fechaHora, estado, tipoDeCita) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, cita.getIdPaciente());
+            ps.setInt(2, cita.getIdMedico());
+            ps.setTimestamp(3, Timestamp.valueOf(cita.getFecha()));
+            ps.setString(4, cita.getEstadoCita());
+            ps.setString(5, cita.getTipoCita());
+
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, "Error al agregar la cita: " + cita, ex);
+            throw new PersistenciaException("Error al agregar la cita en la base de datos.", ex);
+        }
+    }
 
     // vamos a separarlo y a usar este
     public int validarDisponibilidad(int idMedico, LocalDateTime fecha) throws PersistenciaException {
@@ -141,7 +158,7 @@ public class CitaDAO {
     
     public List<Medico> obtenerDoctoresDisponibles(String especialidad) throws PersistenciaException {
         List<Medico> doctores = new ArrayList<>();
-        String sql = "SELECT idUsuario, nombre, especialidad, cedula, estado FROM Medicos WHERE especialidad = ? AND estado = 'Disponible'";
+        String sql = "SELECT * FROM Medico WHERE especialidad = ? AND estado = 'Activo'";
 
         try (Connection conn = conexion.crearConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -150,10 +167,10 @@ public class CitaDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Medico medico = new Medico(
-                        rs.getInt("idUsuario"),
+                        rs.getInt("id_usuario"),
                         rs.getString("nombre"),
                         rs.getString("especialidad"),
-                        rs.getString("cedula"),
+                        rs.getString("cedulaProfesional"),
                         rs.getString("estado")
                     );
                     doctores.add(medico);
@@ -163,6 +180,7 @@ public class CitaDAO {
             throw new PersistenciaException("Error al obtener doctores disponibles", e);
         }
 
+        
         return doctores;
     }
     
@@ -209,4 +227,8 @@ public class CitaDAO {
         }
     }
 
+
+
+
 }
+
