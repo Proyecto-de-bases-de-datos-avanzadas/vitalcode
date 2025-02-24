@@ -142,7 +142,7 @@ public void agendarCita() throws NegocioException {
        boolean existeCita = DependencyInjector.agendarCita().existeCita(medicoSeleccionado.getId(), fecha);
 
         // Verificar si ya existe una cita en la misma fecha y hora para el mismo médico
-        if (existeCita) {
+        if (existeCita==true) {
             JOptionPane.showMessageDialog(null, "El médico ya tiene una cita agendada en la misma fecha y hora.", "Error al agendar cita", JOptionPane.ERROR_MESSAGE);
         } else {
             // Guardar la cita en la base de datos
