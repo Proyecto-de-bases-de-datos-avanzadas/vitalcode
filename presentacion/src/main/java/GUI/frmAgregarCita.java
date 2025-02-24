@@ -5,9 +5,18 @@
 package GUI;
 
 import DTO.MedicoDTO;
+import Exception.NegocioException;
 import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
+import entidades.Horario;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +28,7 @@ public class frmAgregarCita extends javax.swing.JFrame {
      * Creates new form frmAgregarCita
      */
     public final String nombrePaciente;
+    private final Map<String, MedicoDTO> medicosMap = new HashMap<>();
     public frmAgregarCita(String nombrePaciente) {
         this.nombrePaciente = nombrePaciente;
         initComponents();
@@ -36,13 +46,48 @@ public class frmAgregarCita extends javax.swing.JFrame {
         cmbMedico.removeAllItems();
 
         for (MedicoDTO medico : medicos) {
-            System.out.println("Nombre: " + medico.getNombre());
+            
             cmbMedico.addItem(medico.getNombre());
+            medicosMap.put(medico.getNombre(), medico); // guardar los doctores para poder consultar sus datos despues
         }
     } catch (PersistenciaException e) {
         e.printStackTrace();
     }
     }
+    
+    public void mostrarHorarioMedico () throws NegocioException, PersistenciaException{
+        String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
+        MedicoDTO medicoSeleccionado = medicosMap.get(nombreSeleccionado);
+        List<Horario> horarios = DependencyInjector.consultarMedico().recuperarHorarioMedico(medicoSeleccionado.getId());
+        for (Horario horario : horarios){
+            cmbDia.addItem(horario.getDiaSemana());
+        }
+        
+    }
+    private void actualizarIntervalos() {
+        try {
+            String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
+            MedicoDTO medicoSeleccionado = medicosMap.get(nombreSeleccionado);
+            int idMedico = medicoSeleccionado.getId(); 
+            Map<String, List<Time>> intervalosPorDia = DependencyInjector.consultarMedico().obtenerIntervalosMedico(idMedico);
+            String diaSeleccionado = (String) cmbDia.getSelectedItem();
+            List<Time> intervalos = intervalosPorDia.get(diaSeleccionado);
+
+            // Formato para convertir Time a String
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+            // Limpiar y actualizar los intervalos en el combo box
+            intervalosComboBox.removeAllItems();
+            if (intervalos != null) {
+            for (Time intervalo : intervalos) {
+                intervalosComboBox.addItem(sdf.format(intervalo));
+            }
+            }
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(null, "Error al obtener los intervalos: " + ex.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,12 +104,14 @@ public class frmAgregarCita extends javax.swing.JFrame {
         lblDia = new javax.swing.JLabel();
         cmbDia = new javax.swing.JComboBox<>();
         lblHora = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         lblMedico = new javax.swing.JLabel();
         cmbMedico = new javax.swing.JComboBox<>();
         btnRegresar1 = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
         btnEsp = new javax.swing.JButton();
+        btnDia = new javax.swing.JButton();
+        btnHorario = new javax.swing.JButton();
+        intervalosComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -83,17 +130,8 @@ public class frmAgregarCita extends javax.swing.JFrame {
         lblDia.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblDia.setText("Dia:");
 
-        cmbDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "20 de febrero", "25 de febrero", "10 de marzo" }));
-
         lblHora.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblHora.setText("Hora:");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "7:00 am", "8:00 am", "10:30 am" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
 
         lblMedico.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblMedico.setText("Medico:");
@@ -121,10 +159,30 @@ public class frmAgregarCita extends javax.swing.JFrame {
             }
         });
 
+        btnDia.setText("buscar dia");
+        btnDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiaActionPerformed(evt);
+            }
+        });
+
+        btnHorario.setText("buscar horario");
+        btnHorario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnHorarioMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 193, Short.MAX_VALUE)
+                .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(282, 282, 282))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -137,7 +195,7 @@ public class frmAgregarCita extends javax.swing.JFrame {
                         .addGap(365, 365, 365)
                         .addComponent(lblDia))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(353, 353, 353)
+                        .addGap(359, 359, 359)
                         .addComponent(lblHora))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(205, 205, 205)
@@ -146,16 +204,13 @@ public class frmAgregarCita extends javax.swing.JFrame {
                             .addComponent(lblEspecialidad)
                             .addComponent(cmbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(intervalosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
-                        .addComponent(btnEsp, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(253, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 193, Short.MAX_VALUE)
-                .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(282, 282, 282))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnEsp, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                            .addComponent(btnDia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnHorario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,20 +226,24 @@ public class frmAgregarCita extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblMedico)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDia))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDia)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnHorario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblHora)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(112, 112, 112)
+                .addGap(14, 14, 14)
+                .addComponent(intervalosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(104, 104, 104)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -200,10 +259,6 @@ public class frmAgregarCita extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
@@ -221,6 +276,18 @@ public class frmAgregarCita extends javax.swing.JFrame {
         mostrarDoctores(seleccion);
     }//GEN-LAST:event_btnEspMouseClicked
 
+    private void btnDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiaActionPerformed
+        try {
+            mostrarHorarioMedico();
+        } catch (NegocioException | PersistenciaException ex) {
+            Logger.getLogger(frmAgregarCita.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDiaActionPerformed
+
+    private void btnHorarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHorarioMouseClicked
+        actualizarIntervalos();
+    }//GEN-LAST:event_btnHorarioMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -228,12 +295,14 @@ public class frmAgregarCita extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnDia;
     private javax.swing.JButton btnEsp;
+    private javax.swing.JButton btnHorario;
     private javax.swing.JButton btnRegresar1;
     private javax.swing.JComboBox<String> cmbDia;
     private javax.swing.JComboBox<String> cmbEspecialidad;
     private javax.swing.JComboBox<String> cmbMedico;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> intervalosComboBox;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblDia;
     private javax.swing.JLabel lblEspecialidad;

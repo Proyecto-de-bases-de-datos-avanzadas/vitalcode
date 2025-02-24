@@ -11,10 +11,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
@@ -199,6 +201,10 @@ public class MedicoDAO {
         }
 
         return horarios;
+    }
+    public Map<String, List<Time>> consultarIntervalosMedico(int idMedico) throws PersistenciaException {
+        List<Horario> horarios = consultarHorarioMedico(idMedico);
+        return HorarioUtil.generarIntervalosPorDia(horarios);
     }
     
     public boolean actualizarEstadoMedico(int idMedico, String nuevoEstado) throws PersistenciaException {
