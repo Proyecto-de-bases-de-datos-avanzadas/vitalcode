@@ -4,6 +4,7 @@
 
 package com.mycompany.negocio;
 
+import BO.CitaBO;
 import BO.DireccionBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
@@ -31,6 +32,7 @@ public class Negocio {
     public static void main(String[] args) throws PersistenciaException, NegocioException {
         IConexionBD conexionBD = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
+        /*
         // Crear una instancia de MedicoBO
         //faltan inserts en la tabla jsj
         MedicoBO medicoBO = new MedicoBO(conexionBD);
@@ -182,6 +184,19 @@ try {
         } catch (Exception e) {
             System.err.println("Error inesperado: " + e.getMessage());
             e.printStackTrace();
+        }
+        */
+        //cita de emergencia
+        try{
+            CitaBO citaBO = new CitaBO(conexionBD);
+            boolean citaAgendada = citaBO.citaDeEmergencia(3);
+            if (citaAgendada){
+                System.out.println("Cita de emergencia registrada"); 
+            }else{
+                System.out.println("no se pudo agendar la cita");
+            }
+        }catch(NegocioException ne){
+            System.out.println(ne);
         }
     }
 }

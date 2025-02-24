@@ -612,24 +612,23 @@ System.out.println("Cita no encontrada.");
 // 3. Cancelar una cita
 boolean citaCancelada = citaDAO.cancelarCita(9);
 System.out.println("Cita cancelada: " + citaCancelada);
-
-//Cita emergencia
-try {
-int idPaciente = 4;
-
-boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
-
-if (citaEmergenciaAgendada) {
-System.out.println("Cita de emergencia agendada con éxito.");
-} else {
-System.out.println("Error al agendar la cita de emergencia.");
-}
-
-} catch (PersistenciaException e) {
-System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
-e.printStackTrace();
-}
 */
+//Cita emergencia
+    try {
+        int idPaciente = 3;
+
+        boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
+
+        if (citaEmergenciaAgendada) {
+            System.out.println("Cita de emergencia agendada con éxito.");
+        } else {
+            System.out.println("Error al agendar la cita de emergencia.");
+        }
+    }catch (PersistenciaException e) {
+        System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
+        e.printStackTrace();
+    }
+
 
 /*
 
