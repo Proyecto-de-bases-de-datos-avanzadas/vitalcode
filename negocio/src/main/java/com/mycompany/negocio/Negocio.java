@@ -34,7 +34,22 @@ public class Negocio {
         // Crear una instancia de MedicoBO
         //faltan inserts en la tabla jsj
         MedicoBO medicoBO = new MedicoBO(conexionBD);
-
+try {
+            // Llamar al método recuperarMedicoPorID
+            MedicoDTO medicoDTO = medicoBO.recuperarMedicoID(5); // Cambia el ID por el que deseas probar
+            if (medicoDTO != null) {
+                // Imprimir los detalles del médico recuperado
+                System.out.println("ID Usuario: " + medicoDTO.getId());
+                System.out.println("Nombre: " + medicoDTO.getNombre());
+                System.out.println("Especialidad: " + medicoDTO.getEspecialidad());
+                System.out.println("Cedula: " + medicoDTO.getCedula());
+                System.out.println("Estado: " + medicoDTO.getEstado());
+            } else {
+                System.out.println("No se encontró ningún médico con ese ID.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
         // Consultar todas las citas de un paciente
             try {
                 List<CitaDTO> todasLasCitas = pacienteBO.obtenerTodasLasCitas(4);
@@ -114,22 +129,7 @@ public class Negocio {
             e.printStackTrace();
         }
         
-         try {
-            // Llamar al método recuperarMedicoPorID
-            MedicoDTO medicoDTO = medicoBO.recuperarMedicoID(3); // Cambia el ID por el que deseas probar
-            if (medicoDTO != null) {
-                // Imprimir los detalles del médico recuperado
-                System.out.println("ID Usuario: " + medicoDTO.getId());
-                System.out.println("Nombre: " + medicoDTO.getNombre());
-                System.out.println("Especialidad: " + medicoDTO.getEspecialidad());
-                System.out.println("Cedula: " + medicoDTO.getCedula());
-                System.out.println("Estado: " + medicoDTO.getEstado());
-            } else {
-                System.out.println("No se encontró ningún médico con ese ID.");
-            }
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+         
         
         
         //recuperarar direccion por id

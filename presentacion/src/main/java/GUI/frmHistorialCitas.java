@@ -5,6 +5,7 @@
 package GUI;
 
 import DTO.CitaDTO;
+import DTO.MedicoDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
 import Exception.NegocioException;
@@ -44,7 +45,9 @@ public class frmHistorialCitas extends javax.swing.JFrame {
               }else{
                   txtCitasHist.setText("");
                   for (CitaDTO cita : Citas) {
-                    txtCitasHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+cita.getIdMedico()+"\n");
+                      MedicoDTO medicoCita = DependencyInjector.consultarMedico().recuperarMedicoID(cita.getIdMedico());
+                      String nombreMedico = medicoCita.getNombre();
+                    txtCitasHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+nombreMedico+"\n");
             }
               }
              
@@ -65,7 +68,7 @@ public class frmHistorialCitas extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
         lblFiltro = new javax.swing.JLabel();
         btnRegresar1 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cmbFiltra = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtCitasHist = new javax.swing.JTextArea();
         btnFiltro = new javax.swing.JButton();
@@ -96,13 +99,18 @@ public class frmHistorialCitas extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Especialidad" }));
+        cmbFiltra.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Especialidad" }));
 
         txtCitasHist.setColumns(20);
         txtCitasHist.setRows(5);
         jScrollPane2.setViewportView(txtCitasHist);
 
         btnFiltro.setText("filtrar");
+        btnFiltro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFiltroMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -114,7 +122,7 @@ public class frmHistorialCitas extends javax.swing.JFrame {
                         .addGap(193, 193, 193)
                         .addComponent(lblFiltro)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbFiltra, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -136,7 +144,7 @@ public class frmHistorialCitas extends javax.swing.JFrame {
                 .addGap(63, 63, 63)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFiltro)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbFiltra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFiltro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,12 +178,64 @@ public class frmHistorialCitas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
+    private void btnFiltroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFiltroMouseClicked
+        String filtrado = (String)cmbFiltra.getSelectedItem();
+        if (filtrado == "Especialidad"){
+            mostrarCitasEspecialidad();
+        }else{
+            filtrarCitasFecha();
+        }
+        
+    }//GEN-LAST:event_btnFiltroMouseClicked
+    public void mostrarCitasEspecialidad(){
+        try {
+             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+             int idUsuario = usuarioRecuperado.getId();
+             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+              List<CitaDTO> Citas = DependencyInjector.actualizarPaciente().obtenerCitasOrdenadasPorEspecialidad(idUsuario);
+              if(Citas.isEmpty()){
+                  txtCitasHist.append("No tiene citas registradas");
+              }else{
+                  txtCitasHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                    MedicoDTO medicoCita = DependencyInjector.consultarMedico().recuperarMedicoID(cita.getIdMedico());
+                      String Especialidad = medicoCita.getEspecialidad();
+                    txtCitasHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+Especialidad+"\n");
+            }
+              }
+             
+         } catch (NegocioException | PersistenciaException | SQLException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
+    public void filtrarCitasFecha(){
+        try {
+             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+             int idUsuario = usuarioRecuperado.getId();
+             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+              List<CitaDTO> Citas = DependencyInjector.actualizarPaciente().obtenerCitasOrdenadasPorEspecialidad(idUsuario);
+              if(Citas.isEmpty()){
+                  txtCitasHist.append("No tiene citas registradas");
+              }else{
+                  txtCitasHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                    MedicoDTO medicoCita = DependencyInjector.consultarMedico().recuperarMedicoID(cita.getIdMedico());
+                      
+                    String nombreMedico = medicoCita.getNombre();
+                    txtCitasHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+nombreMedico+"\n");
+            }
+              }
+             
+         } catch (NegocioException | PersistenciaException | SQLException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFiltro;
     private javax.swing.JButton btnRegresar1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cmbFiltra;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblFiltro;

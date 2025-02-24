@@ -38,6 +38,12 @@ public class Persistencia {
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
         
+         //recuperar medico por id
+        int idMedico = 5;
+        Medico medicoRecuperado = medicoDAO.consultarMedicoID(idMedico);
+        System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
+        System.out.println("Especialidad: "+medicoRecuperado.getEspecialidadMedico());
+        
         /*// Agregar una nueva cita
             Cita nuevaCita = new Cita();
             nuevaCita.setIdPaciente(37);

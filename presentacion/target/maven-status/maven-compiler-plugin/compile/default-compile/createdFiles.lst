@@ -68,6 +68,7 @@ GUI\frmPantallaPrincipalMedico$5.class
 GUI\frmModificarPerfil$1.class
 GUI\frmCitasMedico$4.class
 GUI\frmDetallesCitaEmergencia$2.class
+GUI\frmHistorialCitas$3.class
 GUI\frmRegistro$7.class
 GUI\frmModificarPerfil.class
 GUI\frmPerfilPaciente$2.class

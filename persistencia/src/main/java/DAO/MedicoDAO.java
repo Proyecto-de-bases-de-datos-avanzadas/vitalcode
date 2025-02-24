@@ -124,11 +124,12 @@ public class MedicoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Medico medico = new Medico();
-                    medico.setIdUsuario(rs.getInt("id_usuario"));
+                     medico.setIdUsuario(rs.getInt("id_usuario"));
                     medico.setNombre(rs.getString("nombre"));
-                    medico.setEspecialidadMedico("especialidad");
-                    medico.setCedulaMedico("cedula");
-                    medico.setEstadoMedico("estado");
+                    medico.setEspecialidadMedico(rs.getString("especialidad"));
+                    medico.setCedulaMedico(rs.getString("cedulaProfesional"));
+                    medico.setEstadoMedico(rs.getString("estado"));
+                
                     return medico;
                 } else {
                     throw new PersistenciaException("El médico con ID " + idMedico + " no ha sido encontrado.");
