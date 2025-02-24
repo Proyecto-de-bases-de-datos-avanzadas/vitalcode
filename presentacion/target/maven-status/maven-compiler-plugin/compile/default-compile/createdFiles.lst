@@ -81,6 +81,7 @@ GUI\frmEliminarCita$2.class
 GUI\frmIniciarSesion$1.class
 GUI\frmPantallaPrincipalMedico$6.class
 GUI\frmCitaEmergencia$1.class
+GUI\frmAgregarCita$6.class
 com\mycompany\presentacion\Presentacion.class
 GUI\frmCitaEmergencia$4.class
 GUI\frmPerfilMedico$2.class

@@ -4,13 +4,25 @@
  */
 package GUI;
 
+import DTO.CitaDTO;
 import DTO.MedicoDTO;
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
+import entidades.Cita;
 import entidades.Horario;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +99,56 @@ public class frmAgregarCita extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error al obtener los intervalos: " + ex.getMessage());
         }
     }
+    public LocalDate obtenerProximoDiaDeLaSemana(String diaSemana) {
+        DayOfWeek diaActual = LocalDate.now().getDayOfWeek();
+        DayOfWeek diaSeleccionado = DayOfWeek.valueOf(diaSemana.toUpperCase());
+
+    // Calcular los días de diferencia entre hoy y el próximo día seleccionado
+    int diasDiferencia = diaSeleccionado.getValue() - diaActual.getValue();
+    if (diasDiferencia <= 0) {
+        diasDiferencia += 7; // Asegurarse de que sea la próxima semana
+    }
+
+    return LocalDate.now().plusDays(diasDiferencia);
+}
+    public LocalDateTime crearLocalDateTime() {
+        String diaSeleccionado = (String) cmbDia.getSelectedItem();
+        String intervaloSeleccionado = (String) intervalosComboBox.getSelectedItem();
+
+        LocalDate fechaDia = obtenerProximoDiaDeLaSemana(diaSeleccionado);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime tiempo = LocalTime.parse(intervaloSeleccionado, formatter);
+
+        return LocalDateTime.of(fechaDia, tiempo);
+    }
+    public void agendarCita() throws NegocioException {
+    try {
+        String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
+        MedicoDTO medicoSeleccionado = medicosMap.get(nombreSeleccionado);
+
+        LocalDateTime fecha = crearLocalDateTime(); // Crear LocalDateTime con los datos del frame
+        
+        // Estado y tipo de cita (puedes ajustarlos según tu lógica)
+        String estadoCita = "Pendiente";
+        String tipoCita = "Regular";
+        
+         UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+             int idUsuario = usuarioRecuperado.getId();
+             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+        // Crear una nueva cita
+        CitaDTO nuevaCita = new CitaDTO(paciente.getIdUsuario(), medicoSeleccionado.getId(), fecha, estadoCita, tipoCita);
+
+        // Guardar la cita en la base de datos
+        DependencyInjector.agendarCita().agregarCitaSimple(nuevaCita);
+
+        JOptionPane.showMessageDialog(null, "Cita agendada.");
+
+    } catch (PersistenciaException e) {
+        e.printStackTrace();
+    }
+}
+
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -151,6 +213,11 @@ public class frmAgregarCita extends javax.swing.JFrame {
         });
 
         btnAgregar.setText("Agendar");
+        btnAgregar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAgregarMouseClicked(evt);
+            }
+        });
 
         btnEsp.setText("buscar medicos");
         btnEsp.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -287,6 +354,16 @@ public class frmAgregarCita extends javax.swing.JFrame {
     private void btnHorarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHorarioMouseClicked
         actualizarIntervalos();
     }//GEN-LAST:event_btnHorarioMouseClicked
+
+    private void btnAgregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarMouseClicked
+        try {
+            agendarCita();
+            
+        } catch (NegocioException ex) {
+            Logger.getLogger(frmAgregarCita.class.getName()).log(Level.SEVERE, null, ex);
+             JOptionPane.showMessageDialog(null, "Error agendar la cita: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnAgregarMouseClicked
 
     /**
      * @param args the command line arguments
