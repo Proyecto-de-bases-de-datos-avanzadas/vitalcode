@@ -264,7 +264,8 @@ public class frmPantallaPrinicipalPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_bntCerrarSesionMouseClicked
 
     private void btnCitasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCitasMouseClicked
-        frmCitasPaciente citasPaciente = new frmCitasPaciente();
+        frmCitasPaciente citasPaciente = new frmCitasPaciente(nombrePaciente);
+        //citasPaciente.mostrarCitas();
         citasPaciente.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnCitasMouseClicked
@@ -285,7 +286,7 @@ public class frmPantallaPrinicipalPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCitaEmergenciaMouseClicked
 
     private void btnHistorialMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistorialMouseClicked
-        frmHistorialCitas historial = new frmHistorialCitas();
+        frmHistorialCitas historial = new frmHistorialCitas(nombrePaciente);
         historial.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnHistorialMouseClicked

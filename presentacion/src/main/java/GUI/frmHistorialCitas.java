@@ -4,6 +4,17 @@
  */
 package GUI;
 
+import DTO.CitaDTO;
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -13,10 +24,34 @@ public class frmHistorialCitas extends javax.swing.JFrame {
     /**
      * Creates new form frmHistorialCitas
      */
-    public frmHistorialCitas() {
+    
+    public final String nombrePaciente;
+    public frmHistorialCitas(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+        
         initComponents();
+        mostrarHistorialCitas();
+        
     }
-
+    public void mostrarHistorialCitas(){
+        try {
+             UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+             int idUsuario = usuarioRecuperado.getId();
+             PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+              List<CitaDTO> Citas = DependencyInjector.actualizarPaciente().obtenerTodasLasCitas(idUsuario);
+              if(Citas.isEmpty()){
+                  txtCitasHist.append("No tiene citas registradas");
+              }else{
+                  txtCitasHist.setText("");
+                  for (CitaDTO cita : Citas) {
+                    txtCitasHist.append(cita.getFecha()+" "+cita.getTipoCita()+" "+cita.getIdMedico()+"\n");
+            }
+              }
+             
+         } catch (NegocioException | PersistenciaException | SQLException ex) {
+             Logger.getLogger(frmCitasPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,14 +64,13 @@ public class frmHistorialCitas extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         lblFiltro = new javax.swing.JLabel();
-        rbFecha = new javax.swing.JRadioButton();
-        rbEspecialidad = new javax.swing.JRadioButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lstHistorial = new javax.swing.JList<>();
         btnRegresar1 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtCitasHist = new javax.swing.JTextArea();
+        btnFiltro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(854, 498));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -47,17 +81,6 @@ public class frmHistorialCitas extends javax.swing.JFrame {
 
         lblFiltro.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblFiltro.setText("Filtrar por:");
-
-        rbFecha.setText("Fecha");
-
-        rbEspecialidad.setText("Especialidad");
-
-        lstHistorial.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Martes 16 de Enero - Cardiologia - Medico3", "Viernes 03 de Febrero - Medicina Familiar . Doctor1" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(lstHistorial);
 
         btnRegresar1.setBackground(new java.awt.Color(0, 0, 0));
         btnRegresar1.setForeground(new java.awt.Color(255, 255, 255));
@@ -73,6 +96,14 @@ public class frmHistorialCitas extends javax.swing.JFrame {
             }
         });
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Especialidad" }));
+
+        txtCitasHist.setColumns(20);
+        txtCitasHist.setRows(5);
+        jScrollPane2.setViewportView(txtCitasHist);
+
+        btnFiltro.setText("filtrar");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -80,37 +111,38 @@ public class frmHistorialCitas extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(315, 315, 315)
-                        .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(216, 216, 216)
+                        .addGap(193, 193, 193)
                         .addComponent(lblFiltro)
                         .addGap(18, 18, 18)
-                        .addComponent(rbFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(rbEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(193, 193, 193)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTitulo))))
-                .addContainerGap(219, Short.MAX_VALUE))
+                        .addGap(185, 185, 185)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(204, 204, 204)
+                        .addComponent(lblTitulo))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(339, 339, 339)
+                        .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(50, 50, 50)
                 .addComponent(lblTitulo)
-                .addGap(45, 45, 45)
+                .addGap(63, 63, 63)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFiltro)
-                    .addComponent(rbFecha)
-                    .addComponent(rbEspecialidad))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFiltro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -129,6 +161,7 @@ public class frmHistorialCitas extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
+        pantallaprincipal.setNombrePaciente(nombrePaciente);
         pantallaprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresar1MouseClicked
@@ -137,49 +170,16 @@ public class frmHistorialCitas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmHistorialCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmHistorialCitas().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFiltro;
     private javax.swing.JButton btnRegresar1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JList<String> lstHistorial;
-    private javax.swing.JRadioButton rbEspecialidad;
-    private javax.swing.JRadioButton rbFecha;
+    private javax.swing.JTextArea txtCitasHist;
     // End of variables declaration//GEN-END:variables
 }

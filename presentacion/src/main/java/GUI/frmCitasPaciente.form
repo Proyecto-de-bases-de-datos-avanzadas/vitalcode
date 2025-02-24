@@ -67,7 +67,7 @@
                               <Component id="btnEliminarCita" min="-2" pref="207" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="btnRegresar" alignment="0" min="-2" pref="82" max="-2" attributes="0"/>
+                      <Component id="btnRegresar" alignment="0" min="-2" pref="127" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="162" max="32767" attributes="0"/>
               </Group>
@@ -117,7 +117,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextArea1">
+            <Component class="javax.swing.JTextArea" name="txtCitas">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="columns" type="int" value="20"/>

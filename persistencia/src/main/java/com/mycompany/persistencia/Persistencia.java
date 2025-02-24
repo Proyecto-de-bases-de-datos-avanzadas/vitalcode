@@ -16,7 +16,6 @@ import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,12 +35,12 @@ public class Persistencia {
         DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
         UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         CitaDAO citaDAO = new CitaDAO(conexionBD);
-        /*
+        
         // Agregar una nueva cita
             Cita nuevaCita = new Cita();
             nuevaCita.setIdPaciente(37);
             nuevaCita.setIdMedico(3);
-            nuevaCita.setFecha(Date.valueOf("2025-03-01 10:00:00"));
+            nuevaCita.setFecha(Timestamp.valueOf("2025-03-01 10:00:00"));
             nuevaCita.setEstadoCita("Pendiente");
             nuevaCita.setFolioCita(12345);
             nuevaCita.setTipoCita("Regular");
@@ -345,15 +344,19 @@ public class Persistencia {
         } catch (Exception ex) {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
-        }*/
-//no jala hay q arreglar 
+        }
+=//no jala hay q arreglar 
         //Pruebas citas:
-        LocalDateTime fechaHoraEspecifica = LocalDateTime.of(2025, 2, 21, 9, 0, 0);
-        Cita nuevaCita2 = new Cita(3, 2, fechaHoraEspecifica, "Pendiente", "Regular");
-               
+        Cita nuevaCita = new Cita();
+        nuevaCita.setIdPaciente(1);
+        nuevaCita.setIdMedico(3);
+        nuevaCita.setFecha(Date.valueOf("2025-03-20"));
+        nuevaCita.setEstadoCita("Pendiente");
+        nuevaCita.setTipoCita("Regular");
+        
         // 1. Agendar una cita
         try {
-            Cita citaAgendada = citaDAO.agendarCita(nuevaCita2);
+            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
             if (citaAgendada != null) {
                 System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
                 } else {
@@ -362,7 +365,6 @@ public class Persistencia {
             } catch (PersistenciaException e) {
             e.printStackTrace();
         }
-        /*
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
@@ -394,6 +396,6 @@ public class Persistencia {
         } catch (PersistenciaException e) {
             System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
             e.printStackTrace();
-        }*/
+        }
     }
 }

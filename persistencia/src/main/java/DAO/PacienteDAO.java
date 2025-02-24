@@ -133,14 +133,16 @@ public class PacienteDAO {
         }
     }
     
-     
-    
-     public List<Cita> obtenerTodasLasCitas(int idPaciente) throws SQLException {
+
+    public List<Cita> obtenerTodasLasCitas(int idPaciente) throws SQLException {
+
         List<Cita> citas = new ArrayList<>();
         String query = "SELECT * FROM Cita WHERE id_paciente = ?";
 
         try (Connection conn = conexion.crearConexion();
+
          PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setInt(1, idPaciente);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -155,13 +157,41 @@ public class PacienteDAO {
                 }
             }
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return citas;
-    } 
+    }
+    
     public List<Cita> obtenerCitasPendientes(int idPaciente) throws SQLException {
+        List<Cita> citas = new ArrayList<>();
+        String query = "SELECT * FROM Cita WHERE id_paciente = ? AND  estado = 'Pendiente'";
+
+      try (Connection conn = conexion.crearConexion();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idPaciente);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+                    cita.setIdCita(rs.getInt("id"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setFecha(rs.getDate("fechaHora"));
+                    cita.setEstadoCita(rs.getString("estado"));
+                    cita.setTipoCita(rs.getString("tipoDeCita"));
+                    citas.add(cita);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citas;
+    }
+
+    
+    public List<Cita> obtenerCitasOrdenadasPorFecha(int idPaciente) throws SQLException {
     List<Cita> citas = new ArrayList<>();
-    String query = "SELECT * FROM Cita WHERE id_paciente = ? AND fechaHora > NOW() AND estado = 'Pendiente'";
+    String query = "SELECT * FROM Cita WHERE id_paciente = ? ORDER BY fechaHora";
 
     try (Connection conn = conexion.crearConexion();
          PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -178,11 +208,34 @@ public class PacienteDAO {
                 citas.add(cita);
             }
         }
-    } catch (SQLException e) {
-        e.printStackTrace(); // Puedes personalizar el manejo de excepciones según tus necesidades
-    }   catch (PersistenciaException ex) {
-            Logger.getLogger(CitaDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (PersistenciaException ex) {
+        Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return citas;}
+    
+    public List<Cita> obtenerCitasOrdenadasPorEspecialidad(int idPaciente) throws SQLException {
+    List<Cita> citas = new ArrayList<>();
+    String query = "SELECT c.* FROM Cita c JOIN Medico m ON c.id_medico = m.id_usuario WHERE c.id_paciente = ? ORDER BY m.especialidad";
+
+    try (Connection conn = conexion.crearConexion();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, idPaciente);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Cita cita = new Cita();
+                cita.setIdCita(rs.getInt("id"));
+                cita.setIdPaciente(rs.getInt("id_paciente"));
+                cita.setIdMedico(rs.getInt("id_medico"));
+                cita.setFecha(rs.getDate("fechaHora"));
+                cita.setEstadoCita(rs.getString("estado"));
+                cita.setTipoCita(rs.getString("tipoDeCita"));
+                citas.add(cita);
+            }
         }
+    } catch (PersistenciaException ex) {
+        Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
     return citas;
 }
+
 }
