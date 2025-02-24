@@ -111,4 +111,6 @@ public class Cita {
         this.estadoCita = estadoCita;
         this.tipoCita = tipoCita;
     }
+
 }  
+

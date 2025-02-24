@@ -33,6 +33,7 @@ public class Persistencia {
 
     public static void main(String[] args) throws PersistenciaException {
         
+
        
             
             IConexionBD conexionBD = new ConexionBD();
@@ -87,7 +88,15 @@ public class Persistencia {
             System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
             System.out.println("Especialidad: "+medicoRecuperado.getEspecialidadMedico());
             
-            / Agregar una nueva cita
+
+            
+
+   
+
+        /*
+        //Agregar una nueva cita
+
+
             Cita nuevaCita = new Cita();
             nuevaCita.setIdPaciente(37);
             nuevaCita.setIdMedico(3);
@@ -622,12 +631,8 @@ e.printStackTrace();
 }
 */
 
+/*
 
-        /*
-=======
-        }
-
->>>>>>> origin/main (688b3ab) - Merge branch 'ma
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
@@ -721,6 +726,10 @@ e.printStackTrace();
             System.out.println("Consulta eliminada correctamente.");
         } else {
             System.out.println("No se pudo eliminar la consulta.");
+
         }*/
+
+        }
+
     }
 }
