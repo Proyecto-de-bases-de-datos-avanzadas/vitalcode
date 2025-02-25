@@ -27,7 +27,7 @@ public class inicio {
        frmIniciarSesion inicioSesion = new frmIniciarSesion();
         inicioSesion.setVisible(true);
        
-           
+           //TODO DEBERIA DE ESTAR CORRECTO SOLO HAY UN ERROR A LA HORA DE CORRER PRESENTACION
     }
     
 }
