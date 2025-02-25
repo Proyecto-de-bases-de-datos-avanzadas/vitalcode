@@ -5,6 +5,7 @@
 package BO;
 
 import DAO.CitaDAO;
+
 import DTO.CitaDTO;
 import DTO.MedicoDTO;
 import Exception.NegocioException;
@@ -111,4 +112,5 @@ public class CitaBO {
         }
     }
 }
+
 

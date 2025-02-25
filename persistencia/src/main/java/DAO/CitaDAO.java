@@ -241,9 +241,4 @@ public class CitaDAO {
             throw new PersistenciaException("Error al consultar la cita: " + e.getMessage(), e);
         }
     }
-
-
-
-
 }
-
