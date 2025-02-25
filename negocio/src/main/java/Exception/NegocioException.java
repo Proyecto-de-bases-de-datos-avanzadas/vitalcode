@@ -2,7 +2,7 @@ package Exception;
 
 /**
  *
- * @author JR
+ * @author ErnestoLpz_252663
  */
 public class NegocioException extends Exception {
     

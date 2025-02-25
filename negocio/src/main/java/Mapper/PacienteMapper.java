@@ -58,7 +58,4 @@ public class PacienteMapper {
         
         return pacienteDTO;
     }
-    
-    
-    
 }

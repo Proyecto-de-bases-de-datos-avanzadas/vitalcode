@@ -1,16 +1,9 @@
-    /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.negocio;
 
-import BO.CitaBO;
-import BO.ConsultaBO;
 import BO.DireccionBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
-import DAO.ConsultaDAO;
 import DTO.CitaDTO;
 import DTO.DireccionNDTO;
 import DTO.HorarioDTO;
@@ -23,11 +16,9 @@ import Exception.NegocioException;
 import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
-import entidades.Consulta;
-import entidades.Horario;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
+    
 /**
  *
  * @author alexnieblas
@@ -37,14 +28,10 @@ public class Negocio {
     public static void main(String[] args) throws PersistenciaException, NegocioException {
         IConexionBD conexionBD = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexionBD);
-        ConsultaDAO consultaDAO = new ConsultaDAO(conexionBD);  // Instancia tu DAO aquí
-        ConsultaBO consultaBO = new ConsultaBO(consultaDAO);
-        
-        /*
         // Crear una instancia de MedicoBO
         //faltan inserts en la tabla jsj
         MedicoBO medicoBO = new MedicoBO(conexionBD);
-try {
+            try {
             // Llamar al método recuperarMedicoPorID
             MedicoDTO medicoDTO = medicoBO.recuperarMedicoID(5); // Cambia el ID por el que deseas probar
             if (medicoDTO != null) {
@@ -187,45 +174,6 @@ try {
         } catch (Exception e) {
             System.err.println("Error inesperado: " + e.getMessage());
             e.printStackTrace();
-        }
-        */
-        //cita de emergencia
-//        try{
-//            CitaBO citaBO = new CitaBO(conexionBD);
-//            boolean citaAgendada = citaBO.citaDeEmergencia(3);
-//            if (citaAgendada){
-//                System.out.println("Cita de emergencia registrada"); 
-//            }else{
-//                System.out.println("no se pudo agendar la cita");
-//            }
-//        }catch(NegocioException ne){
-//            System.out.println(ne);
-//        }
-
-        // Test del método agregarConsulta
-        int idCita = 1;
-        String tipoDeConsulta = "Consulta General";
-        LocalDateTime fechaHora = LocalDateTime.of(2025, 2, 24, 10, 30);  // Fecha y hora de ejemplo
-        String diagnostico = "Diagnóstico de prueba";
-        String notas = "Notas adicionales";
-        
-        boolean resultado = consultaBO.agregarConsulta(idCita, tipoDeConsulta, fechaHora, diagnostico, notas);
-        System.out.println("Resultado de agregar consulta: " + resultado);
-
-        // Test del método eliminarConsulta
-        int idConsulta = 1;
-        boolean eliminacion = consultaBO.eliminarConsulta(idConsulta);
-        System.out.println("Resultado de eliminar consulta: " + eliminacion);
-        
-        // Test del método obtenerConsultasPorMedico
-        int idMedico = 1;
-        List<Consulta> consultas = consultaBO.obtenerConsultasPorMedico(idMedico);
-        if (consultas != null && !consultas.isEmpty()) {
-            for (Consulta consulta : consultas) {
-                System.out.println(consulta);
-            }
-        } else {
-            System.out.println("No se encontraron consultas para el médico con ID " + idMedico);
         }
     }
 }
