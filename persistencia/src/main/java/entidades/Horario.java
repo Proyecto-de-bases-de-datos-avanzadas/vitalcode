@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.sql.Time;
@@ -16,6 +12,15 @@ public class Horario {
     private Time horaEntrada;
     private Time horaSalida;
 
+    public Horario() {
+    }
+    
+    public Horario(String diaSemana, Time horaEntrada, Time horaSalida) {
+        this.diaSemana = diaSemana;
+        this.horaEntrada = horaEntrada;
+        this.horaSalida = horaSalida;
+    }
+    
     // Getters y Setters
     public int getId() {
         return id;

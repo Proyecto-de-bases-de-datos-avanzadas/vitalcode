@@ -9,7 +9,6 @@ import Exception.PersistenciaException;
 import conexion.ConexionBD;
 import conexion.IConexionBD;
 import entidades.Cita;
-import entidades.Consulta;
 import entidades.Direccion;
 import entidades.Horario;
 import entidades.Medico;
@@ -17,13 +16,11 @@ import entidades.Paciente;
 import entidades.Usuario;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -31,19 +28,56 @@ import java.util.logging.Logger;
  */
 public class Persistencia {
 
-    public static void main(String[] args) throws PersistenciaException {
+    public static void main(String[] args) throws PersistenciaException, ParseException {
         
-
-       
-            
             IConexionBD conexionBD = new ConexionBD();
             PacienteDAO pacienteDAO = new PacienteDAO(conexionBD);
-            MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
             DireccionDAO direccionDAO = new DireccionDAO(conexionBD);
             UsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
             CitaDAO citaDAO = new CitaDAO(conexionBD);
             
- /*           // Consultar todas las citas de un médico por fecha
+            
+            // 1. Crear listas para usuarios y médicos
+        List<Usuario> usuarios = new ArrayList<>();
+        List<Medico> medicos = new ArrayList<>();
+
+        // 2. Crear médicos con diferentes especialidades (aggare al azar)
+        String[] nombres = {"Dr. Juan", "Dra. Ana", "Dr. Luis", "Dra. María", "Dr. Carlos"};
+        String[] especialidades = {"Cardiología", "Pediatría", "Neurología", "Ortopedia", "Dermatología"};
+        String[] cedulas = {"12345", "67890", "54321", "98765", "56789"};
+        String[] usuariosNombres = {"usuario1", "usuario2", "usuario3", "usuario4", "usuario5"};
+        String[] contraseñas = {"pass1", "pass2", "pass3", "pass4", "pass5"};
+
+        // 3. Generar médicos, usuarios y asignar horarios de lunes a viernes para to2 los médicos
+        for (int i = 0; i < 5; i++) {
+            // Crear usuario
+            Usuario usuario = new Usuario(usuariosNombres[i], contraseñas[i], "Medico");
+            usuarios.add(usuario);
+
+            // Crear horarios de lunes a viernes con diferentes horas
+//            List<Horario> horarios = new ArrayList<>();
+//            horarios.add(new Horario("Monday", Time.valueOf("08:00:00"), Time.valueOf("14:00:00")));
+//            horarios.add(new Horario("Tuesday", Time.valueOf("09:00:00"), Time.valueOf("15:00:00")));
+//            horarios.add(new Horario("Wednesday", Time.valueOf("10:00:00"), Time.valueOf("16:00:00")));
+//            horarios.add(new Horario("Thursday", Time.valueOf("11:00:00"), Time.valueOf("17:00:00")));
+//            horarios.add(new Horario("Friday", Time.valueOf("12:00:00"), Time.valueOf("18:00:00")));
+
+            // Crear médico
+//            Medico medico = new Medico(nombres[i], especialidades[i], cedulas[i], "Activo", horarios);
+//            medicos.add(medico);
+        }
+
+        // Crear DAO y llamar al método de inserción masiva de la DAO
+        MedicoDAO medicoDAO = new MedicoDAO(new ConexionBD());
+
+        try {
+            boolean resultado = medicoDAO.agregarMedicosConHorarios(medicos, usuarios);
+            System.out.println("Inserción masiva completada: " + resultado);
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+        }
+        
+            // Consultar todas las citas de un médico por fecha
             List<Cita> todasLasCitasFecha = medicoDAO.obtenerTodasLasCitasPorFecha(5);
             System.out.println("Todas las citas del médico:");
             for (Cita cita : todasLasCitasFecha) {
@@ -87,30 +121,22 @@ public class Persistencia {
             Medico medicoRecuperado = medicoDAO.consultarMedicoID(idMedico);
             System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
             System.out.println("Especialidad: "+medicoRecuperado.getEspecialidadMedico());
-            
 
-            
-
-   
-
-        /*
         //Agregar una nueva cita
-
-
-            Cita nuevaCita = new Cita();
-            nuevaCita.setIdPaciente(37);
-            nuevaCita.setIdMedico(3);
-            nuevaCita.setFecha(Timestamp.valueOf("2025-03-01 10:00:00"));
-            nuevaCita.setEstadoCita("Pendiente");
-            nuevaCita.setFolioCita(12345);
-            nuevaCita.setTipoCita("Regular");
-
-            try {
-            citaDAO.agendarCita(nuevaCita);
-            System.out.println("Cita agregada exitosamente.");
-            } catch (PersistenciaException e) {
-            System.err.println("Error al agregar la cita: " + e.getMessage());
-            }
+//            Cita nuevaCita = new Cita();
+//            nuevaCita.setIdPaciente(37);
+//            nuevaCita.setIdMedico(3);
+//            nuevaCita.setFecha(Timestamp.valueOf("2025-03-01 10:00:00"));
+//            nuevaCita.setEstadoCita("Pendiente");
+//            nuevaCita.setFolioCita(12345);
+//            nuevaCita.setTipoCita("Regular");
+//
+//            try {
+//            citaDAO.agendarCita(nuevaCita);
+//            System.out.println("Cita agregada exitosamente.");
+//            } catch (PersistenciaException e) {
+//            System.err.println("Error al agregar la cita: " + e.getMessage());
+//            }
 
             // Consultar todas las citas de un paciente
             try {
@@ -153,8 +179,8 @@ public class Persistencia {
             
             try {
             // Probar el método getHorarioDisponible
-            int idMedico = 3; 
-            List<String> horarios = citaDAO.obtenerHorarioDisponible(idMedico);
+            int idMedico2 = 3; 
+            List<String> horarios = citaDAO.obtenerHorarioDisponible(idMedico2);
 
             System.out.println("Horarios disponibles para el doctor con ID " + idMedico + ":");
             for (String horario : horarios) {
@@ -222,9 +248,9 @@ public class Persistencia {
             
             
             //recuperar medico por id
-            int idMedico = 3;
-            Medico medicoRecuperado = medicoDAO.consultarMedicoID(idMedico);
-            System.out.println("nombre Medico: "+medicoRecuperado.getNombre());
+            int idMedico3 = 3;
+            Medico medicoRecuperado2 = medicoDAO.consultarMedicoID(idMedico3);
+            System.out.println("nombre Medico: "+medicoRecuperado2.getNombre());
             
             
             // modificar direccion
@@ -406,27 +432,31 @@ public class Persistencia {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
         }
-*/
-            /*
-//no jala hay q arreglar 
-        //Pruebas citas:
 
+        //Pruebas citas:
         // 1. Agendar una cita
         try {
-
             LocalDateTime fecha = LocalDateTime.of(2025, 2, 21, 10, 0, 0);
-            Cita nuevaCita = new Cita(3, 3, fecha, "Pendiente", "Regular");
-            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
-            if (citaAgendada != null) {
+            Cita nuevaCita6 = new Cita(3, 3, fecha, "Pendiente", "Regular");
+            Cita citaAgendada = citaDAO.agendarCita(nuevaCita6); // Corrige nuevaCita
 
-            LocalDateTime fecha = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
-            Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
-            Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
             if (citaAgendada != null) {
-                System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
+                LocalDateTime fecha7 = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
+                Cita nuevaCita9 = new Cita(3, 2, fecha7, "Pendiente", "Regular");
+                Cita citaAgendada8 = citaDAO.agendarCita(nuevaCita9);
+
+                if (citaAgendada8 != null) {
+                    System.out.println("Cita agendada con éxito: " + citaAgendada8.getIdCita());
                 } else {
                     System.out.println("Error al agendar la cita.");
                 }
+            } else {
+                System.out.println("Error al agendar la primera cita.");
+            }
+        } catch (PersistenciaException e) {
+            System.err.println("Error de persistencia al agendar citas: " + e.getMessage());
+            e.printStackTrace();
+        }
 
             // prueba recuperar direecion por id
             try{
@@ -578,75 +608,71 @@ public class Persistencia {
             System.err.println("Ocurrió un error inesperado: " + ex.getMessage());
             ex.printStackTrace();
             }
-            
-//no jala hay q arreglar
-//Pruebas citas:
 
-/*
-// 1. Agendar una cita
-try {
-    LocalDateTime fecha = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
-    Cita nuevaCita = new Cita(3, 2, fecha, "Pendiente", "Regular");
-    Cita citaAgendada = citaDAO.agendarCita(nuevaCita);
-    if (citaAgendada != null) {
-        System.out.println("Cita agendada con éxito: " + citaAgendada.getIdCita());
-    } else {
-        System.out.println("Error al agendar la cita.");
-    }
-} catch (PersistenciaException e) {
-    e.printStackTrace();
-}
-/*
-// 2. Consultar una cita por ID
-Cita citaConsultada = citaDAO.consultarCitaPorID(1);
-if (citaConsultada != null) {
-System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
-System.out.println("ID Medico: " + citaConsultada.getIdMedico());
-System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
-System.out.println("Estado: " + citaConsultada.getEstadoCita());
-System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
-} else {
-System.out.println("Cita no encontrada.");
-}
-
-// 3. Cancelar una cita
-boolean citaCancelada = citaDAO.cancelarCita(9);
-System.out.println("Cita cancelada: " + citaCancelada);
-*/
-//Cita emergencia
-    try {
-        int idPaciente = 3;
-
-        boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
-
-        if (citaEmergenciaAgendada) {
-            System.out.println("Cita de emergencia agendada con éxito.");
-        } else {
-            System.out.println("Error al agendar la cita de emergencia.");
+        //Pruebas citas:
+        
+        // 1. Agendar una cita
+        try {
+            LocalDateTime fecha3 = LocalDateTime.of(2025, 2, 28, 10, 0, 0);
+            Cita nuevaCita = new Cita(3, 2, fecha3, "Pendiente", "Regular");
+            Cita citaAgendada4 = citaDAO.agendarCita(nuevaCita);
+            if (citaAgendada4 != null) {
+                System.out.println("Cita agendada con éxito: " + citaAgendada4.getIdCita());
+            } else {
+                System.out.println("Error al agendar la cita.");
+            }
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
         }
-    }catch (PersistenciaException e) {
-        System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
-        e.printStackTrace();
-    }
-
-
-/*
-
+        
         // 2. Consultar una cita por ID
         Cita citaConsultada = citaDAO.consultarCitaPorID(1);
         if (citaConsultada != null) {
-            System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
-            System.out.println("ID Medico: " + citaConsultada.getIdMedico());
-            System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
-            System.out.println("Estado: " + citaConsultada.getEstadoCita());
-            System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
+        System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
+        System.out.println("ID Medico: " + citaConsultada.getIdMedico());
+        System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
+        System.out.println("Estado: " + citaConsultada.getEstadoCita());
+        System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
         } else {
-            System.out.println("Cita no encontrada.");
+        System.out.println("Cita no encontrada.");
         }
 
         // 3. Cancelar una cita
         boolean citaCancelada = citaDAO.cancelarCita(9);
         System.out.println("Cita cancelada: " + citaCancelada);
+
+        //Cita emergencia
+        try {
+        int idPaciente = 4;
+
+        boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
+
+        if (citaEmergenciaAgendada) {
+        System.out.println("Cita de emergencia agendada con éxito.");
+        } else {
+        System.out.println("Error al agendar la cita de emergencia.");
+        }
+
+        } catch (PersistenciaException e) {
+        System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
+        e.printStackTrace();
+        }
+
+        // 2. Consultar una cita por ID
+        Cita citaConsultada3 = citaDAO.consultarCitaPorID(1);
+        if (citaConsultada != null) {
+            System.out.println("ID Paciente: " + citaConsultada3.getIdPaciente());
+            System.out.println("ID Medico: " + citaConsultada3.getIdMedico());
+            System.out.println("Fecha y Hora: " + citaConsultada3.getFecha());
+            System.out.println("Estado: " + citaConsultada3.getEstadoCita());
+            System.out.println("Tipo de Cita: " + citaConsultada3.getTipoCita());
+        } else {
+            System.out.println("Cita no encontrada.");
+        }
+
+        // 3. Cancelar una cita
+        boolean citaCancelada2 = citaDAO.cancelarCita(9);
+        System.out.println("Cita cancelada: " + citaCancelada2);
         
         //Cita emergencia
         try {
@@ -663,40 +689,39 @@ System.out.println("Cita cancelada: " + citaCancelada);
         } catch (PersistenciaException e) {
             e.printStackTrace();
         }
-
         
-//        // 2. Consultar una cita por ID
-//        Cita citaConsultada = citaDAO.consultarCitaPorID(1);
-//        if (citaConsultada != null) {
-//            System.out.println("ID Paciente: " + citaConsultada.getIdPaciente());
-//            System.out.println("ID Medico: " + citaConsultada.getIdMedico());
-//            System.out.println("Fecha y Hora: " + citaConsultada.getFecha());
-//            System.out.println("Estado: " + citaConsultada.getEstadoCita());
-//            System.out.println("Tipo de Cita: " + citaConsultada.getTipoCita());
-//        } else {
-//            System.out.println("Cita no encontrada.");
-//        }
-//
-//        // 3. Cancelar una cita
-//        boolean citaCancelada = citaDAO.cancelarCita(9);
-//        System.out.println("Cita cancelada: " + citaCancelada);
-//        
-//        //Cita emergencia
-//        try {
-//            int idPaciente = 4;
-//
-//            boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
-//
-//            if (citaEmergenciaAgendada) {
-//                System.out.println("Cita de emergencia agendada con éxito.");
-//            } else {
-//                System.out.println("Error al agendar la cita de emergencia.");
-//            }
-//
-//        } catch (PersistenciaException e) {
-//            System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
-//            e.printStackTrace();
-//        }
+        // 2. Consultar una cita por ID
+        Cita citaConsultada2 = citaDAO.consultarCitaPorID(1);
+        if (citaConsultada != null) {
+            System.out.println("ID Paciente: " + citaConsultada2.getIdPaciente());
+            System.out.println("ID Medico: " + citaConsultada2.getIdMedico());
+            System.out.println("Fecha y Hora: " + citaConsultada2.getFecha());
+            System.out.println("Estado: " + citaConsultada2.getEstadoCita());
+            System.out.println("Tipo de Cita: " + citaConsultada2.getTipoCita());
+        } else {
+            System.out.println("Cita no encontrada.");
+        }
+
+        // 3. Cancelar una cita
+        boolean citaCancelada3 = citaDAO.cancelarCita(9);
+        System.out.println("Cita cancelada: " + citaCancelada3);
+        
+        //Cita emergencia
+        try {
+            int idPaciente = 4;
+
+            boolean citaEmergenciaAgendada = citaDAO.agendarCitaEmergencia(idPaciente);
+
+            if (citaEmergenciaAgendada) {
+                System.out.println("Cita de emergencia agendada con éxito.");
+            } else {
+                System.out.println("Error al agendar la cita de emergencia.");
+            }
+
+        } catch (PersistenciaException e) {
+            System.err.println("Error al agendar cita de emergencia: " + e.getMessage());
+            e.printStackTrace();
+        }
         
         // Datos de prueba para agregar una consulta
         int idCita = 1; // Reemplaza con un ID de cita válido
@@ -708,25 +733,23 @@ System.out.println("Cita cancelada: " + citaCancelada);
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date utilDate = sdf.parse(fechaString);
-        Date fecha = new Date(utilDate.getTime());
+        Date fecha2 = new Date(utilDate.getTime());
         
-        // Test agregarConsulta
-        Consulta consulta = new Consulta(idCita, tipoConsulta, fecha, diagnostico, notas);
-        boolean consultaAgregada = consultaDAO.agregarConsulta(consulta.getIdCita(), consulta.getTipoConsulta(), consulta.getFecha(), consulta.getDiagnosticoConsulta(), consulta.getNotasConsulta());
-        if (consultaAgregada) {
-            System.out.println("Consulta agregada correctamente.");
-        } else {
-            System.out.println("No se pudo agregar la consulta.");
-        }
-        
-        // Test eliminarConsulta
-        boolean consultaEliminada = consultaDAO.eliminarConsulta(idConsultaAEliminar);
-        if (consultaEliminada) {
-            System.out.println("Consulta eliminada correctamente.");
-        } else {
-            System.out.println("No se pudo eliminar la consulta.");
-
-        }*/
-
+//        // Test agregarConsulta
+//        Consulta consulta = new Consulta(idCita, tipoConsulta, fecha2, diagnostico, notas);
+//        boolean consultaAgregada = consultaDAO.agregarConsulta(consulta.getIdCita(), consulta.getTipoConsulta(), consulta.getFecha(), consulta.getDiagnosticoConsulta(), consulta.getNotasConsulta());
+//        if (consultaAgregada) {
+//            System.out.println("Consulta agregada correctamente.");
+//        } else {
+//            System.out.println("No se pudo agregar la consulta.");
+//        }
+//        
+//        // Test eliminarConsulta
+//        boolean consultaEliminada = consultaDAO.eliminarConsulta(idConsultaAEliminar);
+//        if (consultaEliminada) {
+//                System.out.println("Consulta eliminada correctamente.");
+//        } else {
+//            System.out.println("No se pudo eliminar la consulta.");
+//        }
     }
 }

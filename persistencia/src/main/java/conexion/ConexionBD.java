@@ -15,7 +15,7 @@ public class ConexionBD implements IConexionBD{
     
     final String USUARIO = "root";
 
-    final String PASS = "D-k%9FSFJGs";
+    final String PASS = "77290Lop";
 
     final String CADENA_CONEXION = "jdbc:mysql://localhost:3306/ClinicaPrivada_v1"; 
     
