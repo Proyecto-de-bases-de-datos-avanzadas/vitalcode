@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package DAO;
 
 import Exception.PersistenciaException;
@@ -9,7 +5,7 @@ import java.sql.Date;
 
 /**
  *
- * @author JR
+ * @author ErnestoLpz_252663
  */
 public interface IConsultaDAO {
     public boolean agregarConsulta(int idCita, String tipoDeConsulta, Date fechaHora, String diagnostico, String notas) throws PersistenciaException;

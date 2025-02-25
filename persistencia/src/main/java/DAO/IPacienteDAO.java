@@ -6,7 +6,7 @@ import entidades.Usuario;
 
 /**
  *
- * @author JR
+ * @author ErnestoLpz_252663
  */
 public interface IPacienteDAO {
     public boolean agregarPaciente(int idUsuario, String correoElectronicoPaciente, String nombrePaciente, String apellidoPaterno, String apellidoMaterno, String telefono) throws PersistenciaException;
