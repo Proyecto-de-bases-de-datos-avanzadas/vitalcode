@@ -91,7 +91,4 @@ public class PacienteNDTO {
     public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
-
-    
 }
-

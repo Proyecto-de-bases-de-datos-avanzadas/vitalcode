@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTO;
 
 import java.sql.Date;
@@ -118,5 +114,4 @@ public class CitaDTO {
     public void setTipoCita(String tipoCita) {
         this.tipoCita = tipoCita;
     }
-
 }
