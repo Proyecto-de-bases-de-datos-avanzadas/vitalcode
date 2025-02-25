@@ -74,7 +74,7 @@ public class MedicoBO {
         return false;
     }
     
-     // Método para obtener las citas de un medico cuya fecha aún no ha pasado y su estado es pendiente
+    // Método para obtener las citas de un medico cuya fecha aún no ha pasado y su estado es pendiente
     public List<CitaDTO> obtenerCitasPendientes(int idMedico)  {
         try {
             List<CitaDTO> citasDTO = new ArrayList<>();
@@ -92,7 +92,7 @@ public class MedicoBO {
         return null;
     }
     
-         // Método para obtener las citas de un medico 
+    // Método para obtener las citas de un medico 
     public List<CitaDTO> obtenerCitas(int idMedico)  {
         try {
             List<CitaDTO> citasDTO = new ArrayList<>();
@@ -110,7 +110,7 @@ public class MedicoBO {
         return null;
     }
     
-             // Método para obtener las citas de un medico ordenadas por fecha
+    // Método para obtener las citas de un medico ordenadas por fecha
     public List<CitaDTO> obtenerCitasFecha(int idMedico)  {
         try {
             List<CitaDTO> citasDTO = new ArrayList<>();
@@ -145,11 +145,8 @@ public class MedicoBO {
         }
         return null;
     }
-    
-    
+
     public Map<String, List<Time>> obtenerIntervalosMedico(int idMedico) throws PersistenciaException {
         return medicoDAO.consultarIntervalosMedico(idMedico);
     }
-    
-    
 }

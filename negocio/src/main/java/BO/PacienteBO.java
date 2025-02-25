@@ -146,4 +146,7 @@ public class PacienteBO {
         return citasDTO;
     }
 
+    public boolean cancelarCita(int idCita) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
