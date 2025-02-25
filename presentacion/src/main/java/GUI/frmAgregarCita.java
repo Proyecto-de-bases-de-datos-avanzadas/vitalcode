@@ -5,6 +5,7 @@
 package GUI;
 
 import DTO.CitaDTO;
+import DTO.HorarioDTO;
 import DTO.MedicoDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
@@ -45,33 +46,27 @@ public class frmAgregarCita extends javax.swing.JFrame {
         this.nombrePaciente = nombrePaciente;
         initComponents();
     }
-    public void mostrarDoctores (String especialidad){
-         try {
-            List<MedicoDTO> medicos = DependencyInjector.agendarCita().obtenerDoctoresDisponibles(especialidad);
+    public void mostrarDoctores (String especialidad) throws NegocioException{
+        List<MedicoDTO> medicos = DependencyInjector.agendarCita().obtenerDoctoresDisponibles(especialidad);
         if (medicos.isEmpty()) {
             System.out.println("No se encontraron doctores para la especialidad: " + especialidad);
         } else {
             System.out.println("Doctores encontrados: " + medicos.size());
         }
-
         // Limpiar el comboBox antes de agregar nuevos items
         cmbMedico.removeAllItems();
-
         for (MedicoDTO medico : medicos) {
             
             cmbMedico.addItem(medico.getNombre());
             medicosMap.put(medico.getNombre(), medico); // guardar los doctores para poder consultar sus datos despues
         }
-    } catch (PersistenciaException e) {
-        e.printStackTrace();
-    }
     }
     
     public void mostrarHorarioMedico () throws NegocioException, PersistenciaException{
         String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
         MedicoDTO medicoSeleccionado = medicosMap.get(nombreSeleccionado);
-        List<Horario> horarios = DependencyInjector.consultarMedico().recuperarHorarioMedico(medicoSeleccionado.getId());
-        for (Horario horario : horarios){
+        List<HorarioDTO> horarios = DependencyInjector.consultarMedico().consultarHorarioMedico(medicoSeleccionado.getId());
+        for (HorarioDTO horario : horarios){
             cmbDia.addItem(horario.getDiaSemana());
         }
         
@@ -348,8 +343,12 @@ public void agendarCita() throws NegocioException {
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
     private void btnEspMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEspMouseClicked
-        String seleccion =(String) cmbEspecialidad.getSelectedItem();
-        mostrarDoctores(seleccion);
+        try {
+            String seleccion =(String) cmbEspecialidad.getSelectedItem();
+            mostrarDoctores(seleccion);
+        } catch (NegocioException ex) {
+            Logger.getLogger(frmAgregarCita.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnEspMouseClicked
 
     private void btnDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiaActionPerformed

@@ -10,6 +10,7 @@ import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.CitaDTO;
 import DTO.DireccionNDTO;
+import DTO.HorarioDTO;
 import DTO.MedicoDTO;
 import DTO.PacienteNDTO;
 import DTO.UsuarioNDTO;
@@ -109,24 +110,19 @@ try {
         MedicoDTO medicoPorUsuario = medicoBO.recuperarMedicoUsuario(usuarioMedido);
         System.out.println("nombre medico: "+medicoPorUsuario.getNombre());
         
-        try {
-            // Llamar al método recuperarHorarioMedico
-            List<Horario> horarios = medicoBO.recuperarHorarioMedico(3); // Cambia el ID por el que deseas probar
-
-            if (!horarios.isEmpty()) {
-                // Imprimir los detalles del horario recuperado
-                for (Horario horario : horarios) {
-                    System.out.println("ID Horario: " + horario.getId());
-                    System.out.println("Día de la Semana: " + horario.getDiaSemana());
-                    System.out.println("Hora de Entrada: " + horario.getHoraEntrada());
-                    System.out.println("Hora de Salida: " + horario.getHoraSalida());
-                    System.out.println("-----------------------------------");
-                }
-            } else {
-                System.out.println("No se encontró ningún horario para el médico con ese ID.");
+        // Llamar al método recuperarHorarioMedico
+        List<HorarioDTO> horarios = medicoBO.consultarHorarioMedico(3); // Cambia el ID por el que deseas probar
+        if (!horarios.isEmpty()) {
+            // Imprimir los detalles del horario recuperado
+            for (HorarioDTO horario : horarios) {
+                System.out.println("ID Horario: " + horario.getId());
+                System.out.println("Día de la Semana: " + horario.getDiaSemana());
+                System.out.println("Hora de Entrada: " + horario.getHoraEntrada());
+                System.out.println("Hora de Salida: " + horario.getHoraSalida());
+                System.out.println("-----------------------------------");
             }
-        } catch (NegocioException | PersistenciaException e) {
-            e.printStackTrace();
+        } else {
+            System.out.println("No se encontró ningún horario para el médico con ese ID.");
         }
         
          
