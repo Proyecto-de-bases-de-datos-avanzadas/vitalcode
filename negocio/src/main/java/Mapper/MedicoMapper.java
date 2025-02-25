@@ -26,7 +26,7 @@ public class MedicoMapper {
     }    
 
 // Convertir de entidad a DTO
-    public MedicoDTO toDTO(Medico medico) {
+    public static MedicoDTO toDTO(Medico medico) {
         return new MedicoDTO(
             medico.getIdUsuario(),
             medico.getNombre(),

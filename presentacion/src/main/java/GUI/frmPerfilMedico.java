@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import DTO.HorarioDTO;
 import DTO.MedicoDTO;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
@@ -37,17 +38,15 @@ public final class frmPerfilMedico extends javax.swing.JFrame {
             txtNombre.setText(medicoRecuperado.getNombre());
             txtCedulaProf.setText(medicoRecuperado.getCedula());
             txtEspecialida.setText(medicoRecuperado.getEspecialidad());
-            List<Horario> horarios = DependencyInjector.consultarMedico().recuperarHorarioMedico(medicoRecuperado.getId());
+            List<HorarioDTO> horarios = DependencyInjector.consultarMedico().consultarHorarioMedico(medicoRecuperado.getId());
             // Mostrar la lista en el JTextArea
 
             txtAreaHorario.setText(""); // Limpiar el área de texto antes de agregar nuevos horarios
-            for (Horario horario : horarios) {
+            for (HorarioDTO horario : horarios) {
                 txtAreaHorario.append(horario.getDiaSemana() + " " + horario.getHoraEntrada() + "-" + horario.getHoraSalida() + "\n");
             }
         
         } catch (PersistenciaException ex) {
-            Logger.getLogger(frmPerfilMedico.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NegocioException ex) {
             Logger.getLogger(frmPerfilMedico.class.getName()).log(Level.SEVERE, null, ex);
         }
         

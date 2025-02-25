@@ -4,6 +4,18 @@
  */
 package GUI;
 
+import DTO.CitaDTO;
+import DTO.MedicoDTO;
+import DTO.PacienteNDTO;
+import DTO.UsuarioNDTO;
+import Exception.NegocioException;
+import Exception.PersistenciaException;
+import configuracion.DependencyInjector;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author erika
@@ -13,7 +25,10 @@ public class frmEliminarCita extends javax.swing.JFrame {
     /**
      * Creates new form frmEliminarCita
      */
-    public frmEliminarCita() {
+    public final String nombrePaciente;
+    public frmEliminarCita(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+        mostrarCitasCancelar();
         initComponents();
     }
 
@@ -34,7 +49,6 @@ public class frmEliminarCita extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(859, 510));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(183, 213, 229));
@@ -45,8 +59,6 @@ public class frmEliminarCita extends javax.swing.JFrame {
 
         lblSeleccion.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lblSeleccion.setText("Seleccione su cita:");
-
-        cmbSeleccionCita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnRegresar1.setBackground(new java.awt.Color(0, 0, 0));
         btnRegresar1.setForeground(new java.awt.Color(255, 255, 255));
@@ -119,49 +131,36 @@ public class frmEliminarCita extends javax.swing.JFrame {
 
     private void btnRegresar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresar1MouseClicked
         frmPantallaPrinicipalPaciente pantallaprincipal = new frmPantallaPrinicipalPaciente();
+        pantallaprincipal.setNombrePaciente(nombrePaciente);
         pantallaprincipal.setVisible(true);
-        this.setVisible(false);
+        this.dispose();
 
     }//GEN-LAST:event_btnRegresar1MouseClicked
-
+    public void mostrarCitasCancelar(){
+        try {
+            UsuarioNDTO usuarioRecuperado = DependencyInjector.consultarUsuario().recuperarUsuarioPorNombre(nombrePaciente);
+            int idUsuario = usuarioRecuperado.getId();
+            PacienteNDTO paciente = DependencyInjector.crearPacienteBO().recuperarPacienteID(idUsuario);
+            List<CitaDTO> Citas = DependencyInjector.actualizarPaciente().obtenerCitasPendientes(idUsuario);
+            if(Citas.isEmpty()){
+                cmbSeleccionCita.addItem("no hay citas");
+            }else{
+                
+                for (CitaDTO cita : Citas) {
+                    MedicoDTO medicoCita = DependencyInjector.consultarMedico().recuperarMedicoID(cita.getIdMedico());
+                    String nombreMedico = medicoCita.getNombre();
+                    cmbSeleccionCita.addItem(cita.getFecha()+" "+cita.getEstadoCita()+" "+nombreMedico+"\n");
+                }
+            }
+        } catch (NegocioException | PersistenciaException | SQLException ex) {
+            Logger.getLogger(frmEliminarCita.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegresar1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmEliminarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmEliminarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmEliminarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmEliminarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmEliminarCita().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;

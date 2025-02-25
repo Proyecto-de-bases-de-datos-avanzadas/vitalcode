@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author erika
  */
-public class frmCitasPaciente extends javax.swing.JFrame {
+public final class frmCitasPaciente extends javax.swing.JFrame {
 
     /**
      * Creates new form frmCitasPaciente
@@ -28,6 +28,7 @@ public class frmCitasPaciente extends javax.swing.JFrame {
      public final String nombrePaciente;
     public frmCitasPaciente(String nombrePaciente) {
         this.nombrePaciente = nombrePaciente;
+        
         initComponents();
         mostrarCitas();
     }
@@ -184,7 +185,7 @@ public class frmCitasPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarMouseClicked
 
     private void btnEliminarCitaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarCitaMouseClicked
-       frmEliminarCita eliminarCita = new frmEliminarCita();
+       frmEliminarCita eliminarCita = new frmEliminarCita(nombrePaciente);
        eliminarCita.setVisible(true);
        this.setVisible(false);
     }//GEN-LAST:event_btnEliminarCitaMouseClicked

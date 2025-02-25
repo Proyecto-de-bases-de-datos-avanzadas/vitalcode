@@ -2,9 +2,11 @@ package BO;
 
 import DAO.MedicoDAO;
 import DTO.CitaDTO;
+import DTO.HorarioDTO;
 import DTO.MedicoDTO;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
+import Mapper.HorarioMapper;
 import Mapper.MedicoMapper;
 import conexion.IConexionBD;
 import entidades.Cita;
@@ -42,12 +44,16 @@ public class MedicoBO {
         return medico;
     }
     
-    public List<Horario> recuperarHorarioMedico(int idMedico) throws NegocioException, PersistenciaException {
-        try {
-            return medicoDAO.consultarHorarioMedico(idMedico);
-        } catch (PersistenciaException e) {
-            throw new NegocioException("Error al recuperar el horario del médico con ID: " + idMedico, e);
+    public List<HorarioDTO> consultarHorarioMedico(int idMedico) throws PersistenciaException {
+        List<Horario> horarios = medicoDAO.consultarHorarioMedico(idMedico);
+        List<HorarioDTO> horarioDTOs = new ArrayList<>();
+
+        for (Horario horario : horarios) {
+            HorarioDTO dto = HorarioMapper.toDTO(horario);
+            horarioDTOs.add(dto);
         }
+
+        return horarioDTOs;
     }
     
     public boolean BajaMedico (int idMedico){
