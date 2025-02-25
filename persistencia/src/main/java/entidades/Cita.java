@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.time.LocalDateTime;
@@ -36,8 +32,6 @@ public class Cita {
         this.estadoCita = estadoCita;
         this.tipoCita = tipoCita;
     }
-
-    
 
     public int getIdCita() {
         return idCita;
@@ -95,8 +89,6 @@ public class Cita {
     public void setTipoCita(String tipoCita) {
         this.tipoCita = tipoCita;
     }
-    
-    
 
     public Cita(int idCita, int idPaciente, int idMedico, LocalDateTime fecha, String estadoCita, int folioCita, String tipoCita) {
         this.idCita = idCita;
@@ -116,6 +108,4 @@ public class Cita {
         this.estadoCita = estadoCita;
         this.tipoCita = tipoCita;
     }
-
 }  
-
