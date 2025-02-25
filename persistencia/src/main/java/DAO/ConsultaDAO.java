@@ -2,11 +2,15 @@ package DAO;
 
 import Exception.PersistenciaException;
 import conexion.IConexionBD;
+import entidades.Consulta;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,5 +56,33 @@ public class ConsultaDAO {
             Logger.getLogger(ConsultaDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new PersistenciaException("Error al eliminar la consulta en la base de datos.");
         }
+    }
+    
+    public List<Consulta> obtenerConsultasPorMedico(int idMedico) throws PersistenciaException {
+        List<Consulta> consultas = new ArrayList<>();
+        String sql = "SELECT * FROM Consulta WHERE id_medico = ?"; // SQL puede variar según tu estructura
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idMedico);  // Asumiendo que 'id_medico' es un campo en tu base de datos
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Consulta consulta = new Consulta(
+                        rs.getInt("idConsulta"),  // Asegúrate de que 'idConsulta' es el nombre de la columna en la DB
+                        rs.getInt("idCita"),      // id de la cita
+                        rs.getString("tipoConsulta"),  // tipo de consulta
+                        rs.getDate("fecha"),      // fecha de la consulta (asumido que es un tipo Date en DB)
+                        rs.getString("diagnosticoConsulta"),  // diagnóstico
+                        rs.getString("notasConsulta")  // notas
+                    );
+                    consultas.add(consulta);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener las consultas del médico", e);
+        }
+
+        return consultas;
     }
 }

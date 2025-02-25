@@ -43,11 +43,6 @@ public class ConsultaBO {
     }
     
     public List<Consulta> obtenerConsultasPorMedico(int idMedico) {
-        try {
-            return consultaDAO.obtenerConsultasPorMedico(idMedico);
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(ConsultaBO.class.getName()).log(Level.SEVERE, "Error al obtener consultas del médico", ex);
-            return null;
-        }
+        return consultaDAO.obtenerConsultasPorMedico(idMedico);
     }
 }
