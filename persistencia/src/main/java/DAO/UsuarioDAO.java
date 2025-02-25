@@ -92,5 +92,6 @@ public class UsuarioDAO implements IUsuarioDAO {
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new PersistenciaException("Error al crear conexión", ex);
-        }}
+        }
+    }
 }

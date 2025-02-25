@@ -36,3 +36,4 @@ public class HorarioUtil {
         return intervalosPorDia;
     }
 }
+

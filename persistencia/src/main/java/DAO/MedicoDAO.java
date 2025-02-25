@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Types;
 import java.time.LocalDateTime;
@@ -31,7 +32,106 @@ public class MedicoDAO {
     public MedicoDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
+// método para hacer los insert masivos
+    public boolean agregarMedicosConHorarios(List<Medico> medicos, List<Usuario> usuarios) throws PersistenciaException {
+        if (medicos.size() != usuarios.size()) {
+            throw new IllegalArgumentException("El número de médicos y usuarios debe coincidir.");
+        }
 
+        String consultaSqlUsuario = "CALL AgregarUsuario(?, ?, ?, ?)"; // Procedimiento de uds
+        String consultaSqlMedico = "INSERT INTO Medico (id_usuario, nombre, especialidad, cedulaProfesional, estado) VALUES (?, ?, ?, ?, 'Activo')"; // hubieran manejado default 'activo'
+        String consultaSqlHorario = "INSERT INTO Horarios (diaSemana, horaEntrada, horaSalida) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE id=id"; // Evita duplicados
+        /*
+        explicacion del on duplicate key update
+        Si ya existe (mismo diaSemana, horaEntrada y horaSalida), no lo duplica y simplemente deja el registro como está. 
+        La parte id=id no cambia realmente nada en la base de datos, pero obliga a MySQL a devolver el ID existente en lugar de generar un error por clave duplicada. Esto nos permite obtener el ID del horario incluso si ya estaba en la base de datos, sin necesidad de hacer una consulta +
+        
+         */
+        String consultaSqlMedicoHorario = "INSERT INTO Medico_Horario (id_medico, id_horario) VALUES (?, ?)";
+
+        try (Connection conn = conexion.crearConexion()) {
+            conn.setAutoCommit(false); // Deshabilitar autocommit para control manual (activa una transaccion por decirlo asi)
+
+            try (CallableStatement csUsuario = conn.prepareCall(consultaSqlUsuario);
+                    PreparedStatement psMedico = conn.prepareStatement(consultaSqlMedico, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement psHorario = conn.prepareStatement(consultaSqlHorario, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement psMedicoHorario = conn.prepareStatement(consultaSqlMedicoHorario)) {
+
+                for (int i = 0; i < usuarios.size(); i++) {
+                    Usuario usuario = usuarios.get(i);
+                    Medico medico = medicos.get(i);
+
+                    // Paso 1: Insertar usuario y obtener su id
+                    String hashedPassword = BCrypt.hashpw(usuario.getContraseniaUsuario(), BCrypt.gensalt()); // metodo de uds
+
+                    // valores de la entidad usuario
+                    csUsuario.setString(1, usuario.getNombre_usuario());
+                    csUsuario.setString(2, hashedPassword);
+                    csUsuario.setString(3, "Medico");
+                    csUsuario.registerOutParameter(4, Types.INTEGER);
+
+                    csUsuario.execute();
+                    int idUsuarioGenerado = csUsuario.getInt(4);
+
+                    if (idUsuarioGenerado <= 0) {
+                        conn.rollback();
+                        throw new PersistenciaException("No se pudo obtener el ID generado del usuario.");
+                    }
+
+                    usuario.setIdUsuario(idUsuarioGenerado);
+                    medico.setIdUsuario(idUsuarioGenerado);
+
+                    // Paso 2: Insertar médico
+                    psMedico.setInt(1, medico.getIdUsuario());
+                    psMedico.setString(2, medico.getNombre());
+                    psMedico.setString(3, medico.getEspecialidadMedico());
+                    psMedico.setString(4, medico.getCedulaMedico());
+                    psMedico.addBatch(); // el batch agrupa todas las inserciones en una sola comunicación con la BD, por lo que evitamos abrir muchas conexiones (Se usa addBatch() para agregar consultas y executeBatch() para ejecutarlas todas de una vez)
+                }
+
+                psMedico.executeBatch(); // Ejecutar inserciones de médicos
+
+                // Paso 3: Insertar horarios y obtener sus IDs
+                for (Medico medico : medicos) {
+                    for (Horario horario : medico.getHorarioMedico()) {
+                        psHorario.setString(1, horario.getDiaSemana());
+                        psHorario.setTime(2, horario.getHoraEntrada());
+                        psHorario.setTime(3, horario.getHoraSalida());
+                        psHorario.addBatch();
+                    }
+                }
+                psHorario.executeBatch(); // Ejecutar inserciones de horarios
+
+                // Paso 4: Obtener IDs de horarios e insertar relaciones médico-horario
+                try (ResultSet rsHorario = psHorario.getGeneratedKeys()) {
+                    for (Medico medico : medicos) {
+                        for (Horario horario : medico.getHorarioMedico()) {
+                            if (rsHorario.next()) {
+                                int idHorario = rsHorario.getInt(1);
+                                psMedicoHorario.setInt(1, medico.getIdUsuario());
+                                psMedicoHorario.setInt(2, idHorario);
+                                psMedicoHorario.addBatch();
+                            }
+                        }
+                    }
+                }
+                psMedicoHorario.executeBatch(); // Ejecutar inserciones de relaciones médico-horario
+
+                conn.commit(); // Confirmar la transacción
+                return true; // si todo salio bien
+
+            } catch (SQLException ex) {
+                conn.rollback();
+                Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, "Error al agregar médicos", ex);
+                throw new PersistenciaException("Error al agregar médicos en la base de datos.", ex);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, "Error en la conexión", ex);
+        }
+
+        return false;
+    }
     // Método para agregar un médico
     public boolean agregarMedicoYUsuario(Medico medico, Usuario usuario) throws PersistenciaException {
         String sqlUsuario = "{CALL AgregarUsuario(?, ?, ?, ?)}";
@@ -335,4 +435,4 @@ public class MedicoDAO {
         }
         return citas;
     } 
-}   
+}
