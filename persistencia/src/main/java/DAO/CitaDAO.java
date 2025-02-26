@@ -149,7 +149,8 @@ public class CitaDAO {
             throw new PersistenciaException("Error al verificar la disponibilidad de la cita", ex);
         }
     }
-    //???
+    
+   //Agendar Cita de Emergencia
     public boolean agendarCitaEmergencia(int idPaciente) throws PersistenciaException {
         String sql = "{CALL AsignarCitaEmergencia(?)}";
 
@@ -171,6 +172,7 @@ public class CitaDAO {
         }
     }
     
+    //Obtener Doctores disponibles
     public List<Medico> obtenerDoctoresDisponibles(String especialidad) throws PersistenciaException {
         List<Medico> doctores = new ArrayList<>();
         String sql = "SELECT * FROM Medico WHERE especialidad = ? AND estado = 'Activo'";
@@ -199,6 +201,7 @@ public class CitaDAO {
         return doctores;
     }
     
+    //Obtener el horario de los doctores
     public List<String> obtenerHorarioDisponible(int idMedico) throws PersistenciaException {
         List<String> horarios = new ArrayList<>();
         String sql = "SELECT horario FROM Horarios WHERE idMedico = ? AND disponible = 1";

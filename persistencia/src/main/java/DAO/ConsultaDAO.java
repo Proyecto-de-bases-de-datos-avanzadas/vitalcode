@@ -26,6 +26,7 @@ public class ConsultaDAO {
         this.conexion = conexion;
     }
 
+    //Agregar consulta
     public boolean agregarConsulta(int idCita, String tipoDeConsulta, Date fechaHora, String diagnostico, String notas) throws PersistenciaException {
         String sentenciaSQL = "{CALL agregar_consulta(?, ?, ?, ?, ?)}";
         try (Connection conn = conexion.crearConexion();
@@ -43,6 +44,7 @@ public class ConsultaDAO {
         }
     }
     
+    //Eliminar consulta
     public boolean eliminarConsulta(int idConsulta) throws PersistenciaException {
         String sentenciaSQL = "DELETE FROM Consulta WHERE id = ?";
         
@@ -58,6 +60,7 @@ public class ConsultaDAO {
         }
     }
     
+    //Obtener consulta por id del medico
     public List<Consulta> obtenerConsultasPorMedico(int idMedico) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
         String sql = "SELECT * FROM Consulta WHERE id_medico = ?"; // SQL puede variar según tu estructura

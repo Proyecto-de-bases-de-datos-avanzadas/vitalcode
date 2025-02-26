@@ -186,9 +186,8 @@ public class MedicoDAO {
         }
         return false;
     }
-    
-    
-    
+
+    //Dar de baja al medico (no se elimina)
     public boolean darDeBajaMedico(int idUsuario) throws PersistenciaException {
         String sql = "UPDATE Medico SET estado = 'Inactivo' WHERE id_usuario = ?";
 
@@ -203,6 +202,8 @@ public class MedicoDAO {
             throw new PersistenciaException("Error al dar de baja al médico en la base de datos.");
         }
     }
+    
+    //Activar al medico (cambio de estado)
     public boolean activarMedico (int idUsuario) throws PersistenciaException{
         String sql = "UPDATE Medico SET estado = 'Activo' WHERE id_usuario = ?";
 
@@ -217,6 +218,8 @@ public class MedicoDAO {
             throw new PersistenciaException("Error al dar de baja al médico en la base de datos.");
         }
     }
+    
+    //Consultamos al medico por su id
     public Medico consultarMedicoID(int idMedico) throws PersistenciaException {
         String sql = "SELECT * FROM medico WHERE id_usuario = ?;";
         try (Connection conn = conexion.crearConexion();
@@ -243,6 +246,7 @@ public class MedicoDAO {
         }
     }
     
+    //Consultamos al medico por su nombre
     public Medico consultarMedicoPorNombre(String nombreUsuario) throws PersistenciaException{
     String sql = "SELECT m.id_usuario, m.nombre, m.especialidad, m.cedulaProfesional, m.estado " +
                      "FROM Medico m " +
@@ -273,6 +277,7 @@ public class MedicoDAO {
         return null;
     }
 
+    //Consultamos el horario del medico con su id
     public List<Horario> consultarHorarioMedico(int idMedico) throws PersistenciaException {
         String sql = "SELECT h.id, h.diaSemana, h.horaEntrada, h.horaSalida " +
                      "FROM Horarios h " +
@@ -302,11 +307,14 @@ public class MedicoDAO {
 
         return horarios;
     }
+    
+    //Consultar los intervalos del medico
     public Map<String, List<Time>> consultarIntervalosMedico(int idMedico) throws PersistenciaException {
         List<Horario> horarios = consultarHorarioMedico(idMedico);
         return HorarioUtil.generarIntervalosPorDia(horarios);
     }
     
+    //Actualizar el estado del medico
     public boolean actualizarEstadoMedico(int idMedico, String nuevoEstado) throws PersistenciaException {
         String sql = "UPDATE Medicos SET estado = ? WHERE idMedico = ?";
 
@@ -323,6 +331,7 @@ public class MedicoDAO {
         }
     }
     
+    //Obtener todas las citas
     public List<Cita> obtenerTodasLasCitas (int idMedico) throws PersistenciaException{
         // declarar una lista para guardar todas las citas del medico
         List<Cita> citas = new ArrayList<>();
@@ -351,6 +360,8 @@ public class MedicoDAO {
         }
         return citas;
     }
+    
+    //Obtener todas las citas con estado de pendiente
      public List<Cita> obtenerTodasLasCitasPendientes (int idMedico) throws PersistenciaException{
         // declarar una lista para guardar todas las citas del medico
         List<Cita> citas = new ArrayList<>();
@@ -379,7 +390,9 @@ public class MedicoDAO {
         }
         return citas;
     }   
-         public List<Cita> obtenerTodasLasCitasPorEstado(int idMedico) throws PersistenciaException{
+     
+    //Obtener todas las citas por estado 
+    public List<Cita> obtenerTodasLasCitasPorEstado(int idMedico) throws PersistenciaException{
         // declarar una lista para guardar todas las citas del medico
         List<Cita> citas = new ArrayList<>();
         
@@ -407,7 +420,9 @@ public class MedicoDAO {
         }
         return citas;
     } 
-            public List<Cita> obtenerTodasLasCitasPorFecha(int idMedico) throws PersistenciaException{
+    
+    //Obtener todas las citas por fecha
+    public List<Cita> obtenerTodasLasCitasPorFecha(int idMedico) throws PersistenciaException{
         // declarar una lista para guardar todas las citas del medico
         List<Cita> citas = new ArrayList<>();
         

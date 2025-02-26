@@ -29,6 +29,7 @@ public class PacienteDAO {
         this.conexion = conexion;
     }
 
+    //Agregar al usuario que a la vez se agrega al paciente
     public boolean agregarUsuarioYPaciente(Usuario usuario, Paciente paciente) throws PersistenciaException {
         String sqlUsuario = "{CALL AgregarUsuario(?, ?, ?, ?)}";
         String sqlPaciente = "{CALL agregar_paciente(?, ?, ?, ?, ?, ?, ?)}";
@@ -113,6 +114,7 @@ public class PacienteDAO {
         }
     }
     
+    //Actualizar la información de los pacientes
     public boolean ActualizarPaciente(Paciente paciente) throws PersistenciaException{
         String sql = "UPDATE paciente SET correoElectronico = ?, nombre =? ,apellidoPat=? ,apellidoMat=? ,telefono=? ,fechaNacimiento =?  WHERE id_usuario = ?;";
         try (Connection conn = conexion.crearConexion();
@@ -133,7 +135,7 @@ public class PacienteDAO {
         }
     }
     
-
+    //Obtener todas las citas
     public List<Cita> obtenerTodasLasCitas(int idPaciente) throws SQLException {
 
         List<Cita> citas = new ArrayList<>();
@@ -163,6 +165,7 @@ public class PacienteDAO {
         return citas;
     }
     
+    //Obtener las citas pendientes
     public List<Cita> obtenerCitasPendientes(int idPaciente) throws SQLException {
         List<Cita> citas = new ArrayList<>();
         String query = "SELECT * FROM Cita WHERE id_paciente = ? AND  estado = 'Pendiente'";
@@ -189,7 +192,7 @@ public class PacienteDAO {
         return citas;
     }
 
-    
+    //Obtener las citas por fecha
     public List<Cita> obtenerCitasOrdenadasPorFecha(int idPaciente) throws SQLException {
     List<Cita> citas = new ArrayList<>();
     String query = "SELECT * FROM Cita WHERE id_paciente = ? ORDER BY fechaHora";
@@ -214,6 +217,7 @@ public class PacienteDAO {
     }
     return citas;}
     
+    //Obtener las citas por especialidad
     public List<Cita> obtenerCitasOrdenadasPorEspecialidad(int idPaciente) throws SQLException {
         List<Cita> citas = new ArrayList<>();
         String query = "SELECT c.* FROM Cita c JOIN Medico m ON c.id_medico = m.id_usuario WHERE c.id_paciente = ? ORDER BY m.especialidad";

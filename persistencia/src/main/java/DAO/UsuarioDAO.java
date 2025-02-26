@@ -19,6 +19,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         this.conexion = conexion;
     }
     
+    //Agregar usuario
     public Usuario agregarUsuario(Usuario usuario) throws PersistenciaException {
         String sentenciaSQL = "{CALL AgregarUsuario(?, ?, ?, ?)}";
 
@@ -43,6 +44,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
 
+    //Consultar al usuario por su id
     @Override
     public Usuario consultarUsuarioPorID(int idUsuario) throws PersistenciaException {
         String sql = "SELECT * FROM Usuario WHERE id = ?";
@@ -67,6 +69,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
     
+    //Consultar al usuario por su nombre
     public Usuario buscarUsuarioPorUsuario(String usuario) throws PersistenciaException {
         String sql = "SELECT * FROM Usuario WHERE nombreUsuario = ?";
         Usuario usuarioRec = null;
